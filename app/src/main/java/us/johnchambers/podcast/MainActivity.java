@@ -1,4 +1,4 @@
-package us.johnchambers.jcpodcastfragments;
+package us.johnchambers.podcast;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package us.johnchambers.jcpodcastfragments;
+package us.johnchambers.podcast;
 
 import org.junit.Test;
 

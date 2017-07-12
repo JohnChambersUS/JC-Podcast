@@ -1,4 +1,4 @@
-package us.johnchambers.jcpodcastfragments;
+package us.johnchambers.podcast;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
