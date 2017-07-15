@@ -1,0 +1,39 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="us.johnchambers.podcast.fragments.SearchFragment"
+    android:id="@+id/search_fragment"
+    >
+
+    <EditText
+        android:id="@+id/searchInputBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:hint="@string/search_hint"
+        android:padding="@dimen/fab_margin"
+        android:layout_gravity="top"
+        />
+
+    <Button
+        android:id="@+id/goSearchButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/fab_margin"
+        android:text="Search"
+        android:layout_below="@id/searchInputBox"
+        />
+
+    <ListView
+        android:id="@+id/searchResultListView"
+        android:layout_width="match_parent"
+        android:background="#ffff00"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/goSearchButton"
+        ></ListView>
+
+
+</RelativeLayout>

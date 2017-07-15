@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/searchResultRow"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:background="#FF0000"
+    >
+
+    <ImageView
+        android:id="@+id/searchResultRowImage"
+        app:layout_widthPercent="30%"
+        app:layout_aspectRatio="100%"
+        android:scaleType="fitXY"
+        >
+    </ImageView>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/searchResultRowTitle"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textSize="18sp"
+        app:layout_widthPercent="70%"
+        android:layout_toRightOf="@id/searchResultRowImage">
+    </TextView>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/searchResultRowFeedUrl"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textSize="18sp"
+        app:layout_widthPercent="70%"
+        android:layout_toRightOf="@id/searchResultRowImage"
+        android:layout_below="@id/searchResultRowTitle"
+        >
+    </TextView>
+
+
+</android.support.percent.PercentRelativeLayout>
