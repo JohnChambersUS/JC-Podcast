@@ -1,7 +1,8 @@
 package us.johnchambers.podcast;
 
 //import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+//import android.app.FragmentTransaction;
+import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,11 +22,16 @@ import android.support.v4.app.FragmentManager;
 
 import butterknife.BindView;
 import us.johnchambers.podcast.fragments.SearchFragment;
+import us.johnchambers.podcast.fragments.SubscribeFragment;
 import us.johnchambers.podcast.misc.VolleyQueue;
+import us.johnchambers.podcast.objects.SearchRow;
 
 public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        SearchFragment.OnFragmentInteractionListener {
+        SearchFragment.OnFragmentInteractionListener,
+        SubscribeFragment.OnFragmentInteractionListener {
+
+    FragmentManager fragmentManager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,8 +120,15 @@ public class MainNavigationActivity extends AppCompatActivity
         return true;
     }
 
+    public android.support.v4.app.FragmentManager getCurrentFragmentManager() {
+        if (fragmentManager == null) {
+            fragmentManager = getSupportFragmentManager();
+        }
+        return fragmentManager;
+    }
+
     public void activateSearchFragment() {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getCurrentFragmentManager();
         SearchFragment sr = SearchFragment.newInstance();
         android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
         transaction.add(R.id.your_placeholder, sr, "SEARCH_FRAGMENT");
@@ -124,12 +137,31 @@ public class MainNavigationActivity extends AppCompatActivity
     }
 
     public void deactivateSearchFragment() {
-        FragmentManager fm = getSupportFragmentManager();
-        fm.findFragmentByTag("SEARCH_FRAGMENT");
-        fm.beginTransaction().hide(fm.findFragmentByTag("SEARCH_FRAGMENT")).commit();
+        getCurrentFragmentManager();
+        android.support.v4.app.Fragment exists = fragmentManager.findFragmentByTag("SEARCH_FRAGMENT");
+        fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("SEARCH_FRAGMENT")).commit();
     }
 
-    public void onFragmentInteraction(Uri uri) {
-        Toast.makeText(getApplicationContext(), "onFragmentInteraction called", Toast.LENGTH_LONG).show();
+    public void activateSubscribeFragment(SearchRow sr) {
+        deactivateSearchFragment();
+        getCurrentFragmentManager()
+                .beginTransaction()
+                .add(R.id.subscribe_placeholder, SubscribeFragment.newInstance(sr), "SUBSCRIBE_FRAGMENT")
+                .commit();
+    }
+
+
+    //************************************************
+    //* Interface implementations
+    //***********************************************
+
+    public void onSearchRowItemClicked(SearchRow sr) {
+        Toast.makeText(getApplicationContext(), "on search row clicked in parent", Toast.LENGTH_SHORT).show();
+        //todo make call for subscribe panel
+        activateSubscribeFragment(sr);
+    }
+
+    public void onSubscribeFragmentBackButtonPressed() {
+        Toast.makeText(getApplicationContext(), "on search row clicked in parent", Toast.LENGTH_SHORT).show();
     }
 }
