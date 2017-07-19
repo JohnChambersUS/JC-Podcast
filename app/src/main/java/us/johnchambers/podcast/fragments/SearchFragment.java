@@ -102,17 +102,18 @@ public class SearchFragment extends Fragment {
         ListView listView = (ListView) _view.findViewById(R.id.searchResultListView);
         listView.setAdapter(_adapter);
 
+        addSearchResultsListViewListener();
 
         return _view;
     }
-
+/*
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onSearchRowItemClicked(null);
         }
     }
-
+*/
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -131,20 +132,6 @@ public class SearchFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 
     //*******************************************
     //* Common methods
@@ -194,28 +181,9 @@ public class SearchFragment extends Fragment {
     //******************************************
     //* Listeners
     //******************************************
-/*
-    private static void addSearchResultsListViewListener() {
-
-        Button lv = (Button) _view.findViewById(R.id.goSearchButton);
-                //.findViewById(R.id.searchResultListView);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View v, int position,
-                                    long arg3)
-            {
-                //TextView feedView = (TextView)v.findViewById(R.id.searchResultRowFeedUrl);
-                //String feedUrl = feedView.getText().toString();
-                //showSubscribeView(feedUrl);
-                Toast.makeText(_context, "Press Listener tapped", Toast.LENGTH_LONG).show();
-            }
-        });
 
 
 
-    }
-*/
 
     private void addListenerGoSearchButton() {
 
@@ -229,6 +197,26 @@ public class SearchFragment extends Fragment {
             }
         });
     }
+
+
+    private void addSearchResultsListViewListener() {
+        ListView lv = (ListView)_view.findViewById(R.id.searchResultListView);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long arg3)
+            {
+                SearchRow sr = _adapter.getItem(position);
+                 mListener.onSearchRowItemClicked(sr);
+            }
+        });
+
+
+
+    }
+
+
 
     //********************************************
     //* Volley section
@@ -282,6 +270,13 @@ public class SearchFragment extends Fragment {
         VolleyQueue.getInstance().getRequestQueue().add(ir);
     }
 
+
+    //***********************************************
+    //* Interfaces
+    //***********************************************
+    public interface OnFragmentInteractionListener {
+        void onSearchRowItemClicked(SearchRow sr);
+    }
 
 
 
