@@ -24,6 +24,7 @@ import java.net.URL;
 import us.johnchambers.podcast.Adapters.SearchDisplayAdapter;
 import us.johnchambers.podcast.Adapters.SubscribeEpisodeListAdapter;
 import us.johnchambers.podcast.R;
+import us.johnchambers.podcast.misc.FragmentBackstackType;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.objects.FeedResponseWrapper;
 import us.johnchambers.podcast.objects.SearchRow;
@@ -37,7 +38,7 @@ import us.johnchambers.podcast.objects.SubscribeEpisodeRow;
  * Use the {@link SubscribeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SubscribeFragment extends Fragment {
+public class SubscribeFragment extends MyFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -117,6 +118,10 @@ public class SubscribeFragment extends Fragment {
 
     private void init(SearchRow sr) {
         _searchRow = sr;
+    }
+
+    public FragmentBackstackType getBackstackType() {
+        return FragmentBackstackType.BRANCH;
     }
 
     private void loadFeedInfo(String response) {
@@ -221,7 +226,7 @@ public class SubscribeFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onSubscribeFragmentBackButtonPressed();
+        void onSubscribeFragmentX();
 
     }
 }

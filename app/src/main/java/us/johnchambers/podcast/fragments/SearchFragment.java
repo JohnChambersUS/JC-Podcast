@@ -26,6 +26,7 @@ import java.net.URL;
 
 import us.johnchambers.podcast.Adapters.SearchDisplayAdapter;
 import us.johnchambers.podcast.R;
+import us.johnchambers.podcast.misc.FragmentBackstackType;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.objects.ITunesCatalogResponse;
 import us.johnchambers.podcast.objects.SearchRow;
@@ -40,7 +41,7 @@ import static android.R.attr.onClick;
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends MyFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -136,6 +137,10 @@ public class SearchFragment extends Fragment {
     //*******************************************
     //* Common methods
     //*******************************************
+
+    public FragmentBackstackType getBackstackType() {
+        return FragmentBackstackType.ROOT;
+    }
 
     private void performSearch() {
         _adapter.clear();
