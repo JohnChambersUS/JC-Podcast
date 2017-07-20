@@ -23,6 +23,7 @@ import android.support.v4.app.FragmentManager;
 import butterknife.BindView;
 import us.johnchambers.podcast.fragments.SearchFragment;
 import us.johnchambers.podcast.fragments.SubscribeFragment;
+import us.johnchambers.podcast.misc.MyFragmentManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.objects.SearchRow;
 
@@ -31,7 +32,8 @@ public class MainNavigationActivity extends AppCompatActivity
         SearchFragment.OnFragmentInteractionListener,
         SubscribeFragment.OnFragmentInteractionListener {
 
-    FragmentManager fragmentManager = null;
+    //FragmentManager fragmentManager = null;
+    MyFragmentManager _myFragmentManager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,8 @@ public class MainNavigationActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        VolleyQueue.getInstance(this);
+        VolleyQueue.getInstance(this); //inits volley queue
+        _myFragmentManager = new MyFragmentManager(getSupportFragmentManager());
     }
 
     @Override
@@ -68,8 +71,9 @@ public class MainNavigationActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            //super.onBackPressed();
         }
+        _myFragmentManager.popBackstackEntry();
     }
 
     @Override
@@ -119,35 +123,39 @@ public class MainNavigationActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+/*
     public android.support.v4.app.FragmentManager getCurrentFragmentManager() {
         if (fragmentManager == null) {
             fragmentManager = getSupportFragmentManager();
         }
         return fragmentManager;
     }
-
+*/
     public void activateSearchFragment() {
-        FragmentManager fm = getCurrentFragmentManager();
-        SearchFragment sr = SearchFragment.newInstance();
-        android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
-        transaction.add(R.id.your_placeholder, sr, "SEARCH_FRAGMENT");
-        transaction.commit();
+        //FragmentManager fm = getCurrentFragmentManager();
+        //add search fragment and activate
+        //SearchFragment sr = SearchFragment.newInstance();
+        //android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
+        //transaction.add(R.id.your_placeholder, sr, "SEARCH_FRAGMENT");
+        //transaction.commit();
         //transaction.show(sr).commit();
+        _myFragmentManager.activateSearchFragment();
     }
 
     public void deactivateSearchFragment() {
-        getCurrentFragmentManager();
-        android.support.v4.app.Fragment exists = fragmentManager.findFragmentByTag("SEARCH_FRAGMENT");
-        fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("SEARCH_FRAGMENT")).commit();
+        //getCurrentFragmentManager();
+        //android.support.v4.app.Fragment exists = fragmentManager.findFragmentByTag("SEARCH_FRAGMENT");
+        //fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("SEARCH_FRAGMENT")).commit();
+        _myFragmentManager.deactivateSearchFragment();
     }
 
     public void activateSubscribeFragment(SearchRow sr) {
-        deactivateSearchFragment();
-        getCurrentFragmentManager()
-                .beginTransaction()
-                .add(R.id.subscribe_placeholder, SubscribeFragment.newInstance(sr), "SUBSCRIBE_FRAGMENT")
-                .commit();
+        //deactivateSearchFragment();
+        //getCurrentFragmentManager()
+        //        .beginTransaction()
+         //       .add(R.id.subscribe_placeholder, SubscribeFragment.newInstance(sr), "SUBSCRIBE_FRAGMENT")
+         //       .commit();
+        _myFragmentManager.activateSubscribeFragment(sr);
     }
 
 
@@ -161,7 +169,7 @@ public class MainNavigationActivity extends AppCompatActivity
         activateSubscribeFragment(sr);
     }
 
-    public void onSubscribeFragmentBackButtonPressed() {
+    public void onSubscribeFragmentX() {
         Toast.makeText(getApplicationContext(), "on search row clicked in parent", Toast.LENGTH_SHORT).show();
     }
 }
