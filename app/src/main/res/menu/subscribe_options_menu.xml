@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    >
+
+    <item
+        android:id="@+id/subscribe_item_title"
+        android:title="Chose a Podcast Mode"/>
+    <item
+        android:id="@+id/subscribe_item_podcast"
+        android:title="Podcast"/>
+    <item
+        android:id="@+id/subscribe_item_book"
+        android:title="Book"/>
+    <item
+        android:id="@+id/subscribe_item_manual"
+        android:title="Manual"/>
+    <item
+        android:id="@+id/subscribe_item_periodic"
+        android:title="Periodic"/>
+
+
+
+</menu>

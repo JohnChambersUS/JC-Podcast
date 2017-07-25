@@ -5,8 +5,12 @@ import android.graphics.Bitmap;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.PopupMenu;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -90,7 +94,7 @@ public class SubscribeFragment extends MyFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         _view = inflater.inflate(R.layout.fragment_subscribe, container, false);
-        //todo call volley to fill fragment
+        setSubscribeButtonListener();
         getPodcastFeedInfo();
         return _view;
     }
@@ -115,6 +119,24 @@ public class SubscribeFragment extends MyFragment {
     //****************************
     //* common routines
     //***************************
+
+    private void setSubscribeButtonListener() {
+        FloatingActionButton fab = (FloatingActionButton) _view.findViewById(R.id.fab_subscribe);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openPopupMenu();
+            }
+        });
+    }
+
+    private void openPopupMenu() {
+        View button = (View) _view.findViewById(R.id.fab_subscribe);
+        PopupMenu popup = new PopupMenu(button.getContext(), button, Gravity.CENTER_VERTICAL);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.subscribe_options_menu, popup.getMenu());
+        popup.show();
+    }
 
     private void init(SearchRow sr) {
         _searchRow = sr;
