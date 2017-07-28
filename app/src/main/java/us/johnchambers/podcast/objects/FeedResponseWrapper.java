@@ -33,9 +33,13 @@ public class FeedResponseWrapper {
     private static SyndFeed _feed;
     private String _response;
     private Integer _currEpisode = -1;
+    private String _podcastId;
+    private Bitmap _podcastImage = null;
+    private String _feedUrl;
 
 
-    public FeedResponseWrapper(String response) {
+    public FeedResponseWrapper(String response, String feedUrl) {
+        _feedUrl = feedUrl;
         _response = response;
         loadFeedInfo();
     }
@@ -90,6 +94,27 @@ public class FeedResponseWrapper {
         catch(Exception e) {
             int y = 1;
         }
+    }
+
+    public String getPodcastId() {
+        if (_podcastId == null) {
+            try {
+                _podcastId = "pid" + ((Integer) _feedUrl.hashCode()).toString();
+            }
+            catch (Exception e) {
+                Long epoch =  (new Date()).getTime();
+                _podcastId = "pid" + epoch.toString();
+            }
+        }
+        return _podcastId;
+    }
+
+    public void setPodcastImage(Bitmap image) {
+        _podcastImage = image;
+    }
+
+    public Bitmap getPodcastImage() {
+        return _podcastImage;
     }
 
 
