@@ -11,10 +11,12 @@ import android.support.v7.widget.PopupMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,6 +31,7 @@ import us.johnchambers.podcast.Adapters.SearchDisplayAdapter;
 import us.johnchambers.podcast.Adapters.SubscribeEpisodeListAdapter;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.misc.FragmentBackstackType;
+import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.objects.FeedResponseWrapper;
 import us.johnchambers.podcast.objects.SearchRow;
@@ -131,11 +134,34 @@ public class SubscribeFragment extends MyFragment {
     }
 
     private void openPopupMenu() {
+
+        //todo do test of podcast here, then move to separate menu item.
+        //MyFileManager.getInstance().addPodcastImage();
+
+
         View button = (View) _view.findViewById(R.id.fab_subscribe);
         PopupMenu popup = new PopupMenu(button.getContext(), button, Gravity.CENTER_VERTICAL);
+
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+        @Override
+        public boolean onMenuItemClick(MenuItem item) {
+            Toast.makeText(getContext(),
+                    _feedResponseWrapper.getPodcastId(),
+                    Toast.LENGTH_SHORT).show();
+            subscribePodcast(item.toString());
+            return true;
+        }
+        });
+
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.subscribe_options_menu, popup.getMenu());
         popup.show();
+    }
+
+    public void subscribePodcast(String item) {
+        MyFileManager.getInstance().addPodcastImage(_feedResponseWrapper.getPodcastImage(),
+                _feedResponseWrapper.getPodcastId());
     }
 
     private void init(SearchRow sr) {
@@ -146,12 +172,12 @@ public class SubscribeFragment extends MyFragment {
         return FragmentBackstackType.BRANCH;
     }
 
-    private void loadFeedInfo(String response) {
+    private void loadFeedInfo(String response, String feedUrl) {
         _adapter = new SubscribeEpisodeListAdapter(_view.getContext());
         ListView listView = (ListView) _view.findViewById(R.id.subscribeEpisodeListView);
         listView.setAdapter(_adapter);
 
-        _feedResponseWrapper = new FeedResponseWrapper(response);
+        _feedResponseWrapper = new FeedResponseWrapper(response, feedUrl);
 
         while (_feedResponseWrapper.nextEpisode()) {
             SubscribeEpisodeRow ser = new SubscribeEpisodeRow();
@@ -165,6 +191,7 @@ public class SubscribeFragment extends MyFragment {
     }
 
     public void addImageToSubscribeScreen(Bitmap bitmap) {
+        _feedResponseWrapper.setPodcastImage(bitmap);
         ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_ResultImage));
         iv.setImageBitmap(bitmap);
     }
@@ -180,12 +207,13 @@ public class SubscribeFragment extends MyFragment {
             feedUrl = new URL(_searchRow.getFeedUrl()).toString();
         }
         catch(Exception e) {}
+        final String feedUrlFinal = feedUrl;
         StringRequest sr = new StringRequest(Request.Method.GET,
                 feedUrl,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        loadFeedInfo(response);
+                        loadFeedInfo(response, feedUrlFinal);
                     }
                 },
 
