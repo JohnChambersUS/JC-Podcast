@@ -26,10 +26,16 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import java.net.URL;
+import java.util.Date;
+import java.util.List;
 
 import us.johnchambers.podcast.Adapters.SearchDisplayAdapter;
 import us.johnchambers.podcast.Adapters.SubscribeEpisodeListAdapter;
 import us.johnchambers.podcast.R;
+import us.johnchambers.podcast.database.EpisodeTable;
+import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+import us.johnchambers.podcast.database.PodcastMode;
+import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.FragmentBackstackType;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
@@ -160,8 +166,58 @@ public class SubscribeFragment extends MyFragment {
     }
 
     public void subscribePodcast(String item) {
+
+        //check to see if already subscribed
+        boolean subscribed = PodcastDatabaseHelper
+                .getInstance()
+                .alreadySubscribedToPodcast(_feedResponseWrapper.getPodcastId());
+        if (!subscribed) {
+            addNewPodcastToDB();
+            addAllEpisodesToDatabase();
+            //todo close subscribe window
+        }
+        else {
+            Toast.makeText(getContext(),
+                    "You are already subscribed to this podcast.",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void addNewPodcastToDB() {
+        PodcastTable newRow = PodcastDatabaseHelper.getInstance().getNewPodcastTableRow();
+        //Store image on disk
         MyFileManager.getInstance().addPodcastImage(_feedResponseWrapper.getPodcastImage(),
                 _feedResponseWrapper.getPodcastId());
+        //add items to podcast table row from wrapper
+        newRow.setPid(_feedResponseWrapper.getPodcastId());
+        newRow.setName(_feedResponseWrapper.getPodcastTitle());
+        newRow.setFeedUrl(_feedResponseWrapper.getFeedUrl());
+        newRow.setSubscriptionTypeViaPodcastMode(PodcastMode.Manual);
+        newRow.setDownloadInterval(0);
+        newRow.setLastDownloadDateViaDate(new Date());
+        //insert podcast table row
+        PodcastDatabaseHelper.getInstance().insertPodcastTableRow(newRow);
+    }
+
+    private void addAllEpisodesToDatabase() {
+        _feedResponseWrapper.processEpisodesFromTop();
+        while (_feedResponseWrapper.nextEpisode()) {
+            EpisodeTable currEpisode = PodcastDatabaseHelper.getInstance().getNewEpisodeTableRow();
+
+            currEpisode.setPid(_feedResponseWrapper.getPodcastId());
+            currEpisode.setEid(_feedResponseWrapper.getEpisodeId());
+            currEpisode.setTitle(_feedResponseWrapper.getCurrEpisodeTitle());
+            currEpisode.setSummary(_feedResponseWrapper.getCurrEpisodeSummary());
+            currEpisode.setAudioUrl(_feedResponseWrapper.getEpisodeDownloadLink());
+            currEpisode.setPubDateViaDate(_feedResponseWrapper.getCurrEpisodeDate());
+            currEpisode.setLength("0:0");
+            currEpisode.setPlayedViaBoolean(false);
+            currEpisode.setInProgressViaBoolean(false);
+            currEpisode.setPlayPoint("0:0");
+            currEpisode.setDownloadedToDeviceViaBoolean(false);
+
+            PodcastDatabaseHelper.getInstance().insertEpisodeTableRow(currEpisode);
+        }
     }
 
     private void init(SearchRow sr) {
@@ -183,7 +239,7 @@ public class SubscribeFragment extends MyFragment {
             SubscribeEpisodeRow ser = new SubscribeEpisodeRow();
             ser.setDate(_feedResponseWrapper.getCurrEpisodeDate());
             ser.setTitle(_feedResponseWrapper.getCurrEpisodeTitle());
-            ser.setDownloadLink(_feedResponseWrapper.getDownloadLink());
+            ser.setDownloadLink(_feedResponseWrapper.getEpisodeDownloadLink());
             _adapter.add(ser);
         }
         //todo make image volley call for top image

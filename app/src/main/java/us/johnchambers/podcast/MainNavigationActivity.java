@@ -21,6 +21,7 @@ import android.support.v4.app.FragmentManager;
 
 
 import butterknife.BindView;
+import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.fragments.SearchFragment;
 import us.johnchambers.podcast.fragments.SubscribeFragment;
 import us.johnchambers.podcast.misc.MyFragmentManager;
@@ -63,6 +64,7 @@ public class MainNavigationActivity extends AppCompatActivity
 
         VolleyQueue.getInstance(this); //inits volley queue
         _myFragmentManager = new MyFragmentManager(getSupportFragmentManager());
+        PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
     }
 
     @Override
