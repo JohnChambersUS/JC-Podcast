@@ -39,7 +39,13 @@ public class FeedResponseWrapper {
 
 
     public FeedResponseWrapper(String response, String feedUrl) {
-        _feedUrl = feedUrl;
+        try {
+            _feedUrl = new URL(feedUrl).toString();
+        }
+        catch (Exception e) {
+            //todo put toast error here
+            _feedUrl = "";
+        }
         _response = response;
         loadFeedInfo();
     }
@@ -50,6 +56,14 @@ public class FeedResponseWrapper {
         boolean f = mat.find();
         String one = mat.group(0);
         return one;
+    }
+
+    public String getFeedUrl() {
+        return _feedUrl;
+    }
+
+    public String getPodcastTitle() {
+        return _feed.getTitle();
     }
 
     public void processEpisodesFromTop() {
@@ -69,12 +83,16 @@ public class FeedResponseWrapper {
         return _feed.getEntries().get(_currEpisode).getTitle();
     }
 
+    public String getCurrEpisodeSummary() {
+        return "dummy-summary";
+    }
+
     public Date getCurrEpisodeDate() {
         Date pd = _feed.getEntries().get(_currEpisode).getPublishedDate();
         return pd;
     }
 
-    public String getDownloadLink() {
+    public String getEpisodeDownloadLink() {
         String u;
         try {
             u = new URL(_feed.getEntries().get(_currEpisode).getUri()).toString();
@@ -108,6 +126,11 @@ public class FeedResponseWrapper {
         }
         return _podcastId;
     }
+
+    public String getEpisodeId() {
+        return "eid" + ((Integer) getEpisodeDownloadLink().hashCode()).toString();
+    }
+
 
     public void setPodcastImage(Bitmap image) {
         _podcastImage = image;
