@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -197,12 +198,17 @@ public class SearchFragment extends MyFragment {
 
             @Override
             public void onClick(View view) {
-                Toast.makeText(_context, "Press Listener tapped", Toast.LENGTH_LONG).show();
+                //Toast.makeText(_context, "Press Listener tapped", Toast.LENGTH_LONG).show();
+                hideKeyboard();
                 performSearch();
             }
         });
     }
 
+    public void hideKeyboard() {
+            InputMethodManager imm = (InputMethodManager) _context.getSystemService(_context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(_view.getWindowToken(), 0);
+    }
 
     private void addSearchResultsListViewListener() {
         ListView lv = (ListView)_view.findViewById(R.id.searchResultListView);
@@ -216,9 +222,6 @@ public class SearchFragment extends MyFragment {
                  mListener.onSearchRowItemClicked(sr);
             }
         });
-
-
-
     }
 
 
