@@ -201,8 +201,8 @@ public class SubscribeFragment extends MyFragment {
     }
 
     private void addAllEpisodesToDatabase() {
-        _feedResponseWrapper.processEpisodesFromTop();
-        while (_feedResponseWrapper.nextEpisode()) {
+        _feedResponseWrapper.processEpisodesFromBottom();
+        while (_feedResponseWrapper.prevEpisode()) {
             EpisodeTable currEpisode = PodcastDatabaseHelper.getInstance().getNewEpisodeTableRow();
 
             currEpisode.setPid(_feedResponseWrapper.getPodcastId());

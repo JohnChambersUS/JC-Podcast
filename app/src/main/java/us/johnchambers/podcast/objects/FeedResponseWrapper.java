@@ -70,6 +70,10 @@ public class FeedResponseWrapper {
         _currEpisode = -1;
     }
 
+    public void processEpisodesFromBottom() {
+        _currEpisode = _feed.getEntries().size();
+    }
+
     public boolean anyEpisodes() {
         return !_feed.getEntries().isEmpty();
     }
@@ -77,6 +81,11 @@ public class FeedResponseWrapper {
     public boolean nextEpisode() {
         _currEpisode++;
         return (_currEpisode < (Integer)_feed.getEntries().size());
+    }
+
+    public boolean prevEpisode() {
+        _currEpisode--;
+        return (_currEpisode > -1);
     }
 
     public String getCurrEpisodeTitle() {
