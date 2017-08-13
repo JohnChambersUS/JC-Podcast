@@ -171,7 +171,7 @@ public class MainNavigationActivity extends AppCompatActivity
         activateSubscribeFragment(sr);
     }
 
-    public void onSubscribeFragmentX() {
-        Toast.makeText(getApplicationContext(), "on search row clicked in parent", Toast.LENGTH_SHORT).show();
+    public void onCloseSubscribeFragment() {
+        _myFragmentManager.popBackstackEntry();
     }
 }
