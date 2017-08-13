@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -141,10 +142,6 @@ public class SubscribeFragment extends MyFragment {
 
     private void openPopupMenu() {
 
-        //todo do test of podcast here, then move to separate menu item.
-        //MyFileManager.getInstance().addPodcastImage();
-
-
         View button = (View) _view.findViewById(R.id.fab_subscribe);
         PopupMenu popup = new PopupMenu(button.getContext(), button, Gravity.CENTER_VERTICAL);
 
@@ -155,6 +152,7 @@ public class SubscribeFragment extends MyFragment {
             Toast.makeText(getContext(),
                     _feedResponseWrapper.getPodcastId(),
                     Toast.LENGTH_SHORT).show();
+            item.collapseActionView();
             subscribePodcast(item.toString());
             return true;
         }
@@ -174,7 +172,10 @@ public class SubscribeFragment extends MyFragment {
         if (!subscribed) {
             addNewPodcastToDB();
             addAllEpisodesToDatabase();
-            //todo close subscribe window
+            mListener.onCloseSubscribeFragment();
+            Toast.makeText(getContext(),
+                    "You are now subscribed to: " + _feedResponseWrapper.getPodcastTitle(),
+                    Toast.LENGTH_LONG).show();
         }
         else {
             Toast.makeText(getContext(),
@@ -332,7 +333,6 @@ public class SubscribeFragment extends MyFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onSubscribeFragmentX();
-
+        void onCloseSubscribeFragment();
     }
 }
