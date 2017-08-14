@@ -38,6 +38,10 @@ public class PodcastDatabaseHelper {
     //* podcast table methods
     //******************************
 
+    public List<PodcastTable> getAllPodcastRows() {
+        return _database.dao().getAllPodcastRows();
+    }
+
     public PodcastTable getNewPodcastTableRow() {
         return new PodcastTable();
     }
