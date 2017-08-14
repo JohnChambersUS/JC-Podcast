@@ -14,6 +14,7 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.fragments.SearchFragment;
 import us.johnchambers.podcast.fragments.SubscribeFragment;
+import us.johnchambers.podcast.fragments.SubscribedFragment;
 import us.johnchambers.podcast.objects.MyBackstackEntry;
 import us.johnchambers.podcast.objects.SearchRow;
 
@@ -24,6 +25,7 @@ public class MyFragmentManager {
 
     private final String SEARCH_FRAGMENT = "SEARCH_FRAGMENT";
     private final String SUBSCRIBE_FRAGMENT = "SUBSCRIBE_FRAGMENT";
+    private final String SUBSCRIBED_FRAGMENT = "SUBSCRIBED_FRAGMENT";
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
 
@@ -70,17 +72,21 @@ public class MyFragmentManager {
     }
 
     public void activateSubscribeFragment(SearchRow sr) {
-        //hide other fragments
-
-        //deactivateSearchFragment();
         SubscribeFragment sf = SubscribeFragment.newInstance(sr);
         _fragmentManager
             .beginTransaction()
             .add(R.id.subscribe_placeholder, sf, SUBSCRIBE_FRAGMENT)
             .commit();
         addToBackstack(sf.getBackstackType(), SUBSCRIBE_FRAGMENT);
+    }
 
-
+    public void activateSubscribedFragment() {
+        SubscribedFragment sf = SubscribedFragment.newInstance();
+        _fragmentManager
+                .beginTransaction()
+                .add(R.id.subscribed_placeholder, sf, SUBSCRIBED_FRAGMENT)
+                .commit();
+        addToBackstack(sf.getBackstackType(), SUBSCRIBED_FRAGMENT);
     }
 
 

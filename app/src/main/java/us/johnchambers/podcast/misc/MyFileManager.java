@@ -2,8 +2,10 @@ package us.johnchambers.podcast.misc;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Date;
 
@@ -51,8 +53,21 @@ public class MyFileManager {
         catch (Exception e) {
             String ex = e.toString();
         }
+    }
 
-
+    public Bitmap getPodcastImage(String pid) {
+        File appDir = _context.getApplicationContext().getFilesDir();
+        File subDir = new File(appDir, PODCAST_IMAGES_DIR);
+        Bitmap bitmap = null;
+        try {
+            File f = new File(subDir, pid + ".png");
+            bitmap = BitmapFactory.decodeStream(new FileInputStream(f));
+        }
+        catch (Exception e) {
+            String ex = e.toString();
+            bitmap = null;
+        }
+        return bitmap;
     }
 
 

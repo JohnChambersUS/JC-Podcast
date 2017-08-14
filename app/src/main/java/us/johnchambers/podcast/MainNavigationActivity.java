@@ -24,6 +24,7 @@ import butterknife.BindView;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.fragments.SearchFragment;
 import us.johnchambers.podcast.fragments.SubscribeFragment;
+import us.johnchambers.podcast.fragments.SubscribedFragment;
 import us.johnchambers.podcast.misc.MyFragmentManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.objects.SearchRow;
@@ -31,7 +32,8 @@ import us.johnchambers.podcast.objects.SearchRow;
 public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         SearchFragment.OnFragmentInteractionListener,
-        SubscribeFragment.OnFragmentInteractionListener {
+        SubscribeFragment.OnFragmentInteractionListener,
+        SubscribedFragment.OnFragmentInteractionListener {
 
     //FragmentManager fragmentManager = null;
     MyFragmentManager _myFragmentManager = null;
@@ -109,8 +111,8 @@ public class MainNavigationActivity extends AppCompatActivity
         if (id == R.id.nav_search) {
             Toast.makeText(getApplicationContext(), "Pressed Search", Toast.LENGTH_LONG).show();
             activateSearchFragment();
-        } else if (id == R.id.nav_gallery) {
-            deactivateSearchFragment();
+        } else if (id == R.id.nav_show_subscribed) {
+            _myFragmentManager.activateSubscribedFragment();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
@@ -174,4 +176,6 @@ public class MainNavigationActivity extends AppCompatActivity
     public void onCloseSubscribeFragment() {
         _myFragmentManager.popBackstackEntry();
     }
+
+    public void onSubscribedFragmentDoesSomething() {}
 }
