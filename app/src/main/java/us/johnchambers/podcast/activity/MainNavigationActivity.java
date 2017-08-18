@@ -1,13 +1,8 @@
-package us.johnchambers.podcast;
+package us.johnchambers.podcast.activity;
 
 //import android.app.FragmentManager;
 //import android.app.FragmentTransaction;
-import android.app.Fragment;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -17,17 +12,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
-import android.support.v4.app.FragmentManager;
 
 
-import butterknife.BindView;
+import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
-import us.johnchambers.podcast.fragments.SearchFragment;
-import us.johnchambers.podcast.fragments.SubscribeFragment;
-import us.johnchambers.podcast.fragments.SubscribedFragment;
+import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
+import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
+import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
 import us.johnchambers.podcast.misc.MyFragmentManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
-import us.johnchambers.podcast.objects.SearchRow;
+import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 
 public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,

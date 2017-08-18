@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="us.johnchambers.podcast.fragments.SearchFragment"
+    tools:context="us.johnchambers.podcast.screens.fragments.search.SearchFragment"
     android:id="@+id/search_fragment"
     >
 

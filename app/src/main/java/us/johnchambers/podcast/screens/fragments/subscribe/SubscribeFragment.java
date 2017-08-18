@@ -1,16 +1,13 @@
-package us.johnchambers.podcast.fragments;
+package us.johnchambers.podcast.screens.fragments.subscribe;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.PopupMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,21 +25,18 @@ import com.android.volley.toolbox.StringRequest;
 
 import java.net.URL;
 import java.util.Date;
-import java.util.List;
 
-import us.johnchambers.podcast.Adapters.SearchDisplayAdapter;
-import us.johnchambers.podcast.Adapters.SubscribeEpisodeListAdapter;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastMode;
 import us.johnchambers.podcast.database.PodcastTable;
-import us.johnchambers.podcast.misc.FragmentBackstackType;
+import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.objects.FeedResponseWrapper;
-import us.johnchambers.podcast.objects.SearchRow;
-import us.johnchambers.podcast.objects.SubscribeEpisodeRow;
+import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 
 /**
  * A simple {@link Fragment} subclass.

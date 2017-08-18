@@ -1,4 +1,4 @@
-package us.johnchambers.podcast.objects;
+package us.johnchambers.podcast.screens.fragments.subscribe;
 
 import java.util.Date;
 

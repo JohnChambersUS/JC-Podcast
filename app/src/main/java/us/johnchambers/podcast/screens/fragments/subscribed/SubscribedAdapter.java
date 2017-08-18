@@ -1,4 +1,4 @@
-package us.johnchambers.podcast.Adapters;
+package us.johnchambers.podcast.screens.fragments.subscribed;
 
 import android.content.Context;
 import android.graphics.Bitmap;

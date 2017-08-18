@@ -1,7 +1,5 @@
 package us.johnchambers.podcast.objects;
 
-import us.johnchambers.podcast.misc.FragmentBackstackType;
-
 /**
  * Created by johnchambers on 7/20/17.
  */

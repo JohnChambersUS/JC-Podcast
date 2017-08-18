@@ -1,4 +1,4 @@
-package us.johnchambers.podcast.misc;
+package us.johnchambers.podcast.objects;
 
 /**
  * Created by johnchambers on 7/20/17.

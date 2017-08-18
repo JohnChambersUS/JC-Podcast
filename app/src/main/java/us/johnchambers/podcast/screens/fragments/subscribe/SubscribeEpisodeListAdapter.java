@@ -1,18 +1,15 @@
-package us.johnchambers.podcast.Adapters;
+package us.johnchambers.podcast.screens.fragments.subscribe;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.objects.SearchRow;
-import us.johnchambers.podcast.objects.SubscribeEpisodeRow;
 
 /**
  * Created by johnchambers on 7/18/17.

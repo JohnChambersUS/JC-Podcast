@@ -1,10 +1,11 @@
-package us.johnchambers.podcast;
+package us.johnchambers.podcast.activity;
 
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.misc.MyFileManager;
 
 public class MainActivity extends AppCompatActivity {

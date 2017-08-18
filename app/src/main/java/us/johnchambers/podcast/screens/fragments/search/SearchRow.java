@@ -1,4 +1,4 @@
-package us.johnchambers.podcast.objects;
+package us.johnchambers.podcast.screens.fragments.search;
 
 /**
  * Created by johnchambers on 7/15/17.

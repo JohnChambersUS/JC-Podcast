@@ -1,4 +1,4 @@
-package us.johnchambers.podcast.fragments;
+package us.johnchambers.podcast.screens.fragments.subscribed;
 
 import android.content.Context;
 import android.net.Uri;
@@ -11,11 +11,10 @@ import android.widget.ListView;
 
 import java.util.List;
 
-import us.johnchambers.podcast.Adapters.SubscribedAdapter;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
-import us.johnchambers.podcast.misc.FragmentBackstackType;
+import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 /**
  * A simple {@link Fragment} subclass.
