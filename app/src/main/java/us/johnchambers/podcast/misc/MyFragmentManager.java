@@ -5,18 +5,17 @@ package us.johnchambers.podcast.misc;
  */
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import java.util.Stack;
 
 import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.fragments.MyFragment;
-import us.johnchambers.podcast.fragments.SearchFragment;
-import us.johnchambers.podcast.fragments.SubscribeFragment;
-import us.johnchambers.podcast.fragments.SubscribedFragment;
+import us.johnchambers.podcast.objects.FragmentBackstackType;
+import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
+import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
+import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
 import us.johnchambers.podcast.objects.MyBackstackEntry;
-import us.johnchambers.podcast.objects.SearchRow;
+import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 
 public class MyFragmentManager {
 

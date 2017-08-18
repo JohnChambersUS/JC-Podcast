@@ -1,4 +1,4 @@
-package us.johnchambers.podcast.Adapters;
+package us.johnchambers.podcast.screens.fragments.search;
 
 /**
  * Created by johnchambers on 7/15/17.
@@ -13,10 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.objects.SearchRow;
 
 //import us.johnchambers.podcast.R;
 //import us.johnchambers.jcpodcast.misc.MyViewManager;

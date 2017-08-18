@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/subscribed_view"
-    tools:context="us.johnchambers.podcast.fragments.SubscribedFragment">
+    tools:context="us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment">
 
     <ListView
         android:id="@+id/subscribedListView"

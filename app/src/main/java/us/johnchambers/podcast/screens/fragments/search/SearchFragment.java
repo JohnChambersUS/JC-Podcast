@@ -1,8 +1,7 @@
-package us.johnchambers.podcast.fragments;
+package us.johnchambers.podcast.screens.fragments.search;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -25,14 +23,10 @@ import com.android.volley.toolbox.StringRequest;
 
 import java.net.URL;
 
-import us.johnchambers.podcast.Adapters.SearchDisplayAdapter;
 import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.misc.FragmentBackstackType;
+import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.misc.VolleyQueue;
-import us.johnchambers.podcast.objects.ITunesCatalogResponse;
-import us.johnchambers.podcast.objects.SearchRow;
-
-import static android.R.attr.onClick;
 
 /**
  * A simple {@link Fragment} subclass.
