@@ -9,7 +9,7 @@
     tools:showIn="@layout/app_bar_main_navigation">
 
     <FrameLayout
-        android:id="@+id/your_placeholder"
+        android:id="@+id/search_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
@@ -22,6 +22,12 @@
 
     <FrameLayout
         android:id="@+id/subscribed_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/subscribed_detail_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>

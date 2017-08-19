@@ -16,18 +16,21 @@ import android.widget.Toast;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
 import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
 import us.johnchambers.podcast.misc.MyFragmentManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
+import us.johnchambers.podcast.screens.fragments.subscribed_detail.SubscribedDetailFragment;
 
 public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         SearchFragment.OnFragmentInteractionListener,
         SubscribeFragment.OnFragmentInteractionListener,
-        SubscribedFragment.OnFragmentInteractionListener {
+        SubscribedFragment.OnFragmentInteractionListener,
+        SubscribedDetailFragment.OnFragmentInteractionListener {
 
     //FragmentManager fragmentManager = null;
     MyFragmentManager _myFragmentManager = null;
@@ -144,7 +147,7 @@ public class MainNavigationActivity extends AppCompatActivity
         //getCurrentFragmentManager();
         //android.support.v4.app.Fragment exists = fragmentManager.findFragmentByTag("SEARCH_FRAGMENT");
         //fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("SEARCH_FRAGMENT")).commit();
-        _myFragmentManager.deactivateSearchFragment();
+        //_myFragmentManager.deactivateSearchFragment();
     }
 
     public void activateSubscribeFragment(SearchRow sr) {
@@ -171,5 +174,9 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager.popBackstackEntry();
     }
 
-    public void onSubscribedFragmentDoesSomething() {}
+    public void onSubscribedFragmentRowItemClicked(PodcastTable pt) {
+        _myFragmentManager.activateSubscribedDetailFragment(pt);
+    }
+
+    public void onSubscribedDetailFragmentDoesSomething() {}
 }
