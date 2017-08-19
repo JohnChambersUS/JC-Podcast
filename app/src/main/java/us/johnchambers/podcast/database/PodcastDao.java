@@ -47,6 +47,10 @@ public interface PodcastDao {
     @Query("SELECT * FROM EpisodeTable WHERE pid = :podcastId")
     List<EpisodeTable> getEpisodeTableRowByPodcastId(String podcastId);
 
+
+    @Query("SELECT * FROM EpisodeTable WHERE pid = :podcastId order by publication_date DESC")
+    List<EpisodeTable> getEpisodeTableRowByPodcastIdNewestFirst(String podcastId);
+
     @Query("SELECT COUNT(*) FROM EpisodeTable WHERE pid = :pid and eid = :eid")
     int getPodcastEpisodeCount(String pid, String eid);
 

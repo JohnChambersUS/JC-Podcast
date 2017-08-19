@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/subscribeEpisodeRow"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:background="#FF0000"
+    >
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/row_subscribed_episode_detail_date"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textSize="18sp"
+        app:layout_widthPercent="30%"
+        >
+    </TextView>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/row_subscribed_detail_episode_title"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textSize="18sp"
+        app:layout_widthPercent="70%"
+        android:layout_toRightOf="@id/row_subscribed_episode_detail_date"
+        >
+    </TextView>
+
+</android.support.percent.PercentRelativeLayout>

@@ -137,9 +137,10 @@ public class FeedResponseWrapper {
     }
 
     public String getEpisodeId() {
+        //todo handle null values
+        //todo make episode unique with date
         return "eid" + ((Integer) getEpisodeDownloadLink().hashCode()).toString();
     }
-
 
     public void setPodcastImage(Bitmap image) {
         _podcastImage = image;

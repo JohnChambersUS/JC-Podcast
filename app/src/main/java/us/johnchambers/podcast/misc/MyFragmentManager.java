@@ -10,12 +10,15 @@ import android.support.v4.app.FragmentManager;
 import java.util.Stack;
 
 import us.johnchambers.podcast.R;
+import us.johnchambers.podcast.database.PodcastTable;
+import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
 import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
 import us.johnchambers.podcast.objects.MyBackstackEntry;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
+import us.johnchambers.podcast.screens.fragments.subscribed_detail.SubscribedDetailFragment;
 
 public class MyFragmentManager {
 
@@ -25,6 +28,7 @@ public class MyFragmentManager {
     private final String SEARCH_FRAGMENT = "SEARCH_FRAGMENT";
     private final String SUBSCRIBE_FRAGMENT = "SUBSCRIBE_FRAGMENT";
     private final String SUBSCRIBED_FRAGMENT = "SUBSCRIBED_FRAGMENT";
+    private final String SUBSCRIBED_DETAIL_FRAGMENT = "SUBSCRIBED_DETAIL_FRAGMENT";
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
 
@@ -45,48 +49,49 @@ public class MyFragmentManager {
     }
 
     public void popBackstackEntry() {
-        MyBackstackEntry topEntry = (MyBackstackEntry)_backstack.peek();
-        if (topEntry.getFragmentBackstackType() == FragmentBackstackType.BRANCH) {
-            _backstack.pop();
-            _fragmentManager.beginTransaction().
-                    remove(_fragmentManager.findFragmentByTag(topEntry.getFragmentTag()))
-                    .commit();
+        if (_backstack.size() > 0) {
+            MyBackstackEntry topEntry = (MyBackstackEntry) _backstack.peek();
+            if (topEntry.getFragmentBackstackType() == FragmentBackstackType.BRANCH) {
+                _backstack.pop();
+                _fragmentManager.beginTransaction().
+                        remove(_fragmentManager.findFragmentByTag(topEntry.getFragmentTag()))
+                        .commit();
+            }
         }
+    }
+
+    private void activateFragment(int containerViewId, MyFragment frag, String fragmentName) {
+        _fragmentManager
+                .beginTransaction()
+                .add(containerViewId, frag, fragmentName)
+                .commit();
+        addToBackstack(frag.getBackstackType(), fragmentName);
     }
 
     public void activateSearchFragment() {
-        SearchFragment sr = SearchFragment.newInstance();
-        _fragmentManager.beginTransaction()
-            .add(R.id.your_placeholder, sr, SEARCH_FRAGMENT)
-            .commit();
-        addToBackstack(sr.getBackstackType(), SEARCH_FRAGMENT);
-    }
-
-    public void deactivateSearchFragment() {
-        Boolean exists = (_fragmentManager.findFragmentByTag(SEARCH_FRAGMENT) != null);
-        if (exists) {
-            _fragmentManager.beginTransaction().hide(_fragmentManager.findFragmentByTag(SEARCH_FRAGMENT)).commit();
-        }
-
+        activateFragment(R.id.search_placeholder,
+                SearchFragment.newInstance(),
+                SEARCH_FRAGMENT);
     }
 
     public void activateSubscribeFragment(SearchRow sr) {
-        SubscribeFragment sf = SubscribeFragment.newInstance(sr);
-        _fragmentManager
-            .beginTransaction()
-            .add(R.id.subscribe_placeholder, sf, SUBSCRIBE_FRAGMENT)
-            .commit();
-        addToBackstack(sf.getBackstackType(), SUBSCRIBE_FRAGMENT);
+        activateFragment(R.id.subscribe_placeholder,
+                SubscribeFragment.newInstance(sr),
+                SUBSCRIBE_FRAGMENT);
     }
 
     public void activateSubscribedFragment() {
-        SubscribedFragment sf = SubscribedFragment.newInstance();
-        _fragmentManager
-                .beginTransaction()
-                .add(R.id.subscribed_placeholder, sf, SUBSCRIBED_FRAGMENT)
-                .commit();
-        addToBackstack(sf.getBackstackType(), SUBSCRIBED_FRAGMENT);
+        activateFragment(R.id.subscribed_placeholder,
+                SubscribedFragment.newInstance(),
+                SUBSCRIBED_FRAGMENT);
     }
+
+    public void activateSubscribedDetailFragment(PodcastTable pt) {
+        activateFragment(R.id.subscribed_detail_placeholder,
+                SubscribedDetailFragment.newInstance(pt),
+                SUBSCRIBED_DETAIL_FRAGMENT);
+    }
+
 
 
 }

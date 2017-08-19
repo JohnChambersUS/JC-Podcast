@@ -76,5 +76,8 @@ public class PodcastDatabaseHelper {
         return false;
     }
 
+    public List<EpisodeTable> getEpisodesSortedNewest(String podcastId) {
+        return _database.dao().getEpisodeTableRowByPodcastIdNewestFirst(podcastId);
+    }
 
 }

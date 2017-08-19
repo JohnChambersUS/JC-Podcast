@@ -1,32 +1,35 @@
-package us.johnchambers.podcast.screens.fragments.subscribed;
+package us.johnchambers.podcast.screens.fragments.subscribed_detail;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.List;
 
 import us.johnchambers.podcast.R;
+import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SubscribedFragment.OnFragmentInteractionListener} interface
+ * {@link SubscribedDetailFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SubscribedFragment#newInstance} factory method to
+ * Use the {@link SubscribedDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SubscribedFragment extends MyFragment {
+public class SubscribedDetailFragment extends MyFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,10 +41,11 @@ public class SubscribedFragment extends MyFragment {
 
     private OnFragmentInteractionListener mListener;
 
-    SubscribedAdapter _adapter;
-    private View _view;
+    private static PodcastTable _podcastTable = null;
+    private static View _view;
+    private static SubscribedDetailEpisodeListAdapter _adapter;
 
-    public SubscribedFragment() {
+    public SubscribedDetailFragment() {
         // Required empty public constructor
     }
 
@@ -51,15 +55,16 @@ public class SubscribedFragment extends MyFragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SubscribedFragment.
+     * @return A new instance of fragment SubscribedDetailFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SubscribedFragment newInstance() {
-        SubscribedFragment fragment = new SubscribedFragment();
+    public static SubscribedDetailFragment newInstance(PodcastTable pt) {
+        SubscribedDetailFragment fragment = new SubscribedDetailFragment();
         Bundle args = new Bundle();
         //args.putString(ARG_PARAM1, param1);
         //args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+        _podcastTable = pt;
         return fragment;
     }
 
@@ -76,17 +81,12 @@ public class SubscribedFragment extends MyFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        _view = inflater.inflate(R.layout.fragment_subscribed, container, false);
-        loadSubscribedListView();
-        addSubscribedListViewListener();
+        _view = inflater.inflate(R.layout.fragment_subscribed_detail, container, false);
+        //todo populate image
+        displayPodcastImage();
+        //todo populate table
+        populateEpisodeListView();
         return _view;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            //mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -111,32 +111,29 @@ public class SubscribedFragment extends MyFragment {
     //*******************************************
 
     public FragmentBackstackType getBackstackType() {
-        return FragmentBackstackType.ROOT;
+        return FragmentBackstackType.BRANCH;
     }
 
-    private void loadSubscribedListView() {
-        _adapter = new SubscribedAdapter(_view.getContext());
-        ListView listView = (ListView) _view.findViewById(R.id.subscribedListView);
+    private void displayPodcastImage() {
+        ImageView image = (ImageView) _view.findViewById(R.id.subscribe_detail_image);
+        Bitmap pcImage = MyFileManager.getInstance().getPodcastImage(_podcastTable.getPid());
+        //todo put handling if image is null
+        image.setImageBitmap(pcImage);
+    }
+
+    private void populateEpisodeListView() {
+
+        _adapter = new SubscribedDetailEpisodeListAdapter(_view.getContext());
+        ListView listView = (ListView) _view.findViewById(R.id.subscribed_detail_episode_list_view);
         listView.setAdapter(_adapter);
 
-        List<PodcastTable> podcasts = PodcastDatabaseHelper.getInstance().getAllPodcastRows();
-        for (PodcastTable podcast : podcasts) {
-            _adapter.add(podcast);
-        }
-    }
+        List<EpisodeTable> episodeList = PodcastDatabaseHelper.getInstance()
+                .getEpisodesSortedNewest(_podcastTable.getPid());
 
-    private void addSubscribedListViewListener() {
-        ListView lv = (ListView)_view.findViewById(R.id.subscribedListView);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> adapter, View v, int position,
-                                    long arg3)
-            {
-                PodcastTable pt = _adapter.getItem(position);
-                mListener.onSubscribedFragmentRowItemClicked(pt);
-            }
-        });
+        for (EpisodeTable episode : episodeList) {
+            _adapter.add(episode);
+        }
+
     }
 
     /**
@@ -151,6 +148,6 @@ public class SubscribedFragment extends MyFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onSubscribedFragmentRowItemClicked(PodcastTable pt);
+        void onSubscribedDetailFragmentDoesSomething();
     }
 }
