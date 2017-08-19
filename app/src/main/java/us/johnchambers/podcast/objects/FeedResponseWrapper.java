@@ -24,6 +24,7 @@ import java.io.StringReader;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -137,9 +138,16 @@ public class FeedResponseWrapper {
     }
 
     public String getEpisodeId() {
-        //todo handle null values
-        //todo make episode unique with date
-        return "eid" + ((Integer) getEpisodeDownloadLink().hashCode()).toString();
+        String badUrl = "";
+        String episodeLink = getEpisodeDownloadLink();
+        if (episodeLink == null) {
+            Random r = new Random();
+            episodeLink = Integer.toString(r.nextInt(100000) + 1);
+            badUrl = "_BADURL";
+        }
+        String episodeDate = getCurrEpisodeDate().toString();
+        Integer hash = (episodeLink + episodeDate).hashCode();
+        return "eid" + hash.toString() + badUrl;
     }
 
     public void setPodcastImage(Bitmap image) {
