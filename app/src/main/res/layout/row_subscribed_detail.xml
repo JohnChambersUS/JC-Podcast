@@ -12,9 +12,10 @@
         android:id="@+id/row_subscribed_episode_detail_date"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:layout_centerVertical="true"
+        android:padding="8dp"
         android:textSize="18sp"
-        app:layout_widthPercent="30%"
+        app:layout_widthPercent="25%"
         >
     </TextView>
 
@@ -22,11 +23,23 @@
         android:id="@+id/row_subscribed_detail_episode_title"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:layout_centerVertical="true"
+        android:paddingRight="8dp"
         android:textSize="18sp"
-        app:layout_widthPercent="70%"
+        app:layout_widthPercent="65%"
         android:layout_toRightOf="@id/row_subscribed_episode_detail_date"
         >
     </TextView>
+
+    <ImageView
+        android:id="@+id/row_subscribed_detail_episode_status"
+        app:layout_widthPercent="10%"
+        app:layout_aspectRatio="100%"
+        android:scaleType="fitCenter"
+        android:layout_toRightOf="@id/row_subscribed_detail_episode_title"
+        android:layout_centerVertical="true"
+        android:paddingRight="8dp"
+        >
+    </ImageView>
 
 </android.support.percent.PercentRelativeLayout>
