@@ -8,17 +8,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.List;
 
 import us.johnchambers.podcast.R;
+import us.johnchambers.podcast.database.DownloadQueueTable;
 import us.johnchambers.podcast.database.EpisodeTable;
+import us.johnchambers.podcast.database.PodcastDatabase;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.MyFileManager;
+import us.johnchambers.podcast.misc.PodcastDownloader;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 /**
@@ -86,6 +90,7 @@ public class SubscribedDetailFragment extends MyFragment {
         displayPodcastImage();
         //todo populate table
         populateEpisodeListView();
+        addSubscribedDetailPlayListener();
         return _view;
     }
 
@@ -135,6 +140,57 @@ public class SubscribedDetailFragment extends MyFragment {
         }
 
     }
+
+    private void addSubscribedDetailPlayListener() {
+        ListView lv = (ListView)_view.findViewById(R.id.subscribed_detail_episode_list_view);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position,
+                                    long arg3)
+            {
+                //EpisodeTable row = _adapter.getItem(position);
+
+                //todo do something
+                processRowTap(adapter, position);
+            }
+        });
+
+
+    }
+
+    private void processRowTap(AdapterView listView, int position) {
+
+        //get state of row
+        EpisodeTable panelRow = _adapter.getItem(position);
+        boolean inQueue = PodcastDatabaseHelper.getInstance().isEpisodeInDownloadQueue(panelRow.getEid());
+
+
+        if (!inQueue) {
+            //get is complete
+            EpisodeTable dbRow = PodcastDatabaseHelper.getInstance()
+                    .getEpisodeTableRowByEpisodeId(panelRow.getEid());
+            if (dbRow == null) {
+                //set icon to bad iccon
+                return;
+            }
+            if (dbRow.getLocalDownloadUrl() != null) {
+                _adapter.updateStatusIconToPlay(listView, position);
+                //play
+            }
+            else {
+                DownloadQueueTable newRow = new DownloadQueueTable();
+                newRow.setEid(panelRow.getEid());
+                newRow.setDownloadReference(0);
+                PodcastDatabaseHelper.getInstance().insertDownloadQueueTableRow(newRow);
+                _adapter.updateStatusIconToDownloading(listView, position);
+                PodcastDownloader.getInstance().wake();
+            }
+        }
+
+
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

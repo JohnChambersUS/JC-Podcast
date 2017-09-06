@@ -48,6 +48,9 @@ public interface PodcastDao {
     List<EpisodeTable> getEpisodeTableRowByPodcastId(String podcastId);
 
 
+    @Query("SELECT * FROM EpisodeTable WHERE eid = :episodeId")
+    List<EpisodeTable> getEpisodeTableRowByEpisodeId(String episodeId);
+
     @Query("SELECT * FROM EpisodeTable WHERE pid = :podcastId order by publication_date DESC")
     List<EpisodeTable> getEpisodeTableRowByPodcastIdNewestFirst(String podcastId);
 
@@ -57,7 +60,33 @@ public interface PodcastDao {
     @Update
     void updateEpisodeTableRow(EpisodeTable episodeTableRow);
 
+    @Query("update episodetable set localdownloadurl = :downloadUrl where eid = :episodeId;")
+    void updateEpisodeLocalUrl(String episodeId, String downloadUrl);
+
     @Delete
     void deleteEpisodeTableRow(EpisodeTable episodeTableRow);
+
+    //**********************************************
+    // Download Queue Table methods
+    //**********************************************
+
+    @Insert
+    void insertDownloadQueueTableRow(DownloadQueueTable downloadQueueTableRow);
+
+    @Query("SELECT * FROM DownloadQueueTable WHERE eid = :episodeId")
+    List<DownloadQueueTable> getDownLoadQueueRowsByEpisodeId(String episodeId);
+
+    @Query("select * from downloadqueuetable where downloadreference = 0 order by identity asc limit 1;")
+    DownloadQueueTable getNextDownloadCandidate();
+
+    @Query("select * from downloadqueuetable where downloadreference > 0;")
+    List<DownloadQueueTable> getAllDownloadsInProgress();
+
+
+    @Update
+    void updateDownloadQueueTableRow(DownloadQueueTable downloadQueueTable);
+
+    @Delete
+    void deleteDownloadQueueTableRow(DownloadQueueTable row);
 
 }

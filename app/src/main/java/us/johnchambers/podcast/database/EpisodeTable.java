@@ -39,8 +39,16 @@ public class EpisodeTable {
     int inProgress;
     @ColumnInfo(name = "play_point")
     String playPoint;
-    @ColumnInfo(name = "downloaded_to_device")
-    int downloadedToDevice;
+    String localDownloadUrl;
+
+    public String getLocalDownloadUrl() {
+        return localDownloadUrl;
+    }
+
+    public void setLocalDownloadUrl(String localDownloadUrl) {
+        this.localDownloadUrl = localDownloadUrl;
+    }
+
 
     public int getIdentity() {
         return identity;
@@ -98,10 +106,8 @@ public class EpisodeTable {
         return playPoint;
     }
 
-    public int getDownloadedToDevice() {
-        return downloadedToDevice;
-    }
 
+    /*
     public boolean getDownloadedToDeviceBoolean() {
         if (downloadedToDevice == 1) {
             return true;
@@ -110,6 +116,7 @@ public class EpisodeTable {
             return false;
         }
     }
+*/
 
     public void setIdentity(int identity) {
         //this.identity = identity;
@@ -181,15 +188,5 @@ public class EpisodeTable {
     public void setDownloadedToDevice(int downloadedToDevice) {
         //this.downloadedToDevice = downloadedToDevice;
     }
-
-    public void setDownloadedToDeviceViaBoolean(boolean downloaded) {
-        if (downloaded) {
-            this.downloadedToDevice = 1;
-        }
-        else {
-            this.downloadedToDevice = 0;
-        }
-    }
-
 
 }
