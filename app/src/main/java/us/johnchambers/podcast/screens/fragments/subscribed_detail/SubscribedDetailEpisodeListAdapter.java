@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
+import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 
 /**
@@ -22,6 +24,7 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
 
 
     private Context _context;
+    private ViewGroup _parentView;
 
     public SubscribedDetailEpisodeListAdapter(Context context) {
         super(context,
@@ -33,7 +36,7 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        _parentView = parent;
         EpisodeTable episode = getItem(position);
 
         if (convertView == null) {
@@ -48,14 +51,33 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
         String t = episode.getTitle();
         title.setText(t.toString());
 
-        if (episode.getDownloadedToDeviceBoolean()) {
+        String dlurl = episode.getLocalDownloadUrl();
+        if (episode.getLocalDownloadUrl() != null) {
             status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
         }
         else {
-            status.setImageDrawable(_context.getDrawable(R.drawable.ic_download));
+            boolean inQueue = PodcastDatabaseHelper.getInstance().isEpisodeInDownloadQueue(episode.getEid());
+            if (inQueue) {
+                status.setImageDrawable(_context.getDrawable(R.drawable.ic_pause));
+            }
+            else {
+                status.setImageDrawable(_context.getDrawable(R.drawable.ic_download));
+            }
         }
-
         return convertView;
     }
 
+    public void updateStatusIconToDownloading(AdapterView listView, int position) {
+        View viewRow = listView.getChildAt(position -
+                listView.getFirstVisiblePosition());
+        ImageView status = (ImageView) viewRow.findViewById(R.id.row_subscribed_detail_episode_status);
+        status.setImageDrawable(_context.getDrawable(R.drawable.ic_pause));
+    }
+
+    public void updateStatusIconToPlay(AdapterView listView, int position) {
+        View viewRow = listView.getChildAt(position -
+                listView.getFirstVisiblePosition());
+        ImageView status = (ImageView) viewRow.findViewById(R.id.row_subscribed_detail_episode_status);
+        status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
+    }
 }

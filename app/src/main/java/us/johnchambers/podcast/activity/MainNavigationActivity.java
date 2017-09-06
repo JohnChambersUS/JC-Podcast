@@ -17,6 +17,7 @@ import android.widget.Toast;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
+import us.johnchambers.podcast.misc.PodcastDownloader;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
 import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
@@ -64,6 +65,7 @@ public class MainNavigationActivity extends AppCompatActivity
         VolleyQueue.getInstance(this); //inits volley queue
         _myFragmentManager = new MyFragmentManager(getSupportFragmentManager());
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
+        PodcastDownloader.getInstance(getApplicationContext()).wake(); //init and clean queue
     }
 
     @Override

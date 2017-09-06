@@ -209,7 +209,7 @@ public class SubscribeFragment extends MyFragment {
             currEpisode.setPlayedViaBoolean(false);
             currEpisode.setInProgressViaBoolean(false);
             currEpisode.setPlayPoint("0:0");
-            currEpisode.setDownloadedToDeviceViaBoolean(false);
+            currEpisode.setLocalDownloadUrl(null);
 
             PodcastDatabaseHelper.getInstance().insertEpisodeTableRow(currEpisode);
         }

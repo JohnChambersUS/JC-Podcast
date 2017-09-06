@@ -18,7 +18,10 @@ public class MyFileManager {
     private static MyFileManager _instance = null;
     private static Context _context;
 
+    private static File _appDir;
+
     private static final String PODCAST_IMAGES_DIR = "podcastImages";
+    private static final String PODCAST_AUDIO_DIR = "podcastAudio";
 
     private MyFileManager() {}
 
@@ -35,14 +38,16 @@ public class MyFileManager {
     }
 
     public void makeStorageDirectories() {
-        File appDir = _context.getApplicationContext().getFilesDir();
-        File subDir = new File(appDir, PODCAST_IMAGES_DIR);
+        _appDir = _context.getApplicationContext().getFilesDir(); //inits this value;
+        File subDir = new File(_appDir, PODCAST_IMAGES_DIR);
         if( !subDir.exists()) { subDir.mkdir(); }
+        subDir = new File(_appDir, PODCAST_AUDIO_DIR);
+        if( !subDir.exists()) { subDir.mkdir(); }
+
     }
 
     public void addPodcastImage(Bitmap image, String podcastId) {
-        File appDir = _context.getApplicationContext().getFilesDir();
-        File subDir = new File(appDir, PODCAST_IMAGES_DIR);
+        File subDir = new File(_appDir, PODCAST_IMAGES_DIR);
         File outputPathWithName = new File(subDir, podcastId + ".png");
         FileOutputStream fos = null;
         try {
@@ -56,8 +61,7 @@ public class MyFileManager {
     }
 
     public Bitmap getPodcastImage(String pid) {
-        File appDir = _context.getApplicationContext().getFilesDir();
-        File subDir = new File(appDir, PODCAST_IMAGES_DIR);
+        File subDir = new File(_appDir, PODCAST_IMAGES_DIR);
         Bitmap bitmap = null;
         try {
             File f = new File(subDir, pid + ".png");
@@ -70,6 +74,13 @@ public class MyFileManager {
         return bitmap;
     }
 
+    public String getPodcastDownloadDir() {
+        return _appDir + "/" + PODCAST_AUDIO_DIR;
+    }
+
+    public Context getContext() {
+        return _context;
+    }
 
 
 
