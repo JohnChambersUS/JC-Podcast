@@ -2,6 +2,11 @@ package us.johnchambers.podcast.activity;
 
 //import android.app.FragmentManager;
 //import android.app.FragmentTransaction;
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -65,6 +70,7 @@ public class MainNavigationActivity extends AppCompatActivity
         VolleyQueue.getInstance(this); //inits volley queue
         _myFragmentManager = new MyFragmentManager(getSupportFragmentManager());
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
+        activteDownloadBroadcastReciever();
         PodcastDownloader.getInstance(getApplicationContext()).wake(); //init and clean queue
     }
 
@@ -159,6 +165,23 @@ public class MainNavigationActivity extends AppCompatActivity
          //       .add(R.id.subscribe_placeholder, SubscribeFragment.newInstance(sr), "SUBSCRIBE_FRAGMENT")
          //       .commit();
         _myFragmentManager.activateSubscribeFragment(sr);
+    }
+
+    //**********************************************
+    //* Broadcast receiver
+    //**********************************************
+
+    public void activteDownloadBroadcastReciever() {
+        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                //long reference = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                //do something with reference
+                PodcastDownloader.getInstance(getApplicationContext()).wake();
+            }
+        };
+        registerReceiver(receiver, filter);
     }
 
 
