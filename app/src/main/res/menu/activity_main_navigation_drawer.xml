@@ -11,9 +11,9 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="My Podcasts" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_player"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="Player" />
         <item
             android:id="@+id/nav_manage"
             android:icon="@drawable/ic_menu_manage"

@@ -2,7 +2,6 @@ package us.johnchambers.podcast.screens.fragments.subscribed_detail;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,7 +16,6 @@ import java.util.List;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.DownloadQueueTable;
 import us.johnchambers.podcast.database.EpisodeTable;
-import us.johnchambers.podcast.database.PodcastDatabase;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
@@ -48,6 +46,7 @@ public class SubscribedDetailFragment extends MyFragment {
     private static PodcastTable _podcastTable = null;
     private static View _view;
     private static SubscribedDetailEpisodeListAdapter _adapter;
+    private static Context _context;
 
     public SubscribedDetailFragment() {
         // Required empty public constructor
@@ -103,6 +102,7 @@ public class SubscribedDetailFragment extends MyFragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        _context = context;
     }
 
     @Override
@@ -176,7 +176,9 @@ public class SubscribedDetailFragment extends MyFragment {
             }
             if (dbRow.getLocalDownloadUrl() != null) {
                 _adapter.updateStatusIconToPlay(listView, position);
-                //play
+                //MyPodcastPlayer.getInstance(_context).play(dbRow.getLocalDownloadUrl());
+                mListener.onSubscribedDetailFragmentDoesSomething(dbRow.getLocalDownloadUrl());
+
             }
             else {
                 DownloadQueueTable newRow = new DownloadQueueTable();
@@ -204,6 +206,6 @@ public class SubscribedDetailFragment extends MyFragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onSubscribedDetailFragmentDoesSomething();
+        void onSubscribedDetailFragmentDoesSomething(String path);
     }
 }

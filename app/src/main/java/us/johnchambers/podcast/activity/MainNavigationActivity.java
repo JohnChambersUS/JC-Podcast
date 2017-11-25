@@ -30,13 +30,15 @@ import us.johnchambers.podcast.misc.MyFragmentManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 import us.johnchambers.podcast.screens.fragments.subscribed_detail.SubscribedDetailFragment;
+import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
 
 public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         SearchFragment.OnFragmentInteractionListener,
         SubscribeFragment.OnFragmentInteractionListener,
         SubscribedFragment.OnFragmentInteractionListener,
-        SubscribedDetailFragment.OnFragmentInteractionListener {
+        SubscribedDetailFragment.OnFragmentInteractionListener,
+        PlayerFragment.OnFragmentInteractionListener {
 
     //FragmentManager fragmentManager = null;
     MyFragmentManager _myFragmentManager = null;
@@ -118,8 +120,8 @@ public class MainNavigationActivity extends AppCompatActivity
             activateSearchFragment();
         } else if (id == R.id.nav_show_subscribed) {
             _myFragmentManager.activateSubscribedFragment();
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_player) {
+            _myFragmentManager.activatePlayerFragment(null);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
@@ -203,5 +205,9 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager.activateSubscribedDetailFragment(pt);
     }
 
-    public void onSubscribedDetailFragmentDoesSomething() {}
+    public void onSubscribedDetailFragmentDoesSomething(String url) {
+        _myFragmentManager.activatePlayerFragment(url);
+    }
+
+    public void onPlayerFragmentDoesSomething() {}
 }
