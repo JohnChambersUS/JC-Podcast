@@ -13,6 +13,7 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
+import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
 import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
@@ -29,6 +30,7 @@ public class MyFragmentManager {
     private final String SUBSCRIBE_FRAGMENT = "SUBSCRIBE_FRAGMENT";
     private final String SUBSCRIBED_FRAGMENT = "SUBSCRIBED_FRAGMENT";
     private final String SUBSCRIBED_DETAIL_FRAGMENT = "SUBSCRIBED_DETAIL_FRAGMENT";
+    private final String PLAYER_FRAGMENT = "PLAYER_FRAGMENT";
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
 
@@ -92,6 +94,12 @@ public class MyFragmentManager {
                 SUBSCRIBED_DETAIL_FRAGMENT);
     }
 
+    public void activatePlayerFragment(String url) {
+        PlayerFragment p = PlayerFragment.newInstance(url);
+        activateFragment(R.id.player_placeholder,
+                p,
+                PLAYER_FRAGMENT);
+    }
 
 
 }
