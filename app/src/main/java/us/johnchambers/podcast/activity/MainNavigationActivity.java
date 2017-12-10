@@ -22,7 +22,7 @@ import android.widget.Toast;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
-import us.johnchambers.podcast.misc.PodcastDownloader;
+//todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
 import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
@@ -73,7 +73,7 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager = new MyFragmentManager(getSupportFragmentManager());
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
         activteDownloadBroadcastReciever();
-        PodcastDownloader.getInstance(getApplicationContext()).wake(); //init and clean queue
+        //todo delete PodcastDownloader.getInstance(getApplicationContext()).wake(); //init and clean queue
     }
 
     @Override
@@ -173,6 +173,7 @@ public class MainNavigationActivity extends AppCompatActivity
     //* Broadcast receiver
     //**********************************************
 
+    //todo delete broadcast receiver
     public void activteDownloadBroadcastReciever() {
         IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
         BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -180,7 +181,7 @@ public class MainNavigationActivity extends AppCompatActivity
             public void onReceive(Context context, Intent intent) {
                 //long reference = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
                 //do something with reference
-                PodcastDownloader.getInstance(getApplicationContext()).wake();
+                //PodcastDownloader.getInstance(getApplicationContext()).wake();
             }
         };
         registerReceiver(receiver, filter);
@@ -205,6 +206,7 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager.activateSubscribedDetailFragment(pt);
     }
 
+    //play the stream
     public void onSubscribedDetailFragmentDoesSomething(String url) {
         _myFragmentManager.activatePlayerFragment(url);
     }

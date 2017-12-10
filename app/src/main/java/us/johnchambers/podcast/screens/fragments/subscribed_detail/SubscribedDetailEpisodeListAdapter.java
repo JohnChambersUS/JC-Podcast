@@ -50,7 +50,10 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
         date.setText(d.toString());
         String t = episode.getTitle();
         title.setText(t.toString());
+        //todo add icon if partially played
+        status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
 
+        /*
         String dlurl = episode.getLocalDownloadUrl();
         if (episode.getLocalDownloadUrl() != null) {
             status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
@@ -64,6 +67,7 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
                 status.setImageDrawable(_context.getDrawable(R.drawable.ic_download));
             }
         }
+        */
         return convertView;
     }
 

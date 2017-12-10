@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.MyFileManager;
-import us.johnchambers.podcast.misc.PodcastDownloader;
+//todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 /**
@@ -159,14 +160,28 @@ public class SubscribedDetailFragment extends MyFragment {
 
     }
 
+    //todo redo to remove download tap
     private void processRowTap(AdapterView listView, int position) {
 
         //get state of row
         EpisodeTable panelRow = _adapter.getItem(position);
-        boolean inQueue = PodcastDatabaseHelper.getInstance().isEpisodeInDownloadQueue(panelRow.getEid());
+        //boolean inQueue = PodcastDatabaseHelper.getInstance().isEpisodeInDownloadQueue(panelRow.getEid());
+        String audioUrl = PodcastDatabaseHelper.getInstance().getEpisodeAudioUrl((panelRow.getEid()));
 
+        if (audioUrl == null) {
+            Toast.makeText(_context, "Url for this episode is null", Toast.LENGTH_LONG).show();
+            return;
+        }
 
-        if (!inQueue) {
+        if (audioUrl.length() > 0) {
+            mListener.onSubscribedDetailFragmentDoesSomething(audioUrl);
+
+        }
+        else {
+            Toast.makeText(_context, "Url for this episode is 0 length", Toast.LENGTH_LONG).show();
+
+        }
+        /*
             //get is complete
             EpisodeTable dbRow = PodcastDatabaseHelper.getInstance()
                     .getEpisodeTableRowByEpisodeId(panelRow.getEid());
@@ -180,15 +195,16 @@ public class SubscribedDetailFragment extends MyFragment {
                 mListener.onSubscribedDetailFragmentDoesSomething(dbRow.getLocalDownloadUrl());
 
             }
-            else {
+            else { // do download
                 DownloadQueueTable newRow = new DownloadQueueTable();
                 newRow.setEid(panelRow.getEid());
                 newRow.setDownloadReference(0);
                 PodcastDatabaseHelper.getInstance().insertDownloadQueueTableRow(newRow);
                 _adapter.updateStatusIconToDownloading(listView, position);
-                PodcastDownloader.getInstance().wake();
+                //PodcastDownloader.getInstance().wake();
             }
         }
+        */
 
 
     }

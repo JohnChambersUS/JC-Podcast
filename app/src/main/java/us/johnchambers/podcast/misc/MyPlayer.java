@@ -55,6 +55,7 @@ public class MyPlayer {
         return _instance;
     }
 
+    //todo change to play url
     public void initializePlayer() {
         if (_player == null) {
             _player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(_context),

@@ -91,6 +91,10 @@ public class PodcastDatabaseHelper {
         }
     }
 
+    public String getEpisodeAudioUrl(String eid) {
+        return _database.dao().getEpisodeAudioUrl(eid);
+    }
+
     public void setEpisodeLocalDownloadUrl(String eid, String localUrl) {
         _database.dao().updateEpisodeLocalUrl(eid, localUrl);
     }
