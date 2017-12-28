@@ -146,10 +146,10 @@ public class EpisodeTable {
         this.pubDate = pubDate;
     }
 
-    public void setPubDateViaDate(Date pubDate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-DDD HH:mm");
-        this.pubDate = sdf.format(pubDate);
-    }
+    //public void setPubDateViaDate(Date pubDate) {
+    //    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-DDD HH:mm");
+    //    this.pubDate = sdf.format(pubDate);
+    //}
 
     public void setLength(String length) {
         this.length = length;
