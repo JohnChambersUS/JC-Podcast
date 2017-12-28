@@ -22,9 +22,12 @@ import com.rometools.rome.io.impl.XmlFixerReader;
 
 import java.io.StringReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -127,7 +130,9 @@ public class FeedResponseWrapper {
     public String getPodcastId() {
         if (_podcastId == null) {
             try {
-                _podcastId = "pid" + ((Integer) _feedUrl.hashCode()).toString();
+                String uuid = UUID.nameUUIDFromBytes(_feedUrl.getBytes()).toString();
+                _podcastId = "pid_" + uuid;
+                //_podcastId = "pid" + ((Integer) _feedUrl.hashCode()).toString();
             }
             catch (Exception e) {
                 Long epoch =  (new Date()).getTime();
@@ -146,8 +151,9 @@ public class FeedResponseWrapper {
             badUrl = "_BADURL";
         }
         String episodeDate = getCurrEpisodeDate().toString();
-        Integer hash = (episodeLink + episodeDate).hashCode();
-        return "eid" + hash.toString() + badUrl;
+        String uuid = UUID.nameUUIDFromBytes((episodeLink + episodeDate).getBytes()).toString();
+        //Integer hash = (episodeLink + episodeDate).hashCode();
+        return "eid_" + uuid + badUrl;
     }
 
     public void setPodcastImage(Bitmap image) {
@@ -156,6 +162,15 @@ public class FeedResponseWrapper {
 
     public Bitmap getPodcastImage() {
         return _podcastImage;
+    }
+
+    public HashMap<String, Boolean> getEpisodeIdHash() {
+        HashMap<String, Boolean> episodeMap = new HashMap();
+        processEpisodesFromTop();
+        while(nextEpisode()) {
+            episodeMap.put(getEpisodeId(), true);
+        }
+        return episodeMap;
     }
 
 

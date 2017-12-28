@@ -4,7 +4,11 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
+import java.util.Date;
 import java.util.List;
+
+import us.johnchambers.podcast.misc.MyFileManager;
+import us.johnchambers.podcast.objects.FeedResponseWrapper;
 
 
 /**
@@ -61,6 +65,16 @@ public class PodcastDatabaseHelper {
         }
     }
 
+    public String getPodcastFeedUrl(String podcastId) {
+        List<PodcastTable> ptl = _database.dao().getPodcastTableRowByPodcastId(podcastId);
+        if (ptl.size() > 0) {
+            return ptl.get(0).getFeedUrl();
+        }
+        else {
+            return "";
+        }
+    }
+
     //********************************
     //* episode table methods
     //********************************
@@ -97,6 +111,10 @@ public class PodcastDatabaseHelper {
 
     public void setEpisodeLocalDownloadUrl(String eid, String localUrl) {
         _database.dao().updateEpisodeLocalUrl(eid, localUrl);
+    }
+
+    public void deleteEpisodeRow(EpisodeTable episodeTable) {
+        _database.dao().deleteEpisodeTableRow(episodeTable);
     }
 
     //***********************************
@@ -143,6 +161,44 @@ public class PodcastDatabaseHelper {
         if (rows.size() > 0) {
             _database.dao().deleteDownloadQueueTableRow(rows.get(0));
         }
+    }
+
+    //*******************************************************
+    //* wrapper methods to add new rows
+    //*******************************************************
+
+    public void addNewPodcastRow(FeedResponseWrapper feedResponseWrapper) {
+        PodcastTable newRow = getNewPodcastTableRow();
+        //Store image on disk
+        MyFileManager.getInstance().addPodcastImage(feedResponseWrapper.getPodcastImage(),
+                feedResponseWrapper.getPodcastId());
+        //add items to podcast table row from wrapper
+        newRow.setPid(feedResponseWrapper.getPodcastId());
+        newRow.setName(feedResponseWrapper.getPodcastTitle());
+        newRow.setFeedUrl(feedResponseWrapper.getFeedUrl());
+        newRow.setSubscriptionTypeViaPodcastMode(PodcastMode.Manual);
+        newRow.setDownloadInterval(0);
+        newRow.setLastDownloadDateViaDate(new Date());
+        //insert podcast table row
+        insertPodcastTableRow(newRow);
+    }
+
+    public void addNewEpisodeRow(FeedResponseWrapper feedResponseWrapper) {
+        EpisodeTable currEpisode = getNewEpisodeTableRow();
+
+        currEpisode.setPid(feedResponseWrapper.getPodcastId());
+        currEpisode.setEid(feedResponseWrapper.getEpisodeId());
+        currEpisode.setTitle(feedResponseWrapper.getCurrEpisodeTitle());
+        currEpisode.setSummary(feedResponseWrapper.getCurrEpisodeSummary());
+        currEpisode.setAudioUrl(feedResponseWrapper.getEpisodeDownloadLink());
+        currEpisode.setPubDateViaDate(feedResponseWrapper.getCurrEpisodeDate());
+        currEpisode.setLength("0:0");
+        currEpisode.setPlayedViaBoolean(false);
+        currEpisode.setInProgressViaBoolean(false);
+        currEpisode.setPlayPoint("0:0");
+        currEpisode.setLocalDownloadUrl(null);
+
+        insertEpisodeTableRow(currEpisode);
     }
 
 }
