@@ -63,7 +63,7 @@ public class PodcastTable {
 
     public Date getLastDownloadDateAsDate() {
         Date returnDate = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-DDD HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("yy-DDD HH:mm");
         try {
             returnDate = sdf.parse(lastDownloadDate);
         }

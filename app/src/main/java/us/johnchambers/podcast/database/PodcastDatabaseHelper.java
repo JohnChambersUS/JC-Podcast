@@ -191,7 +191,7 @@ public class PodcastDatabaseHelper {
         currEpisode.setTitle(feedResponseWrapper.getCurrEpisodeTitle());
         currEpisode.setSummary(feedResponseWrapper.getCurrEpisodeSummary());
         currEpisode.setAudioUrl(feedResponseWrapper.getEpisodeDownloadLink());
-        currEpisode.setPubDateViaDate(feedResponseWrapper.getCurrEpisodeDate());
+        currEpisode.setPubDate(feedResponseWrapper.getCurrEpisodeDate());
         currEpisode.setLength("0:0");
         currEpisode.setPlayedViaBoolean(false);
         currEpisode.setInProgressViaBoolean(false);

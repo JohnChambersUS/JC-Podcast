@@ -22,6 +22,7 @@ import com.rometools.rome.io.impl.XmlFixerReader;
 
 import java.io.StringReader;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -100,9 +101,10 @@ public class FeedResponseWrapper {
         return "dummy-summary";
     }
 
-    public Date getCurrEpisodeDate() {
+    public String getCurrEpisodeDate() {
         Date pd = _feed.getEntries().get(_currEpisode).getPublishedDate();
-        return pd;
+        SimpleDateFormat sdf = new SimpleDateFormat("yy-DDD HH:mm");
+        return sdf.format(pd);
     }
 
     public String getEpisodeDownloadLink() {

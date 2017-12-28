@@ -9,17 +9,17 @@ import java.util.Date;
 
 public class SubscribeEpisodeRow {
 
-    Date _date;
+    String _date;
     String _title;
     String _downloadLink;
 
     public SubscribeEpisodeRow() {}
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         _date = date;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return _date;
     }
 
