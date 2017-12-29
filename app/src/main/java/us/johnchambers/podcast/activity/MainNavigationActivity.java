@@ -75,7 +75,7 @@ public class MainNavigationActivity extends AppCompatActivity
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
 
         //PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
-/*
+
         Thread updaterThread = new Thread(new Runnable(){
             @Override
             public void run(){
@@ -83,7 +83,7 @@ public class MainNavigationActivity extends AppCompatActivity
             }
         });
         updaterThread.start();
-*/
+
         //activteDownloadBroadcastReciever();
         //todo delete PodcastDownloader.getInstance(getApplicationContext()).wake(); //init and clean queue
     }

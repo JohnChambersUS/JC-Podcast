@@ -2,6 +2,7 @@ package us.johnchambers.podcast.screens.fragments.subscribed_detail;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -123,7 +124,10 @@ public class SubscribedDetailFragment extends MyFragment {
     private void displayPodcastImage() {
         ImageView image = (ImageView) _view.findViewById(R.id.subscribe_detail_image);
         Bitmap pcImage = MyFileManager.getInstance().getPodcastImage(_podcastTable.getPid());
-        //todo put handling if image is null
+        if (pcImage == null) {
+            pcImage = BitmapFactory.decodeResource(_context.getResources(),
+                    R.mipmap.ic_missing_podcast_image);
+        }
         image.setImageBitmap(pcImage);
     }
 
