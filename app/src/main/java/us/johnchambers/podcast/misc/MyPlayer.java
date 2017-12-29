@@ -61,6 +61,8 @@ public class MyPlayer {
             _player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(_context),
                     new DefaultTrackSelector(), new DefaultLoadControl());
             _playerView.setPlayer(_player);
+            _playerView.setControllerAutoShow(false);
+            _playerView.setControllerShowTimeoutMs(0);
         }
         playNext();
     }
