@@ -75,6 +75,7 @@ public class PodcastDatabaseHelper {
         }
     }
 
+
     //********************************
     //* episode table methods
     //********************************
@@ -115,6 +116,10 @@ public class PodcastDatabaseHelper {
 
     public void deleteEpisodeRow(EpisodeTable episodeTable) {
         _database.dao().deleteEpisodeTableRow(episodeTable);
+    }
+
+    public String getPodcastIdByAudioUrl(String audioUrl) {
+        return _database.dao().getPodcastIdByAudioUrl(audioUrl);
     }
 
     //***********************************

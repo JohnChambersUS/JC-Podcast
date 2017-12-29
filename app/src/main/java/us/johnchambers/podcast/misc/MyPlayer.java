@@ -1,6 +1,7 @@
 package us.johnchambers.podcast.misc;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
 
@@ -19,6 +20,9 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import us.johnchambers.podcast.database.PodcastDatabase;
+import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 
 /**
  * Created by johnchambers on 11/11/17.
@@ -63,6 +67,8 @@ public class MyPlayer {
             _playerView.setPlayer(_player);
             _playerView.setControllerAutoShow(false);
             _playerView.setControllerShowTimeoutMs(0);
+
+
         }
         playNext();
     }
@@ -78,8 +84,14 @@ public class MyPlayer {
     private MediaSource getNextPlaylistMediaSource() {
 
         MediaSource mediaSource = null;
+
         if (!playQueue.isEmpty()) {
-            mediaSource = buildMediaSource(Uri.parse(playQueue.poll()));
+            String nextUrl = playQueue.poll();
+            mediaSource = buildMediaSource(Uri.parse(nextUrl));
+
+            String pid = PodcastDatabaseHelper.getInstance().getPodcastIdByAudioUrl(nextUrl);
+            Bitmap podcastImage = MyFileManager.getInstance().getPodcastImage(pid);
+            _playerView.setDefaultArtwork(podcastImage);
         }
         return mediaSource;
     }
