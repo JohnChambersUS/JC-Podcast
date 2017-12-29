@@ -78,6 +78,7 @@ public class EpisodeTable {
         return pubDate;
     }
 
+
     public Date getPubDateAsDate() {
         Date returnDate = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-DDD HH:mm");

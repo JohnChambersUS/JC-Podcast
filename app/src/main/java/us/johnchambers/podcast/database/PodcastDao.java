@@ -34,6 +34,7 @@ public interface PodcastDao {
     @Delete
     void deletePodcastTableRow(PodcastTable podcastTableRow);
 
+
     //*******************************************
     //* Episode table methods
     //*******************************************
@@ -59,6 +60,9 @@ public interface PodcastDao {
 
     @Query("SELECT COUNT(*) FROM EpisodeTable WHERE pid = :pid and eid = :eid")
     int getPodcastEpisodeCount(String pid, String eid);
+
+    @Query("SELECT pid FROM EpisodeTable WHERE audio_url = :audioUrl LIMIT 1")
+    String getPodcastIdByAudioUrl(String audioUrl);
 
     @Update
     void updateEpisodeTableRow(EpisodeTable episodeTableRow);
