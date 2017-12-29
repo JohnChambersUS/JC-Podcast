@@ -2,6 +2,7 @@ package us.johnchambers.podcast.screens.fragments.subscribed;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,10 @@ public class SubscribedAdapter extends ArrayAdapter<PodcastTable> {
 
         ImageView image = (ImageView) convertView.findViewById(R.id.subscribedRowImage);
         Bitmap pcImage = MyFileManager.getInstance().getPodcastImage(currPodcast.getPid());
+        if (pcImage == null) {
+            pcImage = BitmapFactory.decodeResource(_context.getResources(),
+                    R.mipmap.ic_missing_podcast_image);
+        }
         //todo put handling if image is null
 
 

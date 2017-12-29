@@ -2,6 +2,7 @@ package us.johnchambers.podcast.misc;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.view.View;
 
@@ -21,6 +22,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabase;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 
@@ -91,7 +93,14 @@ public class MyPlayer {
 
             String pid = PodcastDatabaseHelper.getInstance().getPodcastIdByAudioUrl(nextUrl);
             Bitmap podcastImage = MyFileManager.getInstance().getPodcastImage(pid);
-            _playerView.setDefaultArtwork(podcastImage);
+            if (podcastImage != null) {
+                _playerView.setDefaultArtwork(podcastImage);
+            }
+            else {
+                Bitmap bm = BitmapFactory.decodeResource(_context.getResources(),
+                        R.mipmap.ic_missing_podcast_image);
+                _playerView.setDefaultArtwork(bm);
+            }
         }
         return mediaSource;
     }
