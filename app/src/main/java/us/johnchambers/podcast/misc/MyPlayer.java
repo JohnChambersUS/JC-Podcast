@@ -42,6 +42,9 @@ public class MyPlayer {
 
     private Deque <String> playQueue = new LinkedList();
 
+    private Bitmap _currPodcastPicture = null;
+    private String _nextUrl = null;
+
     private MyPlayer() {}
 
     public static synchronized MyPlayer getInstance(Context context, SimpleExoPlayerView playerView) {
@@ -66,12 +69,10 @@ public class MyPlayer {
         if (_player == null) {
             _player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(_context),
                     new DefaultTrackSelector(), new DefaultLoadControl());
-            _playerView.setPlayer(_player);
-            _playerView.setControllerAutoShow(false);
-            _playerView.setControllerShowTimeoutMs(0);
-
-
         }
+        _playerView.setPlayer(_player);
+        _playerView.setControllerAutoShow(false);
+        _playerView.setControllerShowTimeoutMs(0);
         playNext();
     }
 
@@ -88,20 +89,24 @@ public class MyPlayer {
         MediaSource mediaSource = null;
 
         if (!playQueue.isEmpty()) {
-            String nextUrl = playQueue.poll();
-            mediaSource = buildMediaSource(Uri.parse(nextUrl));
-
-            String pid = PodcastDatabaseHelper.getInstance().getPodcastIdByAudioUrl(nextUrl);
-            Bitmap podcastImage = MyFileManager.getInstance().getPodcastImage(pid);
-            if (podcastImage != null) {
-                _playerView.setDefaultArtwork(podcastImage);
-            }
-            else {
-                Bitmap bm = BitmapFactory.decodeResource(_context.getResources(),
-                        R.mipmap.ic_missing_podcast_image);
-                _playerView.setDefaultArtwork(bm);
-            }
+            _nextUrl = playQueue.poll();
         }
+        if (_nextUrl != null) {
+            mediaSource = buildMediaSource(Uri.parse(_nextUrl));
+            String pid = PodcastDatabaseHelper.getInstance().getPodcastIdByAudioUrl(_nextUrl);
+            _currPodcastPicture = MyFileManager.getInstance().getPodcastImage(pid);
+        }
+        if (_currPodcastPicture == null) {
+            _currPodcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                    R.mipmap.ic_missing_podcast_image);
+        }
+
+        if ((mediaSource == null) &&  (_nextUrl == null)) {
+            _currPodcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                    R.mipmap.ic_nothing_in_queue);
+        }
+
+        _playerView.setDefaultArtwork(_currPodcastPicture);
         return mediaSource;
     }
 
