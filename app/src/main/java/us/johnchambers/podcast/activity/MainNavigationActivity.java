@@ -23,6 +23,7 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 //todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
+import us.johnchambers.podcast.misc.MyPlayer;
 import us.johnchambers.podcast.misc.PodcastUpdater;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
@@ -128,12 +129,12 @@ public class MainNavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_search) {
-            Toast.makeText(getApplicationContext(), "Pressed Search", Toast.LENGTH_LONG).show();
             activateSearchFragment();
         } else if (id == R.id.nav_show_subscribed) {
             _myFragmentManager.activateSubscribedFragment();
         } else if (id == R.id.nav_player) {
             _myFragmentManager.activatePlayerFragment(null);
+           // MyPlayer.getInstance().initializePlayer();
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
