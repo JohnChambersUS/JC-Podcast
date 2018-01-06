@@ -2,16 +2,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="us.johnchambers.podcast.screens.fragments.player.PlayerFragment"
     android:id="@+id/player_fragment"
-    >
+    android:background="#000000">
 
     <com.google.android.exoplayer2.ui.SimpleExoPlayerView
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
-
         />
 
 </RelativeLayout>
