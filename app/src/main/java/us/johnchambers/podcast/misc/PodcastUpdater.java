@@ -1,6 +1,8 @@
 package us.johnchambers.podcast.misc;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -38,6 +40,14 @@ public class PodcastUpdater {
 
     private void updateNextItem() {
         if (!podcastStack.empty()) {
+            try {
+                Thread.sleep(60000);
+            }
+            catch(Exception e) {
+                    Toast.makeText(_context,
+                            "Error sleeping when getting new podcasts: " + e.toString(),
+                            Toast.LENGTH_LONG).show();
+            }
             makeUpdateCall(podcastStack.pop());
         }
     }
@@ -45,6 +55,8 @@ public class PodcastUpdater {
     private void makeUpdateCall(PodcastTable currPodcastTableRow)  {
 
         final PodcastTable pctr = currPodcastTableRow;
+        displayToastMessage("Updating Podcast: " + pctr.getName(),
+                Toast.LENGTH_SHORT);
         StringRequest sr = new StringRequest(Request.Method.GET,
                 currPodcastTableRow.getFeedUrl(),
                 new Response.Listener<String>() {
@@ -57,9 +69,8 @@ public class PodcastUpdater {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError e) {
-                        Toast.makeText(_context,
-                                "Volley Error: " + e.toString(),
-                                Toast.LENGTH_LONG).show();
+                        displayToastMessage( "Volley Error: " + e.toString(),
+                                Toast.LENGTH_LONG);
                     }
                 });
         VolleyQueue vq = VolleyQueue.getInstance();
@@ -98,7 +109,16 @@ public class PodcastUpdater {
     }
 
 
-
+    private void displayToastMessage(final String message, final int toastLength) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            public void run() {
+                Toast.makeText(_context,
+                        message,
+                        toastLength).show();
+            }
+        });
+    }
 
 
 
