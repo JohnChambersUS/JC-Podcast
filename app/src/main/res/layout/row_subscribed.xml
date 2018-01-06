@@ -16,4 +16,16 @@
         >
     </ImageView>
 
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/row_subscribed_podcast_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:paddingRight="8dp"
+        android:textSize="18sp"
+        app:layout_widthPercent="70%"
+        android:layout_toRightOf="@id/subscribedRowImage"
+        >
+    </TextView>
+
 </android.support.percent.PercentRelativeLayout>
