@@ -113,7 +113,14 @@ public class FeedResponseWrapper {
             u = new URL(_feed.getEntries().get(_currEpisode).getUri()).toString();
         }
         catch (Exception e) {
-            u = null;
+            SyndEntry currEntry = _feed.getEntries().get(_currEpisode);
+            String link = currEntry.getLink();
+            try {
+                u = new URL(link).toString();
+            }
+            catch(Exception e2) {
+                u = null;
+            }
         }
         return u;
     }
