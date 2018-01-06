@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -47,8 +48,8 @@ public class SubscribedAdapter extends ArrayAdapter<PodcastTable> {
             pcImage = BitmapFactory.decodeResource(_context.getResources(),
                     R.mipmap.ic_missing_podcast_image);
         }
-        //todo put handling if image is null
-
+        TextView podcastName = (TextView) convertView.findViewById(R.id.row_subscribed_podcast_name);
+        podcastName.setText(currPodcast.getName());
 
         image.setImageBitmap(pcImage);
 
