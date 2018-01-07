@@ -75,18 +75,15 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager = new MyFragmentManager(getSupportFragmentManager());
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
 
-        //PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
-/*
-        Thread updaterThread = new Thread(new Runnable(){
+ /*       Thread updaterThread = new Thread(new Runnable(){
             @Override
             public void run(){
                 PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
             }
         });
         updaterThread.start();
-        */
+*/
         //activteDownloadBroadcastReciever();
-        //todo delete PodcastDownloader.getInstance(getApplicationContext()).wake(); //init and clean queue
     }
 
     @Override
