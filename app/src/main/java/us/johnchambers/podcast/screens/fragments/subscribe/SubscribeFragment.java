@@ -2,6 +2,7 @@ package us.johnchambers.podcast.screens.fragments.subscribe;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -237,8 +238,15 @@ public class SubscribeFragment extends MyFragment {
             ser.setDownloadLink(_feedResponseWrapper.getEpisodeDownloadLink());
             _adapter.add(ser);
         }
-        //todo make image volley call for top image
+        setDefaultImage();
         getPodcastImage();
+    }
+
+    public void setDefaultImage() {
+        ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_ResultImage));
+        Bitmap bitmap =  BitmapFactory.decodeResource(getContext().getResources(),
+                R.mipmap.ic_missing_podcast_image);
+        iv.setImageBitmap(bitmap);
     }
 
     public void addImageToSubscribeScreen(Bitmap bitmap) {

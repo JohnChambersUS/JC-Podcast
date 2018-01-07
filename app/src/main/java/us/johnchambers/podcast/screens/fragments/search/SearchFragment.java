@@ -146,7 +146,7 @@ public class SearchFragment extends MyFragment {
             et.setHint("I said, enter a term");
         }
         else {
-            String searchString = "https://itunes.apple.com/search?media=podcast&entity=podcast&limit=6&term="
+            String searchString = "https://itunes.apple.com/search?media=podcast&entity=podcast&limit=100&term="
                     + term;
             try {
                 searchString = new URL(searchString).toString();
