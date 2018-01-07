@@ -26,17 +26,4 @@
         android:layout_toRightOf="@id/searchResultRowImage">
     </TextView>
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/searchResultRowFeedUrl"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textSize="18sp"
-        app:layout_widthPercent="70%"
-        android:layout_toRightOf="@id/searchResultRowImage"
-        android:layout_below="@id/searchResultRowTitle"
-        >
-    </TextView>
-
-
 </android.support.percent.PercentRelativeLayout>

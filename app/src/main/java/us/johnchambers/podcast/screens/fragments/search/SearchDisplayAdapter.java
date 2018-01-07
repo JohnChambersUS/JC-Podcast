@@ -43,11 +43,9 @@ public class SearchDisplayAdapter extends ArrayAdapter<SearchRow> {
 
         ImageView image = (ImageView) convertView.findViewById(R.id.searchResultRowImage);
         TextView desc = (TextView) convertView.findViewById(R.id.searchResultRowTitle);
-        TextView url = (TextView) convertView.findViewById(R.id.searchResultRowFeedUrl);
 
         image.setImageBitmap(sr.getImage());
         desc.setText(sr.getTitle());
-        url.setText(sr.getFeedUrl());
 
         return convertView;
     }
