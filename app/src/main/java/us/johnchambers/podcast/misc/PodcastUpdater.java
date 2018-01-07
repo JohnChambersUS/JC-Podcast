@@ -40,6 +40,7 @@ public class PodcastUpdater {
 
     private void updateNextItem() {
         if (!podcastStack.empty()) {
+            makeUpdateCall(podcastStack.pop());
             try {
                 Thread.sleep(60000);
             }
@@ -48,7 +49,6 @@ public class PodcastUpdater {
                             "Error sleeping when getting new podcasts: " + e.toString(),
                             Toast.LENGTH_LONG).show();
             }
-            makeUpdateCall(podcastStack.pop());
         }
     }
 

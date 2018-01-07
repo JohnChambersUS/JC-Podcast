@@ -101,6 +101,7 @@ public class SubscribeFragment extends MyFragment {
         _view = inflater.inflate(R.layout.fragment_subscribe, container, false);
         setSubscribeButtonListener();
         getPodcastFeedInfo();
+
         return _view;
     }
 
@@ -261,6 +262,9 @@ public class SubscribeFragment extends MyFragment {
     //***************************
 
     private void getPodcastFeedInfo() {
+        Toast.makeText(getContext(),
+                "Getting podcast info, this may take a few moments if there are lots of episodes.",
+                Toast.LENGTH_LONG).show();
         String feedUrl = null;
         try {
             feedUrl = new URL(_searchRow.getFeedUrl()).toString();
