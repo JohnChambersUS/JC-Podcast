@@ -125,7 +125,7 @@ public class SubscribedDetailFragment extends MyFragment {
         ImageView image = (ImageView) _view.findViewById(R.id.subscribe_detail_image);
         Bitmap pcImage = MyFileManager.getInstance().getPodcastImage(_podcastTable.getPid());
         if (pcImage == null) {
-            pcImage = BitmapFactory.decodeResource(_context.getResources(),
+            pcImage =  BitmapFactory.decodeResource(_context.getResources(),
                     R.mipmap.ic_missing_podcast_image);
         }
         image.setImageBitmap(pcImage);
