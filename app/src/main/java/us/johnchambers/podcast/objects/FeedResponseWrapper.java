@@ -32,6 +32,8 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import us.johnchambers.podcast.misc.HashMaker;
+
 public class FeedResponseWrapper {
 
 
@@ -145,15 +147,16 @@ public class FeedResponseWrapper {
 
     public String getPodcastId() {
         if (_podcastId == null) {
+            String hash = "";
             try {
-                String uuid = UUID.nameUUIDFromBytes(_feedUrl.getBytes()).toString();
-                _podcastId = "pid_" + uuid;
-                //_podcastId = "pid" + ((Integer) _feedUrl.hashCode()).toString();
+                HashMaker hm = new HashMaker();
+                hash = hm.md5(getFeedUrl());
             }
             catch (Exception e) {
                 Long epoch =  (new Date()).getTime();
-                _podcastId = "pid" + epoch.toString();
+                hash = epoch.toString() + "_EPOCH";
             }
+            _podcastId = "pid_" + hash;
         }
         return _podcastId;
     }
@@ -167,9 +170,9 @@ public class FeedResponseWrapper {
             badUrl = "_BADURL";
         }
         String episodeDate = getCurrEpisodeDate().toString();
-        String uuid = UUID.nameUUIDFromBytes((episodeLink + episodeDate).getBytes()).toString();
-        //Integer hash = (episodeLink + episodeDate).hashCode();
-        return "eid_" + uuid + badUrl;
+        HashMaker hm = new HashMaker();
+        String hash = hm.md5(episodeLink + episodeDate);
+        return "eid_" + hash + badUrl;
     }
 
     public void setPodcastImage(Bitmap image) {
@@ -180,7 +183,7 @@ public class FeedResponseWrapper {
         return _podcastImage;
     }
 
-    public HashMap<String, Boolean> getEpisodeIdHash() {
+    public HashMap<String, Boolean> getEpisodeIdHashList() {
         HashMap<String, Boolean> episodeMap = new HashMap();
         processEpisodesFromTop();
         while(nextEpisode()) {

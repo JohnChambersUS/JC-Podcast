@@ -99,7 +99,7 @@ public class PodcastUpdater {
                 PodcastDatabaseHelper.getInstance()
                         .getEpisodesSortedNewest(feedResponseWrapper.getPodcastId());
 
-        HashMap<String, Boolean> epList = feedResponseWrapper.getEpisodeIdHash();
+        HashMap<String, Boolean> epList = feedResponseWrapper.getEpisodeIdHashList();
         for (EpisodeTable currEpisode : dbEpisodes) {
             if (!epList.containsKey(currEpisode.getEid()) ||
                     currEpisode.getEid().toUpperCase().contains("BAD")) {
