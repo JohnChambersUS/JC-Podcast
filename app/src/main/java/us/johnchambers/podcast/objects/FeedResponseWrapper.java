@@ -102,8 +102,15 @@ public class FeedResponseWrapper {
     }
 
     public String getCurrEpisodeDate() {
-        Date pd = _feed.getEntries().get(_currEpisode).getPublishedDate();
         SimpleDateFormat sdf = new SimpleDateFormat("yy-DDD HH:mm");
+        Date pd;
+        try {
+            pd = _feed.getEntries().get(_currEpisode).getPublishedDate();
+        }
+        catch(Exception e) {
+            pd = new Date();
+
+        }
         return sdf.format(pd);
     }
 

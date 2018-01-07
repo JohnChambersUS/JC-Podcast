@@ -76,7 +76,7 @@ public class MainNavigationActivity extends AppCompatActivity
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
 
         //PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
-
+/*
         Thread updaterThread = new Thread(new Runnable(){
             @Override
             public void run(){
@@ -84,7 +84,7 @@ public class MainNavigationActivity extends AppCompatActivity
             }
         });
         updaterThread.start();
-
+        */
         //activteDownloadBroadcastReciever();
         //todo delete PodcastDownloader.getInstance(getApplicationContext()).wake(); //init and clean queue
     }
@@ -92,6 +92,7 @@ public class MainNavigationActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
+        //PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
     }
 
     @Override
@@ -139,9 +140,14 @@ public class MainNavigationActivity extends AppCompatActivity
             _myFragmentManager.activateSubscribedFragment();
         } else if (id == R.id.nav_player) {
             _myFragmentManager.activatePlayerFragment(null);
-           // MyPlayer.getInstance().initializePlayer();
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_update_podcasts) {
+            Thread updaterThread = new Thread(new Runnable(){
+                @Override
+                public void run(){
+                    PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
+                }
+            });
+            updaterThread.start();
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
