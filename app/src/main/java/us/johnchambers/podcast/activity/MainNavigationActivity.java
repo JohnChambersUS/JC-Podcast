@@ -214,7 +214,7 @@ public class MainNavigationActivity extends AppCompatActivity
     //***********************************************
 
     public void onSearchRowItemClicked(SearchRow sr) {
-        Toast.makeText(getApplicationContext(), "on search row clicked in parent", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "on search row clicked in parent", Toast.LENGTH_SHORT).show();
         //todo make call for subscribe panel
         activateSubscribeFragment(sr);
     }
