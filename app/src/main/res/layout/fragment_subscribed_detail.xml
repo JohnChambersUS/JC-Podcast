@@ -30,6 +30,14 @@
         android:layout_below="@id/subscribe_detail_image"
         ></ListView>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_unsubscribe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_remove" />
 
 </android.support.percent.PercentRelativeLayout>
 

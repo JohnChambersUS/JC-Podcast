@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.MyFileManager;
 //todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
+import us.johnchambers.podcast.misc.PodcastUpdater;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 /**
@@ -92,6 +94,7 @@ public class SubscribedDetailFragment extends MyFragment {
         //todo populate table
         populateEpisodeListView();
         addSubscribedDetailPlayListener();
+        setSubscribedButtonListener();
         return _view;
     }
 
@@ -116,6 +119,17 @@ public class SubscribedDetailFragment extends MyFragment {
     //*******************************************
     //* Common methods
     //*******************************************
+
+    private void setSubscribedButtonListener() {
+        FloatingActionButton fab = (FloatingActionButton) _view.findViewById(R.id.fab_unsubscribe);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new PodcastUpdater(_context, _podcastTable.getPid());
+                mListener.onSubscribedDetailFragmentUnsubscribe();
+            }
+        });
+    }
 
     public FragmentBackstackType getBackstackType() {
         return FragmentBackstackType.BRANCH;
@@ -160,8 +174,6 @@ public class SubscribedDetailFragment extends MyFragment {
                 processRowTap(adapter, position);
             }
         });
-
-
     }
 
     //todo redo to remove download tap
@@ -227,5 +239,6 @@ public class SubscribedDetailFragment extends MyFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onSubscribedDetailFragmentDoesSomething(String path);
+        void onSubscribedDetailFragmentUnsubscribe();
     }
 }

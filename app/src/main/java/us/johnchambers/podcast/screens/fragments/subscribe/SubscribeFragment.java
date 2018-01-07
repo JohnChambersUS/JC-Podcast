@@ -131,9 +131,14 @@ public class SubscribeFragment extends MyFragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openPopupMenu();
+                //todo replace popup menu to one giving choice
+                openPopupMenu("default");
             }
         });
+    }
+
+    private void openPopupMenu(String value) {
+        subscribePodcast("podcast");
     }
 
     private void openPopupMenu() {
