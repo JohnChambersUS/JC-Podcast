@@ -65,6 +65,17 @@ public class PodcastDatabaseHelper {
         }
     }
 
+    public PodcastTable getPodcastRow(String podcastId) {
+        List<PodcastTable> ptl = _database.dao().getPodcastTableRowByPodcastId(podcastId);
+        if (ptl.size() > 0) {
+            return ptl.get(0);
+        }
+        else {
+            return null;
+        }
+    }
+
+
     public String getPodcastFeedUrl(String podcastId) {
         List<PodcastTable> ptl = _database.dao().getPodcastTableRowByPodcastId(podcastId);
         if (ptl.size() > 0) {
@@ -75,6 +86,9 @@ public class PodcastDatabaseHelper {
         }
     }
 
+    public void deletePodcastRow(String pid) {
+        _database.dao().deletePodcastRowsByPid(pid);
+    }
 
     //********************************
     //* episode table methods
@@ -120,6 +134,10 @@ public class PodcastDatabaseHelper {
 
     public String getPodcastIdByAudioUrl(String audioUrl) {
         return _database.dao().getPodcastIdByAudioUrl(audioUrl);
+    }
+
+    public void deleteEpisodeRows(String pid) {
+        _database.dao().deleteEpisodeRowsByPid(pid);
     }
 
     //***********************************

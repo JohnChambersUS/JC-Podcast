@@ -28,6 +28,9 @@ public interface PodcastDao {
     @Query("SELECT * FROM PodcastTable WHERE pid = :podcastId")
     List<PodcastTable> getPodcastTableRowByPodcastId(String podcastId);
 
+    @Query("delete from podcastTable where pid = :podcastId;")
+    void deletePodcastRowsByPid(String podcastId);
+
     @Update
     void updatePodcastTableRow(PodcastTable podcastTableRow);
 
@@ -67,8 +70,11 @@ public interface PodcastDao {
     @Update
     void updateEpisodeTableRow(EpisodeTable episodeTableRow);
 
-    @Query("update episodetable set localdownloadurl = :downloadUrl where eid = :episodeId;")
+    @Query("update episodeTable set localdownloadurl = :downloadUrl where eid = :episodeId;")
     void updateEpisodeLocalUrl(String episodeId, String downloadUrl);
+
+    @Query("delete from episodeTable where pid = :podcastId;")
+    void deleteEpisodeRowsByPid(String podcastId);
 
     @Delete
     void deleteEpisodeTableRow(EpisodeTable episodeTableRow);

@@ -232,5 +232,9 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager.activatePlayerFragment(url);
     }
 
+    public void onSubscribedDetailFragmentUnsubscribe() {
+        _myFragmentManager.activateSubscribedFragment();
+    }
+
     public void onPlayerFragmentDoesSomething() {}
 }

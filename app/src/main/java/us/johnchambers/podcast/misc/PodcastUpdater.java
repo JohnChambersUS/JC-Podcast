@@ -38,6 +38,20 @@ public class PodcastUpdater {
         updateNextItem();
     }
 
+    //this removes the podcast belonging to the pid
+    public PodcastUpdater(Context context, String pid) {
+        _context = context;
+        try {
+            String name = PodcastDatabaseHelper.getInstance().getPodcastRow(pid).getName();
+            Toast.makeText(_context,
+                    "Removing podcast: " + name ,
+                    Toast.LENGTH_LONG).show();
+        }
+        catch (Exception e) {}
+        PodcastDatabaseHelper.getInstance().deleteEpisodeRows(pid);
+        PodcastDatabaseHelper.getInstance().deletePodcastRow(pid);
+    }
+
     private void updateNextItem() {
         if (!podcastStack.empty()) {
             makeUpdateCall(podcastStack.pop());
