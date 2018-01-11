@@ -2,6 +2,7 @@ package us.johnchambers.podcast.screens.fragments.search;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -100,6 +102,11 @@ public class SearchFragment extends MyFragment {
 
         addSearchResultsListViewListener();
 
+        //todo add resizer for search button
+
+
+
+
         return _view;
     }
 /*
@@ -110,6 +117,20 @@ public class SearchFragment extends MyFragment {
         }
     }
 */
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
+
+
+
+
+
+
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -146,7 +167,7 @@ public class SearchFragment extends MyFragment {
             et.setHint("I said, enter a term");
         }
         else {
-            String searchString = "https://itunes.apple.com/search?media=podcast&entity=podcast&limit=100&term="
+            String searchString = "https://itunes.apple.com/search?media=podcast&entity=podcast&limit=6&term="
                     + term;
             try {
                 searchString = new URL(searchString).toString();
@@ -187,7 +208,7 @@ public class SearchFragment extends MyFragment {
 
     private void addListenerGoSearchButton() {
 
-        Button button = (Button) _view.findViewById(R.id.goSearchButton);
+        ImageButton button = (ImageButton) _view.findViewById(R.id.goSearchButton);
         button.setOnClickListener(new View.OnClickListener() {
 
             @Override

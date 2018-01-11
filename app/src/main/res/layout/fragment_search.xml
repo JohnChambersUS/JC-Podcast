@@ -1,31 +1,63 @@
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="us.johnchambers.podcast.screens.fragments.search.SearchFragment"
-    android:id="@+id/search_fragment"
-    >
+    android:id="@+id/search_fragment">
 
-    <EditText
-        android:id="@+id/searchInputBox"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="text"
-        android:hint="@string/search_hint"
-        android:padding="@dimen/fab_margin"
-        android:layout_gravity="top"
-        android:background="#ffffff"
-        />
+        android:id="@+id/searchBar"
+        >
 
-    <Button
-        android:id="@+id/goSearchButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/fab_margin"
-        android:text="Search"
-        android:layout_below="@id/searchInputBox"
-        />
+        <TextView
+
+            android:id="@+id/bgTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="background text"
+            android:background="#ff00ff"
+
+            />
+
+        <ImageButton
+            android:id="@+id/goSearchButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_search"
+
+            app:layout_constraintTop_toTopOf="@id/bgTextView"
+            app:layout_constraintBottom_toBottomOf="@id/bgTextView"
+            android:background="#ff0000"
+            app:layout_constraintEnd_toEndOf="@id/bgTextView"
+
+
+            app:layout_constraintDimensionRatio="1:1"
+
+            android:scaleType="fitXY"
+            />
+
+        <EditText
+            android:id="@+id/searchInputBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:hint="@string/search_hint"
+            android:padding="@dimen/fab_margin"
+            android:background="#ffffff"
+            android:text="Enter Search Here"
+            app:layout_constraintTop_toTopOf="@id/bgTextView"
+            app:layout_constraintLeft_toLeftOf="@id/bgTextView"
+            app:layout_constraintBottom_toBottomOf="@id/bgTextView"
+            app:layout_constraintRight_toLeftOf="@id/goSearchButton"
+            />
+
+
+
+    </android.support.constraint.ConstraintLayout>
 
     <ListView
         android:id="@+id/searchResultListView"
@@ -33,8 +65,9 @@
         android:background="#ffff00"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_below="@id/goSearchButton"
+        android:layout_below="@id/searchBar"
         ></ListView>
 
 
 </RelativeLayout>
+

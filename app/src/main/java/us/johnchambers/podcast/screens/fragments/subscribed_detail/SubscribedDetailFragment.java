@@ -140,7 +140,7 @@ public class SubscribedDetailFragment extends MyFragment {
         Bitmap pcImage = MyFileManager.getInstance().getPodcastImage(_podcastTable.getPid());
         if (pcImage == null) {
             pcImage =  BitmapFactory.decodeResource(_context.getResources(),
-                    R.mipmap.ic_missing_podcast_image);
+                    R.raw.missing_podcast_image);
         }
         image.setImageBitmap(pcImage);
     }

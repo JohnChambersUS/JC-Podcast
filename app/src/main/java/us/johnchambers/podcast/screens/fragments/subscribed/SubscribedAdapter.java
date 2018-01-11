@@ -46,7 +46,7 @@ public class SubscribedAdapter extends ArrayAdapter<PodcastTable> {
         Bitmap pcImage = MyFileManager.getInstance().getPodcastImage(currPodcast.getPid());
         if (pcImage == null) {
             pcImage = BitmapFactory.decodeResource(_context.getResources(),
-                    R.mipmap.ic_missing_podcast_image);
+                    R.raw.missing_podcast_image);
         }
         TextView podcastName = (TextView) convertView.findViewById(R.id.row_subscribed_podcast_name);
         podcastName.setText(currPodcast.getName());
