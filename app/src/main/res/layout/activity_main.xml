@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context="us.johnchambers.podcast.activity.MainActivity"
     android:background="#000000"
+
     >
 
     <TextView
