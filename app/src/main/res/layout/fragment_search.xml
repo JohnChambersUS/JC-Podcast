@@ -48,7 +48,6 @@
             android:hint="@string/search_hint"
             android:padding="@dimen/fab_margin"
             android:background="#ffffff"
-            android:text="Enter Search Here"
             app:layout_constraintTop_toTopOf="@id/bgTextView"
             app:layout_constraintLeft_toLeftOf="@id/bgTextView"
             app:layout_constraintBottom_toBottomOf="@id/bgTextView"
