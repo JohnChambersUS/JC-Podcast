@@ -98,12 +98,12 @@ public class MyPlayer {
         }
         if (_currPodcastPicture == null) {
             _currPodcastPicture = BitmapFactory.decodeResource(_context.getResources(),
-                    R.mipmap.ic_missing_podcast_image);
+                    R.raw.missing_podcast_image);
         }
 
         if ((mediaSource == null) &&  (_nextUrl == null)) {
             _currPodcastPicture = BitmapFactory.decodeResource(_context.getResources(),
-                    R.mipmap.ic_nothing_in_queue);
+                    R.raw.nopodcast);
         }
 
         _playerView.setDefaultArtwork(_currPodcastPicture);

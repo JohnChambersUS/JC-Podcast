@@ -251,7 +251,7 @@ public class SubscribeFragment extends MyFragment {
     public void setDefaultImage() {
         ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_ResultImage));
         Bitmap bitmap =  BitmapFactory.decodeResource(getContext().getResources(),
-                R.mipmap.ic_missing_podcast_image);
+                R.raw.missing_podcast_image);
         iv.setImageBitmap(bitmap);
     }
 
