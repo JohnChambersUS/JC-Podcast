@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#3C6EB4</color>
+    <color name="colorPrimaryDark">#394F80</color>
+    <color name="colorAccent">#e3d343</color>
+
+    <style name="jcTheme" parent="AppTheme.NoActionBar">
+        <item name="android:colorPrimary">#3C6EB4</item>
+        <item name="android:colorPrimaryDark">#394F80</item>
+        <item name="android:statusBarColor">#394F80</item>
+        <item name="android:navigationBarColor">#394F80</item>
+    </style>
 </resources>
