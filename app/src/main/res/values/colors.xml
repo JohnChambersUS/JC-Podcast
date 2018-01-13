@@ -2,7 +2,8 @@
 <resources>
     <color name="colorPrimary">#3C6EB4</color>
     <color name="colorPrimaryDark">#394F80</color>
-    <color name="colorAccent">#e3d343</color>
+    <color name="colorAccent">#E3D346</color>
+    <color name="lightBackground">#E3D346</color>
 
     <style name="jcTheme" parent="AppTheme.NoActionBar">
         <item name="android:colorPrimary">#3C6EB4</item>
