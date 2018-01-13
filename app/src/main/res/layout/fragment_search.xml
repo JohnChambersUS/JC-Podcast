@@ -31,7 +31,7 @@
 
             app:layout_constraintTop_toTopOf="@id/bgTextView"
             app:layout_constraintBottom_toBottomOf="@id/bgTextView"
-            android:background="#ff0000"
+            android:background="@color/secondaryAccent"
             app:layout_constraintEnd_toEndOf="@id/bgTextView"
 
 
@@ -61,7 +61,7 @@
     <ListView
         android:id="@+id/searchResultListView"
         android:layout_width="match_parent"
-        android:background="#ffff00"
+        android:background="@color/colorPrimaryDark"
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_below="@id/searchBar"
