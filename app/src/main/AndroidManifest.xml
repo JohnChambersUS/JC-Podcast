@@ -20,7 +20,7 @@
             android:windowSoftInputMode="adjustNothing"
             android:name=".activity.MainNavigationActivity"
             android:label="@string/title_activity_main_navigation"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/jcTheme"></activity>
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
