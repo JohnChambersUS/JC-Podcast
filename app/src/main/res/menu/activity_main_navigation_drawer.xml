@@ -4,33 +4,20 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_search"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_search_combo"
             android:title="Find A New Podcast" />
         <item
             android:id="@+id/nav_show_subscribed"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_my_podcasts_combo"
             android:title="My Podcasts" />
         <item
             android:id="@+id/nav_player"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_player_combo"
             android:title="Player" />
         <item
             android:id="@+id/nav_update_podcasts"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_update_combo"
             android:title="Update Podcasts" />
     </group>
-
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
 
 </menu>
