@@ -15,7 +15,11 @@ import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.TransferListener;
 import com.google.android.exoplayer2.util.Util;
 
 import java.util.Deque;
@@ -128,12 +132,33 @@ public class MyPlayer {
 
     private MediaSource buildMediaSource(Uri uri) {
 
-        String userAgent = Util.getUserAgent(_context, "jcpodcast-exoplayer-agent");
+        //String userAgent = Util.getUserAgent(_context, "jcpodcast-exoplayer-agent");
         //return new ExtractorMediaSource(uri, new DefaultHttpDataSourceFactory(userAgent),
         //        new DefaultExtractorsFactory(), null, null);
-        return new ExtractorMediaSource(uri, new DefaultDataSourceFactory(_context, userAgent),
+        MediaSource ms = new ExtractorMediaSource(uri, createDataSourceFactory(),
                 new DefaultExtractorsFactory(), null, null);
+        return ms;
+    }
 
+    private DefaultDataSourceFactory createDataSourceFactory() {
+        String userAgent = Util.getUserAgent(_context, "jcpodcast-exoplayer-agent");
+
+        // Default parameters, except allowCrossProtocolRedirects is true
+        DefaultHttpDataSourceFactory httpDataSourceFactory = new DefaultHttpDataSourceFactory(
+                userAgent,
+                null,
+                DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS,
+                DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS,
+                true /* allowCrossProtocolRedirects */
+        );
+
+        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(
+                _context,
+                null,
+                httpDataSourceFactory
+        );
+
+        return dataSourceFactory;
     }
 
     public void stop() {
