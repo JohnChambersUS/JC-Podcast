@@ -17,13 +17,13 @@
         android:padding="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:background="#FF00FF"
+        android:background="@color/colorPrimaryDark"
         ></ImageView>
 
     <ListView
         android:id="@+id/subscribed_detail_episode_list_view"
         android:layout_width="match_parent"
-        android:background="#ffff00"
+        android:background="@color/colorPrimaryDark"
         android:layout_weight="1"
         android:layout_height="wrap_content"
         app:layout_heightPercent="70%"

@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#394F80</color>
     <color name="colorAccent">#E3D346</color>
     <color name="lightBackground">#EFF0F0</color>
+    <color name="semiLightBackground">#96DAF8</color>
     <color name="secondaryAccent">#F89C33</color>
 
     <style name="jcTheme" parent="AppTheme.NoActionBar">
