@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -118,10 +119,15 @@ public class SubscribedFragment extends MyFragment {
         _adapter = new SubscribedAdapter(_view.getContext());
         ListView listView = (ListView) _view.findViewById(R.id.subscribedListView);
         listView.setAdapter(_adapter);
-
+        TextView noSubscriptionsView = (TextView) _view.findViewById(R.id.noSubscriptionsMessage);
         List<PodcastTable> podcasts = PodcastDatabaseHelper.getInstance().getAllPodcastRows();
-        for (PodcastTable podcast : podcasts) {
-            _adapter.add(podcast);
+        if (podcasts.size() > 0) {
+            noSubscriptionsView.setVisibility(TextView.INVISIBLE);
+            for (PodcastTable podcast : podcasts) {
+                _adapter.add(podcast);
+            }
+        } else {
+            noSubscriptionsView.setVisibility(TextView.VISIBLE);
         }
     }
 
