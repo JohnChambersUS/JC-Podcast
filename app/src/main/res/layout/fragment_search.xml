@@ -52,6 +52,7 @@
             app:layout_constraintLeft_toLeftOf="@id/bgTextView"
             app:layout_constraintBottom_toBottomOf="@id/bgTextView"
             app:layout_constraintRight_toLeftOf="@id/goSearchButton"
+            android:imeOptions="actionSearch"
             />
 
 
