@@ -213,7 +213,6 @@ public class SearchFragment extends MyFragment {
 
             @Override
             public void onClick(View view) {
-                //Toast.makeText(_context, "Press Listener tapped", Toast.LENGTH_LONG).show();
                 hideKeyboard();
                 performSearch();
             }
