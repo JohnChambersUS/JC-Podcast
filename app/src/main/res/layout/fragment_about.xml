@@ -1,0 +1,65 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="us.johnchambers.podcast.screens.fragments.about.AboutFragment"
+    android:background="@color/lightBackground"
+    >
+
+    <!-- TODO: Update blank fragment layout -->
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/std_margin"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/tv01"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="JC Podcast"
+                />
+
+            <TextView
+                android:id="@+id/tv02"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Version: Bravo"
+                />
+
+            <TextView
+                android:paddingTop="@dimen/std_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="Copyright \u00A9 2018 John Chambers All Rights Reserved"
+                />
+
+            <TextView
+                android:paddingTop="@dimen/std_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:autoLink="web"
+                android:text="http://johnchambers.us"
+                android:textColorLink="#ff0000"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>
