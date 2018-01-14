@@ -56,7 +56,7 @@ public class PodcastUpdater {
         if (!podcastStack.empty()) {
             makeUpdateCall(podcastStack.pop());
             try {
-                Thread.sleep(60000);
+                //Thread.sleep(60000);
             }
             catch(Exception e) {
                     Toast.makeText(_context,

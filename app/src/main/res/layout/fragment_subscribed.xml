@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:id="@+id/subscribed_view"
     tools:context="us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment"
-    android:background="@color/semiLightBackground">
+    android:background="@color/lightBackground">
 
     <ListView
         android:id="@+id/subscribedListView"

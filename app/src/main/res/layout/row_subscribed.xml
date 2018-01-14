@@ -5,15 +5,14 @@
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:background="@color/semiLightBackground"
+    android:background="@color/lightBackground"
     >
 
     <ImageView
         android:id="@+id/subscribedRowImage"
         app:layout_widthPercent="30%"
         app:layout_aspectRatio="100%"
-        android:scaleType="fitXY"
-        >
+        android:scaleType="fitXY">
     </ImageView>
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -25,6 +24,7 @@
         android:textSize="18sp"
         app:layout_widthPercent="70%"
         android:layout_toRightOf="@id/subscribedRowImage"
+        android:textColor="@color/colorPrimaryDark"
         >
     </TextView>
 
