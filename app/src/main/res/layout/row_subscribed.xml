@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:background="#FF0000"
+    android:background="@color/semiLightBackground"
     >
 
     <ImageView
@@ -21,7 +21,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:paddingRight="8dp"
+        android:padding="@dimen/std_margin"
         android:textSize="18sp"
         app:layout_widthPercent="70%"
         android:layout_toRightOf="@id/subscribedRowImage"
