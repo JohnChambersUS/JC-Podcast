@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
-    android:background="#FF0000"
+    android:background="@color/lightBackground"
     >
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -15,6 +15,7 @@
         android:padding="16dp"
         android:textSize="18sp"
         app:layout_widthPercent="30%"
+        android:textColor="@color/colorPrimaryDark"
         >
     </TextView>
 
@@ -26,6 +27,7 @@
         android:textSize="18sp"
         app:layout_widthPercent="70%"
         android:layout_toRightOf="@id/subscribeEpisodeRowDate"
+        android:textColor="@color/colorPrimaryDark"
         >
     </TextView>
 
