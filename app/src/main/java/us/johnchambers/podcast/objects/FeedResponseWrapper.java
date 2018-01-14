@@ -14,6 +14,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.rometools.rome.feed.module.Module;
 import com.rometools.rome.feed.synd.SyndContent;
+import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.feed.synd.SyndImage;
@@ -117,19 +118,45 @@ public class FeedResponseWrapper {
     }
 
     public String getEpisodeDownloadLink() {
-        String u;
-        try {
-            u = new URL(_feed.getEntries().get(_currEpisode).getUri()).toString();
-        }
-        catch (Exception e) {
-            SyndEntry currEntry = _feed.getEntries().get(_currEpisode);
-            String link = currEntry.getLink();
+        String u = null;
+        boolean foundIt = false;
+        SyndEntry currEntry = _feed.getEntries().get(_currEpisode);
+
+        if (!foundIt) {
             try {
+                List<SyndEnclosure> enc = currEntry.getEnclosures();
+                SyndEnclosure sec = enc.get(0);
+                String newUrl = sec.getUrl();
+                u = new URL(newUrl).toString();
+                foundIt = true;
+            } catch (Exception e) {
+
+            }
+        }
+
+        if (!foundIt) {
+            try {
+                u = new URL(currEntry.getUri()).toString();
+                foundIt = true;
+            } catch (Exception e) {
+
+            }
+        }
+
+        if (!foundIt) {
+            try {
+                String link = currEntry.getLink();
                 u = new URL(link).toString();
+                foundIt = true;
+            } catch (Exception e) {
+
             }
-            catch(Exception e2) {
-                u = null;
-            }
+        }
+
+
+
+        if (!foundIt) {
+            u = null;
         }
         return u;
     }
@@ -143,6 +170,7 @@ public class FeedResponseWrapper {
         catch(Exception e) {
             int y = 1;
         }
+        String x = "asdf";
     }
 
     public String getPodcastId() {
