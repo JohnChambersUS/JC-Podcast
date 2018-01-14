@@ -20,4 +20,10 @@
             android:title="Update Podcasts" />
     </group>
 
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@drawable/ic_about"
+        android:title="About" />
+
+
 </menu>

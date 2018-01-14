@@ -25,6 +25,7 @@ import us.johnchambers.podcast.database.PodcastTable;
 //todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
 import us.johnchambers.podcast.misc.MyPlayer;
 import us.johnchambers.podcast.misc.PodcastUpdater;
+import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
 import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
@@ -40,7 +41,8 @@ public class MainNavigationActivity extends AppCompatActivity
         SubscribeFragment.OnFragmentInteractionListener,
         SubscribedFragment.OnFragmentInteractionListener,
         SubscribedDetailFragment.OnFragmentInteractionListener,
-        PlayerFragment.OnFragmentInteractionListener {
+        PlayerFragment.OnFragmentInteractionListener,
+        AboutFragment.OnFragmentInteractionListener {
 
     //FragmentManager fragmentManager = null;
     MyFragmentManager _myFragmentManager = null;
@@ -145,6 +147,8 @@ public class MainNavigationActivity extends AppCompatActivity
                 }
             });
             updaterThread.start();
+        } else if (id == R.id.nav_about) {
+            _myFragmentManager.activateAboutFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -233,4 +237,6 @@ public class MainNavigationActivity extends AppCompatActivity
     }
 
     public void onPlayerFragmentDoesSomething() {}
+
+    public void onAboutFragmentInteraction() {}
 }

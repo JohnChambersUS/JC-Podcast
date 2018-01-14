@@ -180,7 +180,7 @@ public class PlayerFragment extends MyFragment {
     //* methods
     //*************************************
     public FragmentBackstackType getBackstackType() {
-        return FragmentBackstackType.BRANCH;
+        return FragmentBackstackType.ROOT;
     }
 
     public void initializePlayer() {
