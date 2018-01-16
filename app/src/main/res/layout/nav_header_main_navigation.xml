@@ -25,7 +25,8 @@
                 android:text="JC Podcast"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:layout_constraintLeft_toRightOf="@id/logo"
-                android:paddingLeft="@dimen/std_margin" />
+                android:paddingLeft="@dimen/std_margin"
+                android:textColor="@color/colorPrimaryDark"/>
 
             <TextView
                 android:id="@+id/bottom_text"
@@ -36,7 +37,8 @@
                 app:layout_constraintLeft_toRightOf="@id/logo"
                 app:layout_constraintTop_toBottomOf="@id/top_text"
                 android:paddingLeft="@dimen/std_margin"
-                android:layout_centerInParent="true" />
+                android:layout_centerInParent="true"
+                android:textColor="@color/colorPrimaryDark"/>
 
             <ImageView
                 android:id="@+id/logo"
@@ -46,7 +48,6 @@
                 android:scaleType="fitXY"
                 app:layout_constraintTop_toTopOf="@id/top_text"
                 app:layout_constraintBottom_toBottomOf="@id/bottom_text"
-
                 />
 
         </android.support.constraint.ConstraintLayout>
@@ -58,6 +59,10 @@
         android:text="http://johnchambers.us"
         android:paddingTop="@dimen/std_margin"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#000000"/>
+        android:textColorLink="@color/colorPrimaryDark"
+        android:autoLink="web"
+
+
+        />
 
 </LinearLayout>
