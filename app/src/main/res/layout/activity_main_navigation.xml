@@ -14,11 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@raw/background"
-        android:scaleType="fitEnd"
-
+        android:scaleType="fitXY"
         />
 
     <include
+        android:id="@+id/topMenuBar"
         layout="@layout/app_bar_main_navigation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

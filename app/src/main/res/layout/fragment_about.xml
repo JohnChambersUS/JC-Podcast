@@ -58,6 +58,14 @@
                 android:textColorLink="#ff0000"
                 />
 
+            <TextView
+                android:paddingTop="@dimen/big_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/colorPrimaryDark"
+                android:text="@string/background_attrib"
+                />
         </LinearLayout>
 
     </ScrollView>
