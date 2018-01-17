@@ -19,8 +19,7 @@
             android:layout_height="wrap_content"
             android:padding="16dp"
             android:text="background text"
-            android:background="#ff00ff"
-
+            android:background="@color/colorAccent"
             />
 
         <ImageButton
@@ -43,7 +42,7 @@
         <EditText
             android:id="@+id/searchInputBox"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:inputType="text"
             android:hint="@string/search_hint"
             android:padding="@dimen/fab_margin"
