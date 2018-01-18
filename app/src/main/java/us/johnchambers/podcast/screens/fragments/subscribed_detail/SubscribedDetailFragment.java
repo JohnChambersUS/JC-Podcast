@@ -27,14 +27,6 @@ import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.PodcastUpdater;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SubscribedDetailFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SubscribedDetailFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SubscribedDetailFragment extends MyFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -56,20 +48,10 @@ public class SubscribedDetailFragment extends MyFragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SubscribedDetailFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static SubscribedDetailFragment newInstance(PodcastTable pt) {
         SubscribedDetailFragment fragment = new SubscribedDetailFragment();
         Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         _podcastTable = pt;
         return fragment;
@@ -179,9 +161,7 @@ public class SubscribedDetailFragment extends MyFragment {
     //todo redo to remove download tap
     private void processRowTap(AdapterView listView, int position) {
 
-        //get state of row
         EpisodeTable panelRow = _adapter.getItem(position);
-        //boolean inQueue = PodcastDatabaseHelper.getInstance().isEpisodeInDownloadQueue(panelRow.getEid());
         String audioUrl = PodcastDatabaseHelper.getInstance().getEpisodeAudioUrl((panelRow.getEid()));
 
         if (audioUrl == null) {
@@ -197,45 +177,13 @@ public class SubscribedDetailFragment extends MyFragment {
             Toast.makeText(_context, "Url for this episode is 0 length", Toast.LENGTH_LONG).show();
 
         }
-        /*
-            //get is complete
-            EpisodeTable dbRow = PodcastDatabaseHelper.getInstance()
-                    .getEpisodeTableRowByEpisodeId(panelRow.getEid());
-            if (dbRow == null) {
-                //set icon to bad iccon
-                return;
-            }
-            if (dbRow.getLocalDownloadUrl() != null) {
-                _adapter.updateStatusIconToPlay(listView, position);
-                //MyPodcastPlayer.getInstance(_context).play(dbRow.getLocalDownloadUrl());
-                mListener.onSubscribedDetailFragmentDoesSomething(dbRow.getLocalDownloadUrl());
-
-            }
-            else { // do download
-                DownloadQueueTable newRow = new DownloadQueueTable();
-                newRow.setEid(panelRow.getEid());
-                newRow.setDownloadReference(0);
-                PodcastDatabaseHelper.getInstance().insertDownloadQueueTableRow(newRow);
-                _adapter.updateStatusIconToDownloading(listView, position);
-                //PodcastDownloader.getInstance().wake();
-            }
-        }
-        */
-
 
     }
 
+    //******************************
+    //* interfaces
+    //******************************
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onSubscribedDetailFragmentDoesSomething(String path);

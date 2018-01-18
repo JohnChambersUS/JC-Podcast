@@ -16,9 +16,6 @@ import java.util.ArrayList;
 
 import us.johnchambers.podcast.R;
 
-//import us.johnchambers.podcast.R;
-//import us.johnchambers.jcpodcast.misc.MyViewManager;
-//import us.johnchambers.jcpodcast.objects.SearchRow;
 
 public class SearchDisplayAdapter extends ArrayAdapter<SearchRow> {
 

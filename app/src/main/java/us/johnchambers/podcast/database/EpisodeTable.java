@@ -49,7 +49,6 @@ public class EpisodeTable {
         this.localDownloadUrl = localDownloadUrl;
     }
 
-
     public int getIdentity() {
         return identity;
     }
@@ -77,7 +76,6 @@ public class EpisodeTable {
     public String getPubDate() {
         return pubDate;
     }
-
 
     public Date getPubDateAsDate() {
         Date returnDate = new Date();
@@ -108,17 +106,6 @@ public class EpisodeTable {
     }
 
 
-    /*
-    public boolean getDownloadedToDeviceBoolean() {
-        if (downloadedToDevice == 1) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-*/
-
     public void setIdentity(int identity) {
         //this.identity = identity;
     }
@@ -146,11 +133,6 @@ public class EpisodeTable {
     public void setPubDate(String pubDate) {
         this.pubDate = pubDate;
     }
-
-    //public void setPubDateViaDate(Date pubDate) {
-    //    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-DDD HH:mm");
-    //    this.pubDate = sdf.format(pubDate);
-    //}
 
     public void setLength(String length) {
         this.length = length;
@@ -184,10 +166,6 @@ public class EpisodeTable {
 
     public void setPlayPoint(String playPoint) {
         this.playPoint = playPoint;
-    }
-
-    public void setDownloadedToDevice(int downloadedToDevice) {
-        //this.downloadedToDevice = downloadedToDevice;
     }
 
 }

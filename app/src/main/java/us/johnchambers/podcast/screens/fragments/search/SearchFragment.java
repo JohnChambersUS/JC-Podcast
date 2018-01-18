@@ -33,14 +33,6 @@ import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.misc.VolleyQueue;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SearchFragment extends MyFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,14 +54,6 @@ public class SearchFragment extends MyFragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static SearchFragment newInstance() {
         SearchFragment fragment = new SearchFragment();
@@ -93,7 +77,6 @@ public class SearchFragment extends MyFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
 
         _view = inflater.inflate(R.layout.fragment_search, container, false);
 
@@ -106,33 +89,12 @@ public class SearchFragment extends MyFragment {
         addSearchResultsListViewListener();
         addKeyboardSearchListener();
 
-        //todo add resizer for search button
-
-
-
-
         return _view;
     }
-/*
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onSearchRowItemClicked(null);
-        }
-    }
-*/
 
     @Override
     public void onStart() {
         super.onStart();
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -171,7 +133,7 @@ public class SearchFragment extends MyFragment {
             et.setHint("I said, enter a term");
         }
         else {
-            String searchString = "https://itunes.apple.com/search?media=podcast&entity=podcast&limit=6&term="
+            String searchString = "https://itunes.apple.com/search?media=podcast&entity=podcast&limit=100&term="
                     + term;
             try {
                 searchString = new URL(searchString).toString();
@@ -200,8 +162,6 @@ public class SearchFragment extends MyFragment {
         _adapter.add(sr);
         _adapter.notifyDataSetChanged();
     }
-
-
 
     //******************************************
     //* Listeners
@@ -254,8 +214,6 @@ public class SearchFragment extends MyFragment {
             }
         });
     }
-
-
 
     //********************************************
     //* Volley section
@@ -316,8 +274,5 @@ public class SearchFragment extends MyFragment {
     public interface OnFragmentInteractionListener {
         void onSearchRowItemClicked(SearchRow sr);
     }
-
-
-
 
 }

@@ -39,14 +39,6 @@ import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.objects.FeedResponseWrapper;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SubscribeFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SubscribeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SubscribeFragment extends MyFragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -68,14 +60,6 @@ public class SubscribeFragment extends MyFragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SubscribeFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static SubscribeFragment newInstance(SearchRow sr) {
         SubscribeFragment fragment = new SubscribeFragment();
@@ -97,7 +81,6 @@ public class SubscribeFragment extends MyFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         _view = inflater.inflate(R.layout.fragment_subscribe, container, false);
         setSubscribeButtonListener();
         getPodcastFeedInfo();
@@ -263,7 +246,6 @@ public class SubscribeFragment extends MyFragment {
         iv.setImageBitmap(bitmap);
     }
 
-
     //***************************
     //* Volley section
     //***************************
@@ -300,50 +282,38 @@ public class SubscribeFragment extends MyFragment {
 
     private void getPodcastImage() {
         String imageUrl = _feedResponseWrapper.getLogoUrl();
-        try {
-            imageUrl = new URL(imageUrl).toString();
+        if (imageUrl == null) {
+            setDefaultImage();
+        } else {
+            try {
+                imageUrl = new URL(imageUrl).toString();
+            } catch (Exception e) {}
+
+            ImageRequest ir = new ImageRequest(imageUrl,
+                    new Response.Listener<Bitmap>() {
+                        @Override
+                        public void onResponse(Bitmap response) {
+                            addImageToSubscribeScreen(response);
+                        }
+                    },
+                    500,
+                    500,
+                    Bitmap.Config.ARGB_8888,
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError e) {
+                            int z = 1;
+                        }
+                    }
+            );
+
+            VolleyQueue.getInstance().getRequestQueue().add(ir);
         }
-        catch(Exception e) {}
-
-        ImageRequest ir = new ImageRequest(imageUrl,
-                new Response.Listener<Bitmap>() {
-                    @Override
-                    public void onResponse(Bitmap response) {
-                        addImageToSubscribeScreen(response);
-                    }
-                },
-                500,
-                500,
-                Bitmap.Config.ARGB_8888,
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError e) {
-                        int z = 1;
-                    }
-                }
-        );
-
-        //VolleyQueue vq = VolleyQueue.getInstance();
-        //RequestQueue rq = vq.getRequestQueue();
-        //rq.add(ir);
-        VolleyQueue.getInstance().getRequestQueue().add(ir);
     }
 
-
-
-
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+    //**********************************
+    //* listeners
+    //***********************************
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onCloseSubscribeFragment();
