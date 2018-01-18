@@ -59,11 +59,15 @@ public class FeedResponseWrapper {
     }
 
     public String getLogoUrl() {
-        Pattern pat = Pattern.compile("http(s)?:\\/\\/.*\\.(jpg|png|svg|jpeg|gif)");
-        Matcher mat = pat.matcher(_response);
-        boolean f = mat.find();
-        String one = mat.group(0);
-        return one;
+        try {
+            Pattern pat = Pattern.compile("http(s)?:\\/\\/.*\\.(jpg|png|svg|jpeg|gif)");
+            Matcher mat = pat.matcher(_response);
+            boolean f = mat.find();
+            String one = mat.group(0);
+            return one;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public String getFeedUrl() {
@@ -105,6 +109,7 @@ public class FeedResponseWrapper {
     }
 
     public String getCurrEpisodeDate() {
+        String formattedDate = "";
         SimpleDateFormat sdf = new SimpleDateFormat("yy-DDD HH:mm");
         Date pd;
         try {
@@ -114,7 +119,14 @@ public class FeedResponseWrapper {
             pd = new Date();
 
         }
-        return sdf.format(pd);
+        try {
+            formattedDate = sdf.format(pd);
+        }
+        catch (Exception e) {
+            formattedDate = "00-000 00:00";
+        }
+
+        return formattedDate;
     }
 
     public String getEpisodeDownloadLink() {
@@ -152,8 +164,6 @@ public class FeedResponseWrapper {
 
             }
         }
-
-
 
         if (!foundIt) {
             u = null;
@@ -219,7 +229,5 @@ public class FeedResponseWrapper {
         }
         return episodeMap;
     }
-
-
 
 }

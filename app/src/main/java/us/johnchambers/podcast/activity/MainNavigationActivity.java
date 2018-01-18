@@ -44,7 +44,6 @@ public class MainNavigationActivity extends AppCompatActivity
         PlayerFragment.OnFragmentInteractionListener,
         AboutFragment.OnFragmentInteractionListener {
 
-    //FragmentManager fragmentManager = null;
     MyFragmentManager _myFragmentManager = null;
 
     @Override
@@ -54,19 +53,9 @@ public class MainNavigationActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        //fab.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-        //    public void onClick(View view) {
-        //        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-        //                .setAction("Action", null).show();
-        //    }
-        //});
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        //drawer.setDrawerListener(toggle);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -76,22 +65,11 @@ public class MainNavigationActivity extends AppCompatActivity
         VolleyQueue.getInstance(this); //inits volley queue
         _myFragmentManager = new MyFragmentManager(getSupportFragmentManager());
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
-
- /*       Thread updaterThread = new Thread(new Runnable(){
-            @Override
-            public void run(){
-                PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
-            }
-        });
-        updaterThread.start();
-*/
-        //activteDownloadBroadcastReciever();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
     }
 
     @Override
@@ -100,7 +78,7 @@ public class MainNavigationActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            //super.onBackPressed();
+            //super.onBackPressed(); commented out to prevent app closure
         }
         _myFragmentManager.popBackstackEntry();
     }
@@ -108,7 +86,6 @@ public class MainNavigationActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_navigation, menu);
-        //return true;
         return false;
     }
 
@@ -130,7 +107,6 @@ public class MainNavigationActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_search) {
@@ -155,67 +131,20 @@ public class MainNavigationActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-/*
-    public android.support.v4.app.FragmentManager getCurrentFragmentManager() {
-        if (fragmentManager == null) {
-            fragmentManager = getSupportFragmentManager();
-        }
-        return fragmentManager;
-    }
-*/
+
     public void activateSearchFragment() {
-        //FragmentManager fm = getCurrentFragmentManager();
-        //add search fragment and activate
-        //SearchFragment sr = SearchFragment.newInstance();
-        //android.support.v4.app.FragmentTransaction transaction = fm.beginTransaction();
-        //transaction.add(R.id.your_placeholder, sr, "SEARCH_FRAGMENT");
-        //transaction.commit();
-        //transaction.show(sr).commit();
         _myFragmentManager.activateSearchFragment();
     }
 
-    public void deactivateSearchFragment() {
-        //getCurrentFragmentManager();
-        //android.support.v4.app.Fragment exists = fragmentManager.findFragmentByTag("SEARCH_FRAGMENT");
-        //fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag("SEARCH_FRAGMENT")).commit();
-        //_myFragmentManager.deactivateSearchFragment();
-    }
-
     public void activateSubscribeFragment(SearchRow sr) {
-        //deactivateSearchFragment();
-        //getCurrentFragmentManager()
-        //        .beginTransaction()
-         //       .add(R.id.subscribe_placeholder, SubscribeFragment.newInstance(sr), "SUBSCRIBE_FRAGMENT")
-         //       .commit();
         _myFragmentManager.activateSubscribeFragment(sr);
     }
-
-    //**********************************************
-    //* Broadcast receiver
-    //**********************************************
-
-    //todo delete broadcast receiver
-    public void activteDownloadBroadcastReciever() {
-        IntentFilter filter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
-        BroadcastReceiver receiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                //long reference = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-                //do something with reference
-                //PodcastDownloader.getInstance(getApplicationContext()).wake();
-            }
-        };
-        registerReceiver(receiver, filter);
-    }
-
 
     //************************************************
     //* Interface implementations
     //***********************************************
 
     public void onSearchRowItemClicked(SearchRow sr) {
-        //Toast.makeText(getApplicationContext(), "on search row clicked in parent", Toast.LENGTH_SHORT).show();
-        //todo make call for subscribe panel
         activateSubscribeFragment(sr);
     }
 

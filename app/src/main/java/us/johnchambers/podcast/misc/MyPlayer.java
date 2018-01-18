@@ -132,9 +132,6 @@ public class MyPlayer {
 
     private MediaSource buildMediaSource(Uri uri) {
 
-        //String userAgent = Util.getUserAgent(_context, "jcpodcast-exoplayer-agent");
-        //return new ExtractorMediaSource(uri, new DefaultHttpDataSourceFactory(userAgent),
-        //        new DefaultExtractorsFactory(), null, null);
         MediaSource ms = new ExtractorMediaSource(uri, createDataSourceFactory(),
                 new DefaultExtractorsFactory(), null, null);
         return ms;

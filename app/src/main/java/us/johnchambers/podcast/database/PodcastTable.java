@@ -52,7 +52,6 @@ public class PodcastTable {
         return PodcastMode.valueOf(subscriptionType);
     }
 
-
     public int getDownloadInterval() {
         return downloadInterval;
     }
@@ -72,7 +71,6 @@ public class PodcastTable {
         }
         return returnDate;
     }
-
 
     public void setIdentity(int identity) {
         //this.identity = identity;
@@ -98,7 +96,6 @@ public class PodcastTable {
         this.subscriptionType = subscription_type.toString();
     }
 
-
     public void setDownloadInterval(int download_interval) {
         this.downloadInterval = download_interval;
     }
@@ -111,6 +108,5 @@ public class PodcastTable {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-DDD HH:mm");
         this.lastDownloadDate = sdf.format(last_download_date);
     }
-
 
 }

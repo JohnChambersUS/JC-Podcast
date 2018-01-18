@@ -53,21 +53,6 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
         //todo add icon if partially played
         status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
 
-        /*
-        String dlurl = episode.getLocalDownloadUrl();
-        if (episode.getLocalDownloadUrl() != null) {
-            status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
-        }
-        else {
-            boolean inQueue = PodcastDatabaseHelper.getInstance().isEpisodeInDownloadQueue(episode.getEid());
-            if (inQueue) {
-                status.setImageDrawable(_context.getDrawable(R.drawable.ic_pause));
-            }
-            else {
-                status.setImageDrawable(_context.getDrawable(R.drawable.ic_download));
-            }
-        }
-        */
         return convertView;
     }
 

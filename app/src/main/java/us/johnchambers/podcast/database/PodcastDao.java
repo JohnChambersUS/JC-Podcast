@@ -95,7 +95,6 @@ public interface PodcastDao {
     @Query("select * from downloadqueuetable where downloadreference > 0;")
     List<DownloadQueueTable> getAllDownloadsInProgress();
 
-
     @Update
     void updateDownloadQueueTableRow(DownloadQueueTable downloadQueueTable);
 

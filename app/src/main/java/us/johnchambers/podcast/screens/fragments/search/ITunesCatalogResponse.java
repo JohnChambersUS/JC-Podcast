@@ -89,7 +89,6 @@ public class ITunesCatalogResponse {
         }
     }
 
-
     public int getresultCount() {
         return _resultCount;
     }
