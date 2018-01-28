@@ -1,6 +1,8 @@
 package us.johnchambers.podcast.screens.fragments.player;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,9 +26,13 @@ import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 
 import us.johnchambers.podcast.R;
+import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.MyPlayer;
+import us.johnchambers.podcast.misc.PlayerServiceController;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
+import us.johnchambers.podcast.services.PlayerService;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -75,7 +81,7 @@ public class PlayerFragment extends MyFragment {
     private OnFragmentInteractionListener mListener;
 
     private SimpleExoPlayerView _playerView;
-    private static String upNextUrl;
+    private static String upNextUrl = null;
 
     private static MyPlayer _player;
 
@@ -84,16 +90,20 @@ public class PlayerFragment extends MyFragment {
     }
 
     // TODO: Rename and change types and number of parameters
+    public static PlayerFragment newInstance() {
+        PlayerFragment fragment = new PlayerFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        upNextUrl = "";
+        return fragment;
+    }
+
     public static PlayerFragment newInstance(String url) {
         PlayerFragment fragment = new PlayerFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         upNextUrl = url;
         return fragment;
-    }
-
-    public void go() {
-        initializePlayer();
     }
 
     @Override
@@ -110,6 +120,9 @@ public class PlayerFragment extends MyFragment {
                              Bundle savedInstanceState) {
         _view =  inflater.inflate(R.layout.fragment_player, container, false);
         _playerView = (SimpleExoPlayerView) _view.findViewById(R.id.video_view);
+        attachPlayerToView();
+        playUrl();
+        setImage();
         return _view;
     }
 
@@ -136,13 +149,12 @@ public class PlayerFragment extends MyFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        _player.stop();
+        PlayerServiceController.getInstance().stopPlayer();
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        initializePlayer();
     }
 
     //*************************************
@@ -152,15 +164,35 @@ public class PlayerFragment extends MyFragment {
         return FragmentBackstackType.ROOT;
     }
 
-    public void initializePlayer() {
-        _player = MyPlayer.getInstance(_context, _playerView);
-        _player.addToEndOfPlayQueue(upNextUrl);
-        _player.initializePlayer();
+    public void attachPlayerToView() {
+        PlayerServiceController.getInstance().attachPlayerToView(_playerView);
     }
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onPlayerFragmentDoesSomething();
+    }
+
+    private void setImage() {
+        Bitmap podcastPicture = null;
+        String currUrl = PlayerServiceController.getInstance().getCurrentUrl();
+
+        if (currUrl.equals("")) {
+            podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                    R.raw.nopodcast);
+        } else {
+            String pid = PodcastDatabaseHelper.getInstance().getPodcastIdByAudioUrl(currUrl);
+            podcastPicture = MyFileManager.getInstance().getPodcastImage(pid);
+            if (podcastPicture == null) {
+                podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                        R.raw.missing_podcast_image);
+            }
+        }
+        _playerView.setDefaultArtwork(podcastPicture);
+    }
+
+    private void playUrl() {
+        PlayerServiceController.getInstance().playUrl(upNextUrl);
     }
 
 }

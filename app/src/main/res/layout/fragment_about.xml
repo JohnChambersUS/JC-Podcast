@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/colorPrimaryDark"
-                android:text="Version: Bravo"
+                android:text="@string/app_version"
                 />
 
             <TextView

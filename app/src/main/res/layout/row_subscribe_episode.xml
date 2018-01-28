@@ -28,6 +28,7 @@
         app:layout_widthPercent="70%"
         android:layout_toRightOf="@id/subscribeEpisodeRowDate"
         android:textColor="@color/colorPrimaryDark"
+        android:layout_centerVertical="true"
         >
     </TextView>
 
