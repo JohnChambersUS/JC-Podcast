@@ -24,6 +24,7 @@ import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 //todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
 import us.johnchambers.podcast.misc.MyPlayer;
+import us.johnchambers.podcast.misc.PlayerServiceController;
 import us.johnchambers.podcast.misc.PodcastUpdater;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
@@ -65,11 +66,21 @@ public class MainNavigationActivity extends AppCompatActivity
         VolleyQueue.getInstance(this); //inits volley queue
         _myFragmentManager = new MyFragmentManager(getSupportFragmentManager());
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
+
+        PlayerServiceController.getInstance(getApplicationContext()); //init player controller
+        //PlayerServiceController.getInstance().init();
+        //PlayerServiceController.getInstance().init2();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PlayerServiceController.getInstance().stopService();
     }
 
     @Override
@@ -114,7 +125,7 @@ public class MainNavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_show_subscribed) {
             _myFragmentManager.activateSubscribedFragment();
         } else if (id == R.id.nav_player) {
-            _myFragmentManager.activatePlayerFragment(null);
+            _myFragmentManager.activatePlayerFragment();
         } else if (id == R.id.nav_update_podcasts) {
             Thread updaterThread = new Thread(new Runnable(){
                 @Override

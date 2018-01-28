@@ -74,41 +74,75 @@ public class MyFragmentManager {
     }
 
     public void activateSearchFragment() {
-        activateFragment(R.id.search_placeholder,
-                SearchFragment.newInstance(),
-                SEARCH_FRAGMENT);
+        if (!alreadyOnTop(SEARCH_FRAGMENT)) {
+            activateFragment(R.id.search_placeholder,
+                    SearchFragment.newInstance(),
+                    SEARCH_FRAGMENT);
+        }
     }
 
     public void activateSubscribeFragment(SearchRow sr) {
-        activateFragment(R.id.subscribe_placeholder,
-                SubscribeFragment.newInstance(sr),
-                SUBSCRIBE_FRAGMENT);
+        if (!alreadyOnTop(SUBSCRIBE_FRAGMENT)) {
+            activateFragment(R.id.subscribe_placeholder,
+                    SubscribeFragment.newInstance(sr),
+                    SUBSCRIBE_FRAGMENT);
+        }
     }
 
     public void activateSubscribedFragment() {
-        activateFragment(R.id.subscribed_placeholder,
-                SubscribedFragment.newInstance(),
-                SUBSCRIBED_FRAGMENT);
+        if (!alreadyOnTop(SUBSCRIBED_FRAGMENT)) {
+            activateFragment(R.id.subscribed_placeholder,
+                    SubscribedFragment.newInstance(),
+                    SUBSCRIBED_FRAGMENT);
+        }
     }
 
     public void activateSubscribedDetailFragment(PodcastTable pt) {
-        activateFragment(R.id.subscribed_detail_placeholder,
-                SubscribedDetailFragment.newInstance(pt),
-                SUBSCRIBED_DETAIL_FRAGMENT);
+        if (!alreadyOnTop(SUBSCRIBED_DETAIL_FRAGMENT)) {
+            activateFragment(R.id.subscribed_detail_placeholder,
+                    SubscribedDetailFragment.newInstance(pt),
+                    SUBSCRIBED_DETAIL_FRAGMENT);
+        }
     }
 
     public void activatePlayerFragment(String url) {
-        PlayerFragment p = PlayerFragment.newInstance(url);
-        activateFragment(R.id.player_placeholder,
-                p,
-                PLAYER_FRAGMENT);
+        if (!alreadyOnTop(PLAYER_FRAGMENT)) {
+            PlayerFragment p = PlayerFragment.newInstance(url);
+            activateFragment(R.id.player_placeholder,
+                    p,
+                    PLAYER_FRAGMENT);
+        }
+    }
+
+    public void activatePlayerFragment() {
+        if (!alreadyOnTop(PLAYER_FRAGMENT)) {
+            PlayerFragment p = PlayerFragment.newInstance();
+            activateFragment(R.id.player_placeholder,
+                    p,
+                    PLAYER_FRAGMENT);
+        }
     }
 
     public void activateAboutFragment() {
-        AboutFragment fragment = AboutFragment.newInstance();
-        activateFragment(R.id.about_placeholder,
-                fragment,
-                ABOUT_FRAGMENT);
+        if (!alreadyOnTop(ABOUT_FRAGMENT)) {
+            AboutFragment fragment = AboutFragment.newInstance();
+            activateFragment(R.id.about_placeholder,
+                    fragment,
+                    ABOUT_FRAGMENT);
+        }
+    }
+
+    private boolean alreadyOnTop(String fragmentName) {
+        if (_backstack.size() == 0) {
+            return false;
+        }
+
+        MyBackstackEntry top = (MyBackstackEntry) _backstack.peek();
+        if (top.getFragmentTag().equals(fragmentName)) {
+            return true;
+        }
+
+        return false;
     }
 
 }

@@ -24,6 +24,7 @@
         android:textSize="18sp"
         app:layout_widthPercent="70%"
         android:textColor="@color/colorPrimaryDark"
+        android:layout_centerVertical="true"
         android:layout_toRightOf="@id/searchResultRowImage">
     </TextView>
 

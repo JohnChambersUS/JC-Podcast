@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="us.johnchambers.podcast">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,11 +21,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:windowSoftInputMode="adjustNothing"
             android:name=".activity.MainNavigationActivity"
             android:label="@string/title_activity_main_navigation"
+            android:screenOrientation="portrait"
             android:theme="@style/jcTheme"
-            android:screenOrientation="portrait"></activity>
+            android:windowSoftInputMode="adjustNothing" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -29,10 +34,15 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/provider_paths"/>
+                android:resource="@xml/provider_paths" />
         </provider>
+
+        <service
+            android:name=".services.PlayerService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="true"
+            ></service>
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 </manifest>
