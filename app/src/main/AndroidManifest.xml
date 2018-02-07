@@ -38,11 +38,12 @@
         </provider>
 
         <service
-            android:name=".services.PlayerService"
+            android:name=".services.player.PlayerService"
             android:enabled="true"
             android:exported="true"
             android:stopWithTask="true"
             ></service>
+        <receiver android:name=".services.player.PlayerNotificationBroadcastReceiver" />
     </application>
 
 </manifest>

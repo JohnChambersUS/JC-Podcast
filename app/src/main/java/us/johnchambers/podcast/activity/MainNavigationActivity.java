@@ -2,11 +2,6 @@ package us.johnchambers.podcast.activity;
 
 //import android.app.FragmentManager;
 //import android.app.FragmentTransaction;
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -16,15 +11,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 //todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
-import us.johnchambers.podcast.misc.MyPlayer;
-import us.johnchambers.podcast.misc.PlayerServiceController;
+import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.misc.PodcastUpdater;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
@@ -68,9 +61,8 @@ public class MainNavigationActivity extends AppCompatActivity
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
 
         PlayerServiceController.getInstance(getApplicationContext()); //init player controller
-        //PlayerServiceController.getInstance().init();
-        //PlayerServiceController.getInstance().init2();
     }
+
 
     @Override
     public void onStop() {
@@ -168,8 +160,8 @@ public class MainNavigationActivity extends AppCompatActivity
     }
 
     //play the stream
-    public void onSubscribedDetailFragmentDoesSomething(String url) {
-        _myFragmentManager.activatePlayerFragment(url);
+    public void onSubscribedDetailFragmentDoesSomething(String episodeId) {
+        _myFragmentManager.activatePlayerFragment(episodeId);
     }
 
     public void onSubscribedDetailFragmentUnsubscribe() {

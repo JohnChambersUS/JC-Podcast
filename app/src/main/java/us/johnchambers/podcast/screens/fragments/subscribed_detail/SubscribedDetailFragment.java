@@ -170,7 +170,7 @@ public class SubscribedDetailFragment extends MyFragment {
         }
 
         if (audioUrl.length() > 0) {
-            mListener.onSubscribedDetailFragmentDoesSomething(audioUrl);
+            mListener.onSubscribedDetailFragmentDoesSomething(panelRow.getEid());
 
         }
         else {

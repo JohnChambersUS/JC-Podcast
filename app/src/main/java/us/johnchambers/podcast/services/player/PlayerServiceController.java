@@ -1,16 +1,14 @@
-package us.johnchambers.podcast.misc;
+package us.johnchambers.podcast.services.player;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.view.View;
 
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
-import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.services.PlayerService;
+import us.johnchambers.podcast.database.EpisodeTable;
 
 /**
  * Created by johnchambers on 1/22/18.
@@ -33,8 +31,9 @@ public class PlayerServiceController {
         _context = context;
         if (_instance == null) {
             _instance = new PlayerServiceController();
+            startService();
         }
-        startService();
+
         return _instance;
     }
 
@@ -43,20 +42,28 @@ public class PlayerServiceController {
     //**********************************
 
     public void init() {
-        startService();
-        //_service.initService(_context);
-    }
-
-    public void init2() {
-        //_service.initService(_context);
+        if (_service == null) {
+            startService();
+        }
     }
 
     public void attachPlayerToView(SimpleExoPlayerView playerView) {
+        init();
+        while (_service == null) {
+            try {
+                "".wait(1000);
+            } catch(Exception e) {}
+
+        }
         _service.attachPlayerToView(playerView);
     }
 
     public String getCurrentUrl() {
         return _service.getCurrentUrl();
+    }
+
+    public EpisodeTable getCurrentEpisode() {
+        return _service.getCurrentEpisode();
     }
 
     public void stopService() {
@@ -67,8 +74,24 @@ public class PlayerServiceController {
         _service.stopPlayer();
     }
 
-    public void playUrl(String url) {
-        _service.play(url);
+    public void pausePlayer() {
+        _service.pausePlayer();
+    }
+
+    public void resumePlayer() {
+        _service.resumePlayer();
+    }
+
+    public void forwardPlayer() {
+        _service.forwardPlayer();
+    }
+
+    public void rewindPlayer() {
+        _service.rewindPlayer();
+    }
+
+    public void playEpisode(EpisodeTable episode) {
+        _service.playEpisode(episode);
     }
 
     //*******************************************************
@@ -100,5 +123,6 @@ public class PlayerServiceController {
             _serviceBound = false;
         }
     };
+
 
 }
