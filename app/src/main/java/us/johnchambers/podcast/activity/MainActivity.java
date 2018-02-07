@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.misc.MyFileManager;
-import us.johnchambers.podcast.misc.PlayerServiceController;
 
 public class MainActivity extends AppCompatActivity {
 

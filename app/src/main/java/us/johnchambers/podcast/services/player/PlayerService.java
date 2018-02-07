@@ -1,21 +1,23 @@
-package us.johnchambers.podcast.services;
+package us.johnchambers.podcast.services.player;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
+import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
-import android.view.View;
+
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -35,8 +37,10 @@ import com.google.android.exoplayer2.util.Util;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.activity.MainActivity;
-import us.johnchambers.podcast.database.PodcastDatabaseHelper;
-import us.johnchambers.podcast.misc.MyFileManager;
+import us.johnchambers.podcast.database.EpisodeTable;
+
+import static com.google.android.exoplayer2.Player.STATE_IDLE;
+import static us.johnchambers.podcast.misc.Constants.*;
 
 public class PlayerService extends Service {
 
@@ -46,8 +50,11 @@ public class PlayerService extends Service {
     private SimpleExoPlayerView _playerView;
     private Context _context = null;
     @NonNull private String _currUrl = "";
+    @NonNull private EpisodeTable _currEpisode = new EpisodeTable();
     private boolean _running = false;
     private long _contentPosition = 0;
+
+    Notification.Action action2;
 
     public PlayerService() {
         super();
@@ -85,20 +92,94 @@ public class PlayerService extends Service {
     }
     // Only run once for setup
     private void makeForegroundService() {
-        Intent notificationIntent = new Intent(this, MainActivity.class);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
+        Notification theNo = getPlayerNotification("",
+                "",
+                "",
+                "",
+                "");
 
+        startForeground(_id, theNo);
+    }
+
+    private void setNoticationToPaused() {
+        Notification theNo = getPlayerNotification(PLAYER_REWIND,
+                PLAYER_PLAY,
+                PLAYER_FORWARD,
+                _currEpisode.getTitle(),
+                "");
+
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        nm.notify(_id, theNo);
+
+    }
+
+    private void setNoticationToPlaying() {
+        Notification theNo = getPlayerNotification(PLAYER_REWIND,
+                PLAYER_PAUSE,
+                PLAYER_FORWARD,
+                _currEpisode.getTitle(),
+                "");
+
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        nm.notify(_id, theNo);
+    }
+
+
+    private Notification getBlankNotification() {
         Notification notification = new Notification.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Podcast in progress")
+                .setContentTitle("")
                 .setContentText("")
-                .setContentIntent(pendingIntent)
                 .build();
 
-        startForeground(_id, notification);
+        return notification;
     }
+
+    private Notification getPlayerNotification(String button1, String button2, String button3,
+                                               String title, String contextText) {
+
+        Notification.Builder notif;
+        NotificationManager nm;
+        notif = new Notification.Builder(getApplicationContext());
+        notif.setSmallIcon(R.mipmap.ic_launcher);
+        notif.setContentTitle(title);
+        notif.setContentText(contextText);
+        Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        notif.setSound(path);
+        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        if (!button1.equals("")) {
+            Intent yesReceive = new Intent(this,
+                    PlayerNotificationBroadcastReceiver.class);
+            yesReceive.setAction(button1);
+            PendingIntent pendingIntentYes = PendingIntent.getBroadcast(this, 12345, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
+            notif.addAction(R.drawable.ic_notication_back, button1, pendingIntentYes);
+        }
+
+        if (!button2.equals("")) {
+            Intent yesReceive2 = new Intent(this,
+                    PlayerNotificationBroadcastReceiver.class);
+            yesReceive2.setAction(button2);
+            PendingIntent pendingIntentYes2 = PendingIntent.getBroadcast(this, 12345, yesReceive2, PendingIntent.FLAG_UPDATE_CURRENT);
+            action2 = new Notification.Action(R.drawable.ic_notication_pause, button2, pendingIntentYes2);
+            notif.addAction(action2);
+        }
+
+        if (!button3.equals("")) {
+            Intent yesReceive3 = new Intent(this,
+                    PlayerNotificationBroadcastReceiver.class);
+            yesReceive3.setAction(button3);
+            PendingIntent pendingIntentYes3 = PendingIntent.getBroadcast(this, 12345, yesReceive3, PendingIntent.FLAG_UPDATE_CURRENT);
+            notif.addAction(R.mipmap.ic_launcher, button3, pendingIntentYes3);
+        }
+
+        return notif.build();
+
+    }
+
+
+
     // Only run once for setup
     private void createEmptyPlayer() {
         _player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(_context),
@@ -113,6 +194,15 @@ public class PlayerService extends Service {
             return value;
         }
     }
+
+    private EpisodeTable safeNull(EpisodeTable value) {
+        if ((value == null) || !(value instanceof EpisodeTable)) {
+            return new EpisodeTable();
+        } else {
+            return value;
+        }
+    }
+
 
     //************************************
     //* common public methods
@@ -129,6 +219,10 @@ public class PlayerService extends Service {
         return _currUrl;
     }
 
+    public EpisodeTable getCurrentEpisode() {
+        return _currEpisode;
+    }
+
     public void shutdownService() {
         _player.stop();
         stopForeground(true);
@@ -143,18 +237,32 @@ public class PlayerService extends Service {
         _player.setPlayWhenReady(false);
     }
 
-    public void play(String url) {
+    public void resumePlayer() {
+        _player.setPlayWhenReady(true);
+    }
 
-        String passedUrl = safeNull(url);
+    public void forwardPlayer() {
+        _player.seekTo(_contentPosition + 30000);
+    }
 
-        if (passedUrl.equals("") && (_currUrl.equals(""))) {
+    public void rewindPlayer() {
+        _player.seekTo(_contentPosition - 30000);
+    }
+
+    public void playEpisode(EpisodeTable episode) {
+
+        episode = safeNull(episode);
+        String episodeAudioUrl = safeNull(episode.getAudioUrl());
+        String currAudioUrl = safeNull(_currEpisode.getAudioUrl());
+
+        if (episodeAudioUrl.equals("") && currAudioUrl.equals("")) {
             //nothing to play
             //show blank screen
             return;
         }
 
-        if (passedUrl.equals("") && (_currUrl != "")) {
-            _player.prepare(makeMediaSource(_currUrl),
+        if (episodeAudioUrl.equals("") && !currAudioUrl.equals("")) {
+            _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
                     true,
                     false);
             _player.seekTo(_contentPosition);
@@ -162,8 +270,8 @@ public class PlayerService extends Service {
             return;
         }
 
-        if (passedUrl.equals(_currUrl)) {
-            _player.prepare(makeMediaSource(_currUrl),
+        if (episodeAudioUrl.equals(currAudioUrl)) {
+            _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
                     true,
                     false);
             _player.seekTo(_contentPosition);
@@ -173,12 +281,13 @@ public class PlayerService extends Service {
 
         //if get this far then change to new url
 
-        _currUrl = passedUrl;
-        _player.prepare(makeMediaSource(passedUrl),
+        _currEpisode = episode;
+        _player.prepare(makeMediaSource(episode.getAudioUrl()),
                 true,
                 false);
         _player.setPlayWhenReady(true);
 
+        setNoticationToPlaying();
     }
 
     private MediaSource makeMediaSource(String url) {
@@ -246,6 +355,14 @@ public class PlayerService extends Service {
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
             _contentPosition = _player.getContentPosition();
+
+            if (playWhenReady == false) {
+                setNoticationToPaused();
+            }
+
+            if (playWhenReady == true) {
+                setNoticationToPlaying();
+            }
         }
 
         @Override

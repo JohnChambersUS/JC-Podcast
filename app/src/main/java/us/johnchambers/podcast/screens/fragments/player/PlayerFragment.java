@@ -5,64 +5,23 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.DefaultRenderersFactory;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 
 import us.johnchambers.podcast.R;
+import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.MyPlayer;
-import us.johnchambers.podcast.misc.PlayerServiceController;
+import us.johnchambers.podcast.misc.Utils;
+import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
-import us.johnchambers.podcast.services.PlayerService;
-
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.Player;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.Format;
-import com.google.android.exoplayer2.LoadControl;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.decoder.DecoderCounters;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.LoopingMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
-import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
-import com.google.android.exoplayer2.video.VideoRendererEventListener;
+import us.johnchambers.podcast.misc.Utils.*;
 
 
 public class PlayerFragment extends MyFragment {
@@ -75,13 +34,13 @@ public class PlayerFragment extends MyFragment {
     private String mParam1;
     private String mParam2;
 
-    private Context _context = null;
+    private static Context _context = null;
     private View _view;
 
     private OnFragmentInteractionListener mListener;
 
     private SimpleExoPlayerView _playerView;
-    private static String upNextUrl = null;
+    public static EpisodeTable _currEpisode = null;
 
     private static MyPlayer _player;
 
@@ -94,15 +53,15 @@ public class PlayerFragment extends MyFragment {
         PlayerFragment fragment = new PlayerFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        upNextUrl = "";
+        _currEpisode = null;
         return fragment;
     }
 
-    public static PlayerFragment newInstance(String url) {
+    public static PlayerFragment newInstance(String episodeId) {
         PlayerFragment fragment = new PlayerFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        upNextUrl = url;
+        _currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episodeId);
         return fragment;
     }
 
@@ -121,7 +80,7 @@ public class PlayerFragment extends MyFragment {
         _view =  inflater.inflate(R.layout.fragment_player, container, false);
         _playerView = (SimpleExoPlayerView) _view.findViewById(R.id.video_view);
         attachPlayerToView();
-        playUrl();
+        playEpisode();
         setImage();
         return _view;
     }
@@ -165,7 +124,8 @@ public class PlayerFragment extends MyFragment {
     }
 
     public void attachPlayerToView() {
-        PlayerServiceController.getInstance().attachPlayerToView(_playerView);
+        PlayerServiceController pc = PlayerServiceController.getInstance(_context);
+        pc.attachPlayerToView(_playerView);
     }
 
     public interface OnFragmentInteractionListener {
@@ -175,14 +135,15 @@ public class PlayerFragment extends MyFragment {
 
     private void setImage() {
         Bitmap podcastPicture = null;
-        String currUrl = PlayerServiceController.getInstance().getCurrentUrl();
+
+        EpisodeTable episodeTable = PlayerServiceController.getInstance().getCurrentEpisode();
+        String currUrl = Utils.safeNull((episodeTable.getAudioUrl()));
 
         if (currUrl.equals("")) {
             podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
                     R.raw.nopodcast);
         } else {
-            String pid = PodcastDatabaseHelper.getInstance().getPodcastIdByAudioUrl(currUrl);
-            podcastPicture = MyFileManager.getInstance().getPodcastImage(pid);
+            podcastPicture = MyFileManager.getInstance().getPodcastImage(episodeTable.getPid());
             if (podcastPicture == null) {
                 podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
                         R.raw.missing_podcast_image);
@@ -191,8 +152,8 @@ public class PlayerFragment extends MyFragment {
         _playerView.setDefaultArtwork(podcastPicture);
     }
 
-    private void playUrl() {
-        PlayerServiceController.getInstance().playUrl(upNextUrl);
+    private void playEpisode() {
+        PlayerServiceController.getInstance().playEpisode(_currEpisode);
     }
 
 }
