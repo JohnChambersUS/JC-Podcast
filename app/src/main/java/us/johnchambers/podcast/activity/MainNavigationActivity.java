@@ -9,6 +9,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -17,6 +18,7 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 //todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
+import us.johnchambers.podcast.services.player.PlayerService;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.misc.PodcastUpdater;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
@@ -85,6 +87,37 @@ public class MainNavigationActivity extends AppCompatActivity
         }
         _myFragmentManager.popBackstackEntry();
     }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            //rewind
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD:
+            case KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD:
+                PlayerServiceController.getInstance().rewindPlayer();
+                break;
+            //play pause
+            case KeyEvent.KEYCODE_MEDIA_PAUSE:
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEYCODE_MEDIA_STOP:
+                PlayerServiceController.getInstance().flipPlayerState();
+                break;
+            //forward
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+            case KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_STEP_FORWARD:
+                PlayerServiceController.getInstance().forwardPlayer();
+                break;
+            default:
+                return super.onKeyUp(keyCode, event);
+        }
+        return true;
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
