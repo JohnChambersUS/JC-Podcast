@@ -241,6 +241,14 @@ public class PlayerService extends Service {
         _player.setPlayWhenReady(true);
     }
 
+    public void flipPlayerState() {
+        if (_player.getPlayWhenReady()) {
+            _player.setPlayWhenReady(false);
+        } else {
+            _player.setPlayWhenReady(true);
+        }
+    }
+
     public void forwardPlayer() {
         _player.seekTo(_contentPosition + 30000);
     }

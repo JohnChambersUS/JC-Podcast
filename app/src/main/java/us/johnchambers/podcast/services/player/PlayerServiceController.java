@@ -2,6 +2,7 @@ package us.johnchambers.podcast.services.player;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -82,6 +83,10 @@ public class PlayerServiceController {
         _service.resumePlayer();
     }
 
+    public void flipPlayerState() {
+        _service.flipPlayerState();
+    }
+
     public void forwardPlayer() {
         _service.forwardPlayer();
     }
@@ -123,6 +128,7 @@ public class PlayerServiceController {
             _serviceBound = false;
         }
     };
+
 
 
 }
