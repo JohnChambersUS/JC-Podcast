@@ -140,14 +140,16 @@ public class PlayerService extends Service {
                                                String title, String contextText) {
 
         Notification.Builder notif;
-        NotificationManager nm;
+        //NotificationManager nm;
         notif = new Notification.Builder(getApplicationContext());
         notif.setSmallIcon(R.mipmap.ic_launcher);
         notif.setContentTitle(title);
         notif.setContentText(contextText);
-        Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        notif.setSound(path);
-        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notif.setAutoCancel(true);
+        //Uri path = RingtoneManager.getDefaultUri();
+        //notif.setSound(path);
+
+        //nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         if (!button1.equals("")) {
             Intent yesReceive = new Intent(this,
@@ -226,6 +228,9 @@ public class PlayerService extends Service {
     public void shutdownService() {
         _player.stop();
         stopForeground(true);
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        nm.cancel(_id);
+        nm.cancelAll();
         stopSelf();
     }
 
@@ -250,11 +255,11 @@ public class PlayerService extends Service {
     }
 
     public void forwardPlayer() {
-        _player.seekTo(_contentPosition + 30000);
+        _player.seekTo(_player.getContentPosition() + 30000);
     }
 
     public void rewindPlayer() {
-        _player.seekTo(_contentPosition - 30000);
+        _player.seekTo(_player.getContentPosition() - 30000);
     }
 
     public void playEpisode(EpisodeTable episode) {
