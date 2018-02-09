@@ -2,6 +2,7 @@ package us.johnchambers.podcast.activity;
 
 //import android.app.FragmentManager;
 //import android.app.FragmentTransaction;
+import android.app.NotificationManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -75,6 +76,8 @@ public class MainNavigationActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         PlayerServiceController.getInstance().stopService();
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        nm.cancelAll();
     }
 
     @Override

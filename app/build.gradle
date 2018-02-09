@@ -7,8 +7,8 @@ android {
         applicationId "us.johnchambers.podcast"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 1
-        versionName "1.0"
+        versionCode 4
+        versionName "1.4.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -35,11 +35,9 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.android.support:percent:25.3.1'
-    compile 'com.jakewharton:butterknife:8.7.0'
     compile 'com.android.volley:volley:1.0.0'
     compile 'android.arch.persistence.room:runtime:1.0.0-alpha1'
     testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
     annotationProcessor 'android.arch.persistence.room:compiler:1.0.0-alpha1'
     compile 'com.google.android.exoplayer:exoplayer:r2.5.4'
 }
