@@ -3,6 +3,7 @@ package us.johnchambers.podcast.activity;
 //import android.app.FragmentManager;
 //import android.app.FragmentTransaction;
 import android.app.NotificationManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,7 +20,6 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 //todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
-import us.johnchambers.podcast.services.player.PlayerService;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.misc.PodcastUpdater;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
@@ -42,6 +42,8 @@ public class MainNavigationActivity extends AppCompatActivity
         AboutFragment.OnFragmentInteractionListener {
 
     MyFragmentManager _myFragmentManager = null;
+    AudioManager mAudioManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +66,8 @@ public class MainNavigationActivity extends AppCompatActivity
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
 
         PlayerServiceController.getInstance(getApplicationContext()); //init player controller
+
+
     }
 
 
@@ -93,6 +97,7 @@ public class MainNavigationActivity extends AppCompatActivity
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
+        /*
         switch (keyCode) {
             //rewind
             case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
@@ -118,6 +123,7 @@ public class MainNavigationActivity extends AppCompatActivity
             default:
                 return super.onKeyUp(keyCode, event);
         }
+        */
         return true;
     }
 
