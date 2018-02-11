@@ -7,12 +7,18 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
+import android.media.session.MediaSession;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
+import android.view.KeyEvent;
+import android.view.View;
+import android.widget.Toast;
 
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -53,8 +59,11 @@ public class PlayerService extends Service {
     @NonNull private EpisodeTable _currEpisode = new EpisodeTable();
     private boolean _running = false;
     private long _contentPosition = 0;
+    private PowerManager.WakeLock wakeLock;
 
     Notification.Action action2;
+
+    MediaSession audioSession;
 
     public PlayerService() {
         super();
@@ -64,6 +73,8 @@ public class PlayerService extends Service {
     public void onCreate() {
         super.onCreate();
         initService();
+
+
     }
 
     @Override
@@ -88,6 +99,14 @@ public class PlayerService extends Service {
             _context = getApplicationContext();
             makeForegroundService();
             createEmptyPlayer();
+
+            //mas();
+/*
+            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
+                    "MyWakelockTag");
+            wakeLock.acquire();
+            */
         }
     }
     // Only run once for setup
@@ -140,16 +159,11 @@ public class PlayerService extends Service {
                                                String title, String contextText) {
 
         Notification.Builder notif;
-        //NotificationManager nm;
         notif = new Notification.Builder(getApplicationContext());
         notif.setSmallIcon(R.mipmap.ic_launcher);
         notif.setContentTitle(title);
         notif.setContentText(contextText);
         notif.setAutoCancel(true);
-        //Uri path = RingtoneManager.getDefaultUri();
-        //notif.setSound(path);
-
-        //nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         if (!button1.equals("")) {
             Intent yesReceive = new Intent(this,
@@ -179,8 +193,6 @@ public class PlayerService extends Service {
         return notif.build();
 
     }
-
-
 
     // Only run once for setup
     private void createEmptyPlayer() {
@@ -399,6 +411,102 @@ public class PlayerService extends Service {
         }
     };
 
+    //*************************************************
+    //* media key listener
+    //*************************************************
+/*
+    public void mas() {
+
+
+        audioSession = new MediaSession(getApplicationContext(), "TAG");
+
+        audioSession.setCallback(new MediaSession.Callback() {
+
+            @Override
+            public boolean onMediaButtonEvent(final Intent mediaButtonIntent) {
+
+                Toast.makeText(_context, "my text", Toast.LENGTH_LONG).show();
+
+                flipPlayerState();
+
+                String intentAction = mediaButtonIntent.getAction();
+                KeyEvent event = (KeyEvent) mediaButtonIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+                int action = event.getAction();
+                if (action != KeyEvent.ACTION_DOWN) {
+                    //return super.onMediaButtonEvent(mediaButtonIntent);
+                }
+                */
+/*
+                switch (event) {
+                    //rewind
+                    case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+                    case KeyEvent.KEYCODE_MEDIA_REWIND:
+                    case KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD:
+                    case KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD:
+                        PlayerServiceController.getInstance().rewindPlayer();
+                        break;
+                    //play pause
+                    case KeyEvent.KEYCODE_MEDIA_PAUSE:
+                    case KeyEvent.KEYCODE_MEDIA_PLAY:
+                    case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+                    case KeyEvent.KEYCODE_MEDIA_STOP:
+                        PlayerServiceController.getInstance().flipPlayerState();
+                        break;
+                    //forward
+                    case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+                    case KeyEvent.KEYCODE_MEDIA_NEXT:
+                    case KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD:
+                    case KeyEvent.KEYCODE_MEDIA_STEP_FORWARD:
+                        PlayerServiceController.getInstance().forwardPlayer();
+                        break;
+                    default:
+                        return super.onKeyUp(keyCode, event);
+                }
+                */
+
+
+
+/*
+
+                return super.onMediaButtonEvent(mediaButtonIntent);
+            }
+
+
+        });
+
+        PlaybackState state = new PlaybackState.Builder()
+                .setActions(PlaybackState.ACTION_PLAY_PAUSE)
+                .setState(PlaybackState.STATE_PLAYING, 0, 0, 0)
+                .build();
+        audioSession.setPlaybackState(state);
+
+        //audioSession.setFlags();
+
+        audioSession.setActive(true);
+
+    }
+
+    */
+
+    //***************************
+    //* on key listener
+    //**************************
+    /*
+    public void setOnKeyListener() {
+
+        new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Toast.makeText(_context, "on key", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+        };
+
+
+    }
+    */
 
 
 

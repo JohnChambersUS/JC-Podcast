@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
@@ -84,6 +85,7 @@ public class PlayerServiceController {
     }
 
     public void flipPlayerState() {
+        Toast.makeText(_context, "IN PLAYER", Toast.LENGTH_LONG).show();
         _service.flipPlayerState();
     }
 
