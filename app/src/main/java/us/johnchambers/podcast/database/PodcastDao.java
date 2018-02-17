@@ -76,6 +76,9 @@ public interface PodcastDao {
     @Query("delete from episodeTable where pid = :podcastId;")
     void deleteEpisodeRowsByPid(String podcastId);
 
+    @Query("delete from episodeTable where eid = :episodeId;")
+    void deleteEpisodeRowsByEid(String episodeId);
+
     @Delete
     void deleteEpisodeTableRow(EpisodeTable episodeTableRow);
 
