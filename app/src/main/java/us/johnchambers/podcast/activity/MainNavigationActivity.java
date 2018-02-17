@@ -3,6 +3,7 @@ package us.johnchambers.podcast.activity;
 //import android.app.FragmentManager;
 //import android.app.FragmentTransaction;
 import android.app.NotificationManager;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -161,13 +162,17 @@ public class MainNavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_player) {
             _myFragmentManager.activatePlayerFragment();
         } else if (id == R.id.nav_update_podcasts) {
-            Thread updaterThread = new Thread(new Runnable(){
-                @Override
-                public void run(){
-                    PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
-                }
-            });
-            updaterThread.start();
+            Intent intent = new Intent() ;
+            intent.setClassName("us.johnchambers.podcast" ,
+                    "us.johnchambers.podcast.services.updater.PodcastUpdateService") ;
+            this.startService(intent) ;
+            //Thread updaterThread = new Thread(new Runnable(){
+            //    @Override
+            //    public void run(){
+            //        PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
+            //    }
+            //});
+            //updaterThread.start();
         } else if (id == R.id.nav_about) {
             _myFragmentManager.activateAboutFragment();
         }

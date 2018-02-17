@@ -1,0 +1,133 @@
+package us.johnchambers.podcast.services.updater
+
+import android.app.IntentService
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Intent
+import android.content.Context
+import android.support.v7.app.NotificationCompat
+import android.widget.Toast
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.VolleyError
+import com.android.volley.toolbox.StringRequest
+import us.johnchambers.podcast.R
+import us.johnchambers.podcast.database.PodcastDatabaseHelper
+import us.johnchambers.podcast.database.PodcastTable
+import us.johnchambers.podcast.misc.VolleyQueue
+import us.johnchambers.podcast.objects.FeedResponseWrapper
+import java.util.*
+import kotlin.collections.HashMap
+
+/**
+ * An [IntentService] subclass for handling asynchronous task requests in
+ * a service on a separate handler thread.
+ *
+ *
+ * TODO: Customize class - update intent actions, extra parameters and static
+ * helper methods.
+ */
+class PodcastUpdateService : IntentService("PodcastUpdateService") {
+
+    //private Stack<PodcastTable> podcastStack = new Stack();
+
+    var podcastStack = Stack<PodcastTable>()
+    var _intent : Intent? = null
+    var _notificationId = 23457
+
+    override fun onHandleIntent(intent: Intent?) {
+        _intent = intent
+        if (intent != null) {
+            //val action = intent.action
+            displayNotification()
+            updatePodcasts()
+        }
+    }
+
+    fun updatePodcasts() {
+        var podcastList = PodcastDatabaseHelper.getInstance(applicationContext).allPodcastRows
+        podcastStack.addAll(podcastList)
+        updateNextPodcast()
+    }
+
+    fun updateNextPodcast() {
+        if (podcastStack.empty()) {
+            clearNotification()
+            stopSelf()
+        }
+        else {
+            updateThisPodcast(podcastStack.pop())
+        }
+    }
+
+    fun updateThisPodcast(podcast : PodcastTable) {
+        val sr = StringRequest(Request.Method.GET,
+                podcast.getFeedUrl(),
+                Response.Listener { response -> updateTheDB(response, podcast) },
+
+                Response.ErrorListener { e ->
+                    //todo
+                })
+        val vq = VolleyQueue.getInstance(applicationContext)
+        val rq = vq.requestQueue
+        rq!!.add(sr)
+    }
+
+    fun updateTheDB(response : String, currPodcastTableRow : PodcastTable) {
+        var newEpisodes = HashMap<String, Boolean>()
+        val feedResponseWrapper = FeedResponseWrapper(response,
+                currPodcastTableRow.feedUrl)
+        feedResponseWrapper.processEpisodesFromBottom()
+        while (feedResponseWrapper.prevEpisode()) {
+            //get curr episode id
+            var newEpisodeId = feedResponseWrapper.episodeId
+            //check to see if episode in DB
+            var dbRow = PodcastDatabaseHelper.getInstance()
+                    .getEpisodeTableRowByEpisodeId(newEpisodeId)
+            //if not in DB, then add
+            if (dbRow == null) {
+                PodcastDatabaseHelper.getInstance().addNewEpisodeRow(feedResponseWrapper)
+            }
+            newEpisodes.set(newEpisodeId, true)
+        }
+        removeDeadEpisodesFromDB(newEpisodes, currPodcastTableRow.pid)
+        updateNextPodcast()
+    }
+
+    fun removeDeadEpisodesFromDB(newEpisodes : HashMap<String, Boolean>, pid : String) {
+        var dbEpisodeList = PodcastDatabaseHelper.getInstance().getEpisodesSortedNewest(pid)
+        for (episode in dbEpisodeList) {
+            if (!newEpisodes.contains(episode.eid)) {
+                PodcastDatabaseHelper.getInstance().deleteEpisodeRow(episode.eid)
+            }
+        }
+    }
+
+
+
+    fun displayNotification() {
+
+        var notification = NotificationCompat.Builder(applicationContext)
+                .setContentTitle("Service is running")
+                .setSmallIcon(R.mipmap.ic_launcher)
+
+        var pendingIntent : PendingIntent = PendingIntent.getActivity(applicationContext,
+                0,
+                Intent("new intent"),
+                0)
+
+        notification.setContentIntent(pendingIntent)
+
+        var notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(_notificationId, notification.build())
+    }
+
+    fun clearNotification() {
+        var notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(_notificationId)
+        notificationManager.cancelAll()
+    }
+
+
+
+}

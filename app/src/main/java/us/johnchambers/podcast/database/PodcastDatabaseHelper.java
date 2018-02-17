@@ -132,6 +132,11 @@ public class PodcastDatabaseHelper {
         _database.dao().deleteEpisodeTableRow(episodeTable);
     }
 
+
+    public void deleteEpisodeRow(String episodeId) {
+        _database.dao().deleteEpisodeRowsByEid(episodeId);
+    }
+
     public String getPodcastIdByAudioUrl(String audioUrl) {
         return _database.dao().getPodcastIdByAudioUrl(audioUrl);
     }

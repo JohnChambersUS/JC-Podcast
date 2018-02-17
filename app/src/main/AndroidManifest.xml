@@ -45,6 +45,11 @@
             android:stopWithTask="true" />
 
         <receiver android:name=".services.player.PlayerNotificationBroadcastReceiver" />
+
+        <service
+            android:name=".services.updater.PodcastUpdateService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>
