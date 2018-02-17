@@ -20,9 +20,7 @@ import android.view.MenuItem;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
-//todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
-import us.johnchambers.podcast.misc.PodcastUpdater;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
@@ -165,14 +163,7 @@ public class MainNavigationActivity extends AppCompatActivity
             Intent intent = new Intent() ;
             intent.setClassName("us.johnchambers.podcast" ,
                     "us.johnchambers.podcast.services.updater.PodcastUpdateService") ;
-            this.startService(intent) ;
-            //Thread updaterThread = new Thread(new Runnable(){
-            //    @Override
-            //    public void run(){
-            //        PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
-            //    }
-            //});
-            //updaterThread.start();
+            this.startService(intent);
         } else if (id == R.id.nav_about) {
             _myFragmentManager.activateAboutFragment();
         }

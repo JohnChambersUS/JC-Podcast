@@ -23,8 +23,6 @@ import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.MyFileManager;
-//todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
-import us.johnchambers.podcast.misc.PodcastUpdater;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 public class SubscribedDetailFragment extends MyFragment {
@@ -107,7 +105,7 @@ public class SubscribedDetailFragment extends MyFragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new PodcastUpdater(_context, _podcastTable.getPid());
+                PodcastDatabaseHelper.getInstance().removeEntirePodcast( _podcastTable.getPid());
                 mListener.onSubscribedDetailFragmentUnsubscribe();
             }
         });
