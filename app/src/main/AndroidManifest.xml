@@ -50,6 +50,11 @@
             android:name=".services.updater.PodcastUpdateService"
             android:enabled="true"
             android:exported="true" />
+
+        <receiver
+            android:name=".services.updater.PodcastUpdateBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

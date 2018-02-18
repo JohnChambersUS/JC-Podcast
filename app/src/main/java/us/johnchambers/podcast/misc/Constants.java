@@ -13,6 +13,12 @@ public final class Constants {
     public static String PLAYER_END = "End";
     public static String PLAYER_FORWARD = "Forward";
 
+    public static Boolean DEBUG = false;
+
+    public static int UPDATE_HOUR = 04;
+    public static int UPDATE_MINUTE = 11;
+    public static long UPDATE_INTERVAL = 24*60*60*1000; //milliseconds
+
     private Constants() {}
 
 }
