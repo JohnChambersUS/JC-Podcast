@@ -6,14 +6,14 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.Context
 import android.support.v7.app.NotificationCompat
-import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.database.PodcastTable
+import us.johnchambers.podcast.misc.Constants
+import us.johnchambers.podcast.misc.DebugInfo
 import us.johnchambers.podcast.misc.VolleyQueue
 import us.johnchambers.podcast.objects.FeedResponseWrapper
 import java.util.*
@@ -37,11 +37,23 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
 
     override fun onHandleIntent(intent: Intent?) {
         _intent = intent
+        if (Constants.DEBUG) {
+            val bug = DebugInfo(applicationContext)
+            bug.writeTimeFile("UpdaterStarted")
+        }
         if (intent != null) {
             //val action = intent.action
             displayNotification()
             updatePodcasts()
         }
+    }
+
+    override fun onDestroy() {
+        if (Constants.DEBUG) {
+            val bug = DebugInfo(applicationContext)
+            bug.writeTimeFile("UpdaterEnded")
+        }
+        super.onDestroy()
     }
 
     fun updatePodcasts() {
@@ -52,7 +64,7 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
 
     fun updateNextPodcast() {
         if (podcastStack.empty()) {
-            clearNotification()
+            //clearNotification()
             stopSelf()
         }
         else {
