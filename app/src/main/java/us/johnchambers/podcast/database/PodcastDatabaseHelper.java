@@ -3,6 +3,7 @@ package us.johnchambers.podcast.database;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Room;
 import android.content.Context;
+import android.widget.Toast;
 
 import java.util.Date;
 import java.util.List;
@@ -132,6 +133,11 @@ public class PodcastDatabaseHelper {
         _database.dao().deleteEpisodeTableRow(episodeTable);
     }
 
+
+    public void deleteEpisodeRow(String episodeId) {
+        _database.dao().deleteEpisodeRowsByEid(episodeId);
+    }
+
     public String getPodcastIdByAudioUrl(String audioUrl) {
         return _database.dao().getPodcastIdByAudioUrl(audioUrl);
     }
@@ -222,6 +228,23 @@ public class PodcastDatabaseHelper {
         currEpisode.setLocalDownloadUrl(null);
 
         insertEpisodeTableRow(currEpisode);
+    }
+
+    //*************************************************
+    //* Common public utility methods
+    //*************************************************
+
+    public void removeEntirePodcast(String pid) {
+        try {
+            String name = getPodcastRow(pid).getName();
+            Toast.makeText(_context,
+                    "Removing podcast: " + name ,
+                    Toast.LENGTH_LONG).show();
+        }
+        catch (Exception e) {}
+
+        deleteEpisodeRows(pid);
+        deletePodcastRow(pid);
     }
 
 }

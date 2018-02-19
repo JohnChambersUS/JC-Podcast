@@ -2,7 +2,10 @@ package us.johnchambers.podcast.activity;
 
 //import android.app.FragmentManager;
 //import android.app.FragmentTransaction;
+import android.app.AlarmManager;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -16,12 +19,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
+import java.util.Calendar;
+
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
-//todo delete import us.johnchambers.podcast.misc.PodcastDownloader;
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
-import us.johnchambers.podcast.misc.PodcastUpdater;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
@@ -67,7 +71,7 @@ public class MainNavigationActivity extends AppCompatActivity
 
         PlayerServiceController.getInstance(getApplicationContext()); //init player controller
 
-
+        setUpdateAlarm();
     }
 
 
@@ -161,13 +165,10 @@ public class MainNavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_player) {
             _myFragmentManager.activatePlayerFragment();
         } else if (id == R.id.nav_update_podcasts) {
-            Thread updaterThread = new Thread(new Runnable(){
-                @Override
-                public void run(){
-                    PodcastUpdater pdu = new PodcastUpdater(getApplicationContext());
-                }
-            });
-            updaterThread.start();
+            Intent intent = new Intent() ;
+            intent.setClassName("us.johnchambers.podcast" ,
+                    "us.johnchambers.podcast.services.updater.PodcastUpdateService") ;
+            this.startService(intent);
         } else if (id == R.id.nav_about) {
             _myFragmentManager.activateAboutFragment();
         }
@@ -183,6 +184,25 @@ public class MainNavigationActivity extends AppCompatActivity
 
     public void activateSubscribeFragment(SearchRow sr) {
         _myFragmentManager.activateSubscribeFragment(sr);
+    }
+
+    public void setUpdateAlarm() {
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, Constants.UPDATE_HOUR);
+        cal.set(Calendar.MINUTE, Constants.UPDATE_MINUTE);
+
+
+        Intent intent = new Intent(this, us.johnchambers.podcast.services.updater.PodcastUpdateBroadcastReceiver.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0,
+                intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                cal.getTimeInMillis(),
+                Constants.UPDATE_INTERVAL,
+                pendingIntent);
     }
 
     //************************************************
