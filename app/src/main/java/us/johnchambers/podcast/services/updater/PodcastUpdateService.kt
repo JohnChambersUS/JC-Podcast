@@ -12,8 +12,7 @@ import com.android.volley.toolbox.StringRequest
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.database.PodcastTable
-import us.johnchambers.podcast.misc.Constants
-import us.johnchambers.podcast.misc.DebugInfo
+import us.johnchambers.podcast.misc.L
 import us.johnchambers.podcast.misc.VolleyQueue
 import us.johnchambers.podcast.objects.FeedResponseWrapper
 import java.util.*
@@ -37,22 +36,15 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
 
     override fun onHandleIntent(intent: Intent?) {
         _intent = intent
-        if (Constants.DEBUG) {
-            val bug = DebugInfo(applicationContext)
-            bug.writeTimeFile("UpdaterStarted")
-        }
+        L.i(this as Object, "Updater started")
         if (intent != null) {
-            //val action = intent.action
             displayNotification()
             updatePodcasts()
         }
     }
 
     override fun onDestroy() {
-        if (Constants.DEBUG) {
-            val bug = DebugInfo(applicationContext)
-            bug.writeTimeFile("UpdaterEnded")
-        }
+        L.i(this as Object, "Updater ended")
         super.onDestroy()
     }
 
@@ -64,7 +56,7 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
 
     fun updateNextPodcast() {
         if (podcastStack.empty()) {
-            //clearNotification()
+            clearNotification()
             stopSelf()
         }
         else {
@@ -73,6 +65,7 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
     }
 
     fun updateThisPodcast(podcast : PodcastTable) {
+        L.i(this as Object, "Updating " + podcast.name)
         val sr = StringRequest(Request.Method.GET,
                 podcast.getFeedUrl(),
                 Response.Listener { response -> updateTheDB(response, podcast) },
@@ -99,6 +92,8 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
             //if not in DB, then add
             if (dbRow == null) {
                 PodcastDatabaseHelper.getInstance().addNewEpisodeRow(feedResponseWrapper)
+                L.i(this as Object,
+                        "Adding episode " + feedResponseWrapper.currEpisodeTitle)
             }
             newEpisodes.set(newEpisodeId, true)
         }
@@ -111,11 +106,10 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
         for (episode in dbEpisodeList) {
             if (!newEpisodes.contains(episode.eid)) {
                 PodcastDatabaseHelper.getInstance().deleteEpisodeRow(episode.eid)
+                L.i(this as Object, "removing episode " + episode.title)
             }
         }
     }
-
-
 
     fun displayNotification() {
 

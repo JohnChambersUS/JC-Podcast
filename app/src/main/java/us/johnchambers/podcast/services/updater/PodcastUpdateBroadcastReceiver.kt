@@ -3,8 +3,7 @@ package us.johnchambers.podcast.services.updater
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import us.johnchambers.podcast.misc.Constants
-import us.johnchambers.podcast.misc.DebugInfo
+import us.johnchambers.podcast.misc.L
 
 class PodcastUpdateBroadcastReceiver : BroadcastReceiver() {
 
@@ -14,10 +13,7 @@ class PodcastUpdateBroadcastReceiver : BroadcastReceiver() {
                     us.johnchambers.podcast.services.updater.PodcastUpdateService::class.java)
             context.startService(intent)
 
-            if (Constants.DEBUG) {
-                val bug = DebugInfo(context)
-                bug.writeTimeFile("ReceiverCalled")
-            }
+            L.i(this as Object, "Broadcast Reciever ran, started updater")
         }
     }
 }
