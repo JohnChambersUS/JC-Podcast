@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">JC Podcast</string>
-    <string name="app_version">Codename: Disco</string>
+    <string name="app_version">Codename: Echo</string>
     <string name="title_activity_main_navigation">MainNavigationActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
