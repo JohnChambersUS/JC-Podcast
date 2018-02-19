@@ -17,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 
 import java.util.Calendar;
@@ -26,7 +25,6 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.Constants;
-import us.johnchambers.podcast.misc.DebugInfo;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
@@ -205,12 +203,6 @@ public class MainNavigationActivity extends AppCompatActivity
                 cal.getTimeInMillis(),
                 Constants.UPDATE_INTERVAL,
                 pendingIntent);
-
-        if (Constants.DEBUG) {
-            DebugInfo bug = new DebugInfo(getApplicationContext());
-            bug.writeTimeFile("TimerSet");
-        }
-
     }
 
     //************************************************
