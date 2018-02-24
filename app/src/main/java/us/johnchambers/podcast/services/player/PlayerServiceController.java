@@ -11,6 +11,8 @@ import android.widget.Toast;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import us.johnchambers.podcast.database.EpisodeTable;
+import us.johnchambers.podcast.database.NowPlaying;
+import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 
 /**
  * Created by johnchambers on 1/22/18.
@@ -97,7 +99,11 @@ public class PlayerServiceController {
         _service.rewindPlayer();
     }
 
+    // play episode without playlist
+    // assume it to be the podcast
     public void playEpisode(EpisodeTable episode) {
+        PodcastDatabaseHelper.getInstance().updateNowPlayingEpisode(episode.getEid());
+        PodcastDatabaseHelper.getInstance().updateNowPlayingPlaylist(episode.getPid());
         _service.playEpisode(episode);
     }
 

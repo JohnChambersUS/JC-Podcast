@@ -104,4 +104,20 @@ public interface PodcastDao {
     @Delete
     void deleteDownloadQueueTableRow(DownloadQueueTable row);
 
+    //*********************************************************
+    //* Now Playing Table methods
+    //*********************************************************
+
+    @Update
+    void updateNowPlayingTableRow(NowPlayingTable nowPlayingTable);
+
+    @Query("SELECT * FROM NowPlayingTable WHERE keyname = :key LIMIT 1")
+    NowPlayingTable getNowPlayingTableByKey(String key);
+
+    @Query("SELECT count(*) FROM NowPlayingTable WHERE keyname = :key")
+    int getNowPlayingTableByKeyCount(String key);
+
+    @Insert
+    void insertNowPlayingTableRow(NowPlayingTable nowPlayingTable);
+
 }
