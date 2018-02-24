@@ -33,6 +33,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.HashMaker;
 
 public class FeedResponseWrapper {
@@ -194,7 +195,7 @@ public class FeedResponseWrapper {
                 Long epoch =  (new Date()).getTime();
                 hash = epoch.toString() + "_EPOCH";
             }
-            _podcastId = "pid_" + hash;
+            _podcastId = Constants.PID_FLAG + "_" + hash;
         }
         return _podcastId;
     }
@@ -210,7 +211,7 @@ public class FeedResponseWrapper {
         String episodeDate = getCurrEpisodeDate().toString();
         HashMaker hm = new HashMaker();
         String hash = hm.md5(episodeLink + episodeDate);
-        return "eid_" + hash + badUrl;
+        return Constants.EID_FLAG + "_" + hash + badUrl;
     }
 
     public void setPodcastImage(Bitmap image) {

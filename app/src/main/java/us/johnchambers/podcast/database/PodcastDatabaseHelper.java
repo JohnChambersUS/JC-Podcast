@@ -32,12 +32,30 @@ public class PodcastDatabaseHelper {
                     PodcastDatabase.class, "podcast-db")
                     .allowMainThreadQueries()
                     .build();
+            initTables();
         }
         return _instance;
     }
 
     public static synchronized PodcastDatabaseHelper getInstance() {
         return _instance;
+    }
+
+    private static void initTables() {
+
+
+        if (_database.dao().getNowPlayingTableByKeyCount(NowPlaying.EID) < 1) {
+            NowPlayingTable np1 = new NowPlayingTable();
+            np1.setKey(NowPlaying.EID);
+            np1.setValue("");
+            _database.dao().insertNowPlayingTableRow(np1);
+        }
+        if (_database.dao().getNowPlayingTableByKeyCount(NowPlaying.PLAYLIST) < 1) {
+            NowPlayingTable np2 = new NowPlayingTable();
+            np2.setKey(NowPlaying.PLAYLIST);
+            np2.setValue("");
+            _database.dao().insertNowPlayingTableRow(np2);
+        }
     }
 
     //******************************
@@ -145,6 +163,43 @@ public class PodcastDatabaseHelper {
     public void deleteEpisodeRows(String pid) {
         _database.dao().deleteEpisodeRowsByPid(pid);
     }
+
+    //***********************************
+    //* Now playing table methods
+    //***********************************
+
+    public void updateNowPlayingEpisode(String eid) {
+
+        NowPlayingTable np = new NowPlayingTable();
+        np.setKey(NowPlaying.EID);
+        np.setValue(eid);
+        try {
+            _database.dao().updateNowPlayingTableRow(np);
+        }
+        catch (Exception e){
+
+        }
+    }
+
+    public void updateNowPlayingPlaylist(String playlist) {
+
+        NowPlayingTable np = new NowPlayingTable();
+        np.setKey(NowPlaying.PLAYLIST);
+        np.setValue(playlist);
+        try {
+            _database.dao().updateNowPlayingTableRow(np);
+        }
+        catch (Exception e){
+
+        }
+    }
+
+
+
+
+
+
+
 
     //***********************************
     //* Download Queue Table methods

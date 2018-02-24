@@ -19,6 +19,10 @@ public final class Constants {
     public static int UPDATE_MINUTE = 11;
     public static long UPDATE_INTERVAL = 24*60*60*1000; //milliseconds
 
+    public static String PID_FLAG = "pid";
+    public static String EID_FLAG = "eid";
+    public static String PLAYLIST_FLAG = "playlist";
+
     private Constants() {}
 
 }
