@@ -3,6 +3,7 @@ package us.johnchambers.podcast.database;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -97,12 +98,26 @@ public class EpisodeTable {
         return played;
     }
 
+    @Ignore
+    public boolean getInProgressAsBoolean() {
+        if (inProgress == 1) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public int getInProgress() {
         return inProgress;
     }
 
     public String getPlayPoint() {
         return playPoint;
+    }
+
+    public long getPlayPointAsLong() {
+        return Long.parseLong(playPoint);
     }
 
 
@@ -151,21 +166,31 @@ public class EpisodeTable {
         }
     }
 
-    public void setInProgress(int inProgress) {
-        this.inProgress = inProgress;
+    public void setInProgress(int ip) {
+        inProgress = 0;
+        if (ip == 1) {
+            inProgress = 1;
+        }
     }
 
     public void setInProgressViaBoolean(boolean inProgress) {
-        if (inProgress) {
-            this.inProgress = 1;
-        }
-        else {
-            this.inProgress = 0;
-        }
+        //if (false) {
+        //    this.inProgress = 1;
+        //}
+        //else {
+        //    this.inProgress = 0;
+        //}
     }
 
     public void setPlayPoint(String playPoint) {
         this.playPoint = playPoint;
     }
+
+    @Ignore
+    public void setPlayPoint(long playPoint) {
+        String pp = Long.valueOf(playPoint).toString();
+        this.playPoint = pp;
+    }
+
 
 }

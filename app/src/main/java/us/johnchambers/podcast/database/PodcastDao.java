@@ -73,6 +73,9 @@ public interface PodcastDao {
     @Query("update episodeTable set localdownloadurl = :downloadUrl where eid = :episodeId;")
     void updateEpisodeLocalUrl(String episodeId, String downloadUrl);
 
+    @Query("update episodeTable set play_point = :playPoint where eid = :episodeId;")
+    void updateEpisodePlayPoint(String episodeId, String playPoint);
+
     @Query("delete from episodeTable where pid = :podcastId;")
     void deleteEpisodeRowsByPid(String podcastId);
 

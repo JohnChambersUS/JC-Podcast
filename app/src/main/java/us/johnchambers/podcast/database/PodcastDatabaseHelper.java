@@ -121,6 +121,19 @@ public class PodcastDatabaseHelper {
         _database.dao().insertEpisodeTableRow(episodeTable);
     }
 
+    public void updateEpisodeTableRow(EpisodeTable episodeTable) {
+        _database.dao().updateEpisodeTableRow(episodeTable);
+    }
+
+    public void updateEpisodePlayPoint(String eid, String playPoint) {
+        _database.dao().updateEpisodePlayPoint(eid, playPoint);
+    }
+
+    public void updateEpisodePlayPoint(String eid, long playPoint) {
+        String pp = Long.valueOf(playPoint).toString();
+        _database.dao().updateEpisodePlayPoint(eid, pp);
+    }
+
     public boolean doesEpisodeExist(String pid, String eid) {
         return false;
     }
@@ -194,6 +207,10 @@ public class PodcastDatabaseHelper {
         }
     }
 
+    public String getNowPlayingEpisodeId() {
+        NowPlayingTable np = _database.dao().getNowPlayingTableByKey(NowPlaying.EID);
+        return np.getValue();
+    }
 
 
 

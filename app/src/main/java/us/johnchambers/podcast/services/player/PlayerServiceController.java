@@ -10,9 +10,16 @@ import android.widget.Toast;
 
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import us.johnchambers.podcast.Events.TimeUpdateEvent;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.NowPlaying;
+import us.johnchambers.podcast.database.NowPlayingTable;
+import us.johnchambers.podcast.database.PodcastDatabase;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+import us.johnchambers.podcast.misc.L;
 
 /**
  * Created by johnchambers on 1/22/18.
@@ -36,6 +43,7 @@ public class PlayerServiceController {
         if (_instance == null) {
             _instance = new PlayerServiceController();
             startService();
+            EventBus.getDefault().register(_instance);
         }
 
         return _instance;
@@ -102,9 +110,11 @@ public class PlayerServiceController {
     // play episode without playlist
     // assume it to be the podcast
     public void playEpisode(EpisodeTable episode) {
-        PodcastDatabaseHelper.getInstance().updateNowPlayingEpisode(episode.getEid());
-        PodcastDatabaseHelper.getInstance().updateNowPlayingPlaylist(episode.getPid());
-        _service.playEpisode(episode);
+        if (episode != null) {
+            PodcastDatabaseHelper.getInstance().updateNowPlayingEpisode(episode.getEid());
+            PodcastDatabaseHelper.getInstance().updateNowPlayingPlaylist(episode.getPid());
+            _service.playEpisode(episode);
+        }
     }
 
     //*******************************************************
@@ -136,6 +146,22 @@ public class PlayerServiceController {
             _serviceBound = false;
         }
     };
+
+    //****************************
+    //* Events
+    //****************************
+    @Subscribe
+    public void onEvent(TimeUpdateEvent event){
+        try {
+            String eid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
+            PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(eid, event.getMillis());
+        }
+        catch (Exception e) {
+            L.INSTANCE.i((Object) this, e.toString());
+        }
+
+
+    }
 
 
 
