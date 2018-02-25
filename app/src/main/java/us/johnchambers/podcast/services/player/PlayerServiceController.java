@@ -115,6 +115,13 @@ public class PlayerServiceController {
             PodcastDatabaseHelper.getInstance().updateNowPlayingPlaylist(episode.getPid());
             _service.playEpisode(episode);
         }
+        else {
+            String nowPlayingEid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
+            if (nowPlayingEid != NowPlaying.NO_EPISODE_FLAG) {
+                episode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(nowPlayingEid);
+            }
+            _service.playEpisode(episode);
+        }
     }
 
     //*******************************************************
