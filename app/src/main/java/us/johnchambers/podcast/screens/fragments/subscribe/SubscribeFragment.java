@@ -197,10 +197,10 @@ public class SubscribeFragment extends MyFragment {
             currEpisode.setSummary(_feedResponseWrapper.getCurrEpisodeSummary());
             currEpisode.setAudioUrl(_feedResponseWrapper.getEpisodeDownloadLink());
             currEpisode.setPubDate(_feedResponseWrapper.getCurrEpisodeDate());
-            currEpisode.setLength("0:0");
+            currEpisode.setLength("0");
             currEpisode.setPlayedViaBoolean(false);
             currEpisode.setInProgressViaBoolean(false);
-            currEpisode.setPlayPoint("0:0");
+            currEpisode.setPlayPoint("0");
             currEpisode.setLocalDownloadUrl(null);
 
             PodcastDatabaseHelper.getInstance().insertEpisodeTableRow(currEpisode);

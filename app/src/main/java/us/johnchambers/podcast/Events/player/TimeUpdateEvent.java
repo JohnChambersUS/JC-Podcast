@@ -1,4 +1,4 @@
-package us.johnchambers.podcast.Events;
+package us.johnchambers.podcast.Events.player;
 
 /**
  * Created by johnchambers on 2/24/18.

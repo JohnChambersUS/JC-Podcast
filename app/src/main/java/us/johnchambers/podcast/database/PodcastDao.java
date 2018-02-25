@@ -82,6 +82,9 @@ public interface PodcastDao {
     @Query("delete from episodeTable where eid = :episodeId;")
     void deleteEpisodeRowsByEid(String episodeId);
 
+    @Query("SELECT * FROM episodetable WHERE pid = :podcastId and identity > :identity  ORDER BY identity ASC LIMIT 1;")
+    EpisodeTable getNextMediaPodcastPlaylist(String podcastId, int identity);
+
     @Delete
     void deleteEpisodeTableRow(EpisodeTable episodeTableRow);
 
