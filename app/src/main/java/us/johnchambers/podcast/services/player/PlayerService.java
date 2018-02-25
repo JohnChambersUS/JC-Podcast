@@ -318,6 +318,9 @@ public class PlayerService extends Service {
         _player.prepare(makeMediaSource(episode.getAudioUrl()),
                 true,
                 false);
+        if (episode.getPlayPointAsLong() > 0) {
+            _player.seekTo(episode.getPlayPointAsLong());
+        }
         _player.setPlayWhenReady(true);
 
         setNoticationToPlaying();
