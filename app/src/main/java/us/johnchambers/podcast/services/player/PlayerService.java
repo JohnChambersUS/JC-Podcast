@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.RingtoneManager;
 import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
@@ -25,6 +26,7 @@ import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -41,6 +43,9 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import org.greenrobot.eventbus.EventBus;
+
+import us.johnchambers.podcast.Events.TimeUpdateEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.activity.MainActivity;
 import us.johnchambers.podcast.database.EpisodeTable;
@@ -65,6 +70,10 @@ public class PlayerService extends Service {
 
     MediaSession audioSession;
 
+    EventBus _eventBus = EventBus.getDefault();
+
+
+
     public PlayerService() {
         super();
     }
@@ -73,7 +82,6 @@ public class PlayerService extends Service {
     public void onCreate() {
         super.onCreate();
         initService();
-
 
     }
 
@@ -379,7 +387,11 @@ public class PlayerService extends Service {
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+            if (_player.getAudioFormat() == null) {
+                return;
+            }
             _contentPosition = _player.getContentPosition();
+            _eventBus.post(new TimeUpdateEvent(_player.getContentPosition()));
 
             if (playWhenReady == false) {
                 setNoticationToPaused();
@@ -507,6 +519,7 @@ public class PlayerService extends Service {
 
     }
     */
+
 
 
 
