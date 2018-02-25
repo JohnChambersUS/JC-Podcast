@@ -2,7 +2,6 @@ package us.johnchambers.podcast.services.player;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -13,7 +12,8 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import us.johnchambers.podcast.Events.TimeUpdateEvent;
+import us.johnchambers.podcast.Events.player.MediaEndedEvent;
+import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.NowPlaying;
 import us.johnchambers.podcast.database.NowPlayingTable;
@@ -124,6 +124,23 @@ public class PlayerServiceController {
         }
     }
 
+    private void playNextEpisode() {
+        String currEid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
+        if (currEid == NowPlaying.NO_EPISODE_FLAG) {
+            return;
+        }
+        EpisodeTable currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(currEid);
+        EpisodeTable nextEpisode = PodcastDatabaseHelper.getInstance().getNextMediaPodcastPlaylist(currEpisode);
+        //todo check for empty next et
+        if (nextEpisode != null) {
+            playEpisode(nextEpisode);
+        } else {
+            //todo play end of playlist message
+        }
+
+    }
+
+
     //*******************************************************
     //* service not started with new
     //* started with intent
@@ -166,8 +183,11 @@ public class PlayerServiceController {
         catch (Exception e) {
             L.INSTANCE.i((Object) this, e.toString());
         }
+    }
 
-
+    @Subscribe
+    public void onEvent(MediaEndedEvent event) {
+        playNextEpisode();
     }
 
 

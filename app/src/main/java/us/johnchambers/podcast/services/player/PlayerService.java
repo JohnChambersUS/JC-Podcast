@@ -6,27 +6,18 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.AudioAttributes;
-import android.media.RingtoneManager;
 import android.media.session.MediaSession;
-import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Toast;
 
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -45,12 +36,12 @@ import com.google.android.exoplayer2.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 
-import us.johnchambers.podcast.Events.TimeUpdateEvent;
+import us.johnchambers.podcast.Events.player.MediaEndedEvent;
+import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.activity.MainActivity;
 import us.johnchambers.podcast.database.EpisodeTable;
 
-import static com.google.android.exoplayer2.Player.STATE_IDLE;
+import static com.google.android.exoplayer2.Player.STATE_ENDED;
 import static us.johnchambers.podcast.misc.Constants.*;
 
 public class PlayerService extends Service {
@@ -63,7 +54,7 @@ public class PlayerService extends Service {
     @NonNull private String _currUrl = "";
     @NonNull private EpisodeTable _currEpisode = new EpisodeTable();
     private boolean _running = false;
-    private long _contentPosition = 0;
+
     private PowerManager.WakeLock wakeLock;
 
     Notification.Action action2;
@@ -298,7 +289,6 @@ public class PlayerService extends Service {
             _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
                     true,
                     false);
-            _player.seekTo(_contentPosition);
             _player.setPlayWhenReady(true);
             return;
         }
@@ -307,7 +297,6 @@ public class PlayerService extends Service {
             _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
                     true,
                     false);
-            _player.seekTo(_contentPosition);
             _player.setPlayWhenReady(true);
             return;
         }
@@ -393,7 +382,6 @@ public class PlayerService extends Service {
             if (_player.getAudioFormat() == null) {
                 return;
             }
-            _contentPosition = _player.getContentPosition();
             _eventBus.post(new TimeUpdateEvent(_player.getContentPosition()));
 
             if (playWhenReady == false) {
@@ -402,6 +390,10 @@ public class PlayerService extends Service {
 
             if (playWhenReady == true) {
                 setNoticationToPlaying();
+            }
+
+            if (playbackState == STATE_ENDED) {
+                _eventBus.post(new MediaEndedEvent());
             }
         }
 

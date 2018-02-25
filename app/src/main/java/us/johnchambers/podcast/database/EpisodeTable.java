@@ -24,7 +24,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 public class EpisodeTable {
 
     @PrimaryKey(autoGenerate = true)
-    private int identity; //identity column
+    public int identity; //identity column
 
     String pid;
     String eid;

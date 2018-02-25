@@ -264,6 +264,10 @@ public class PodcastDatabaseHelper {
         }
     }
 
+    public EpisodeTable getNextMediaPodcastPlaylist(EpisodeTable et) {
+        return _database.dao().getNextMediaPodcastPlaylist(et.getPid(), et.getIdentity());
+    }
+
     //*******************************************************
     //* wrapper methods to add new rows
     //*******************************************************
@@ -293,10 +297,10 @@ public class PodcastDatabaseHelper {
         currEpisode.setSummary(feedResponseWrapper.getCurrEpisodeSummary());
         currEpisode.setAudioUrl(feedResponseWrapper.getEpisodeDownloadLink());
         currEpisode.setPubDate(feedResponseWrapper.getCurrEpisodeDate());
-        currEpisode.setLength("0:0");
+        currEpisode.setLength("0");
         currEpisode.setPlayedViaBoolean(false);
         currEpisode.setInProgressViaBoolean(false);
-        currEpisode.setPlayPoint("0:0");
+        currEpisode.setPlayPoint("0");
         currEpisode.setLocalDownloadUrl(null);
 
         insertEpisodeTableRow(currEpisode);
