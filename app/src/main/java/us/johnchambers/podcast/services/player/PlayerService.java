@@ -279,6 +279,7 @@ public class PlayerService extends Service {
         String episodeAudioUrl = safeNull(episode.getAudioUrl());
         String currAudioUrl = safeNull(_currEpisode.getAudioUrl());
 
+
         if (episodeAudioUrl.equals("") && currAudioUrl.equals("")) {
             //nothing to play
             //show blank screen
@@ -290,6 +291,7 @@ public class PlayerService extends Service {
                     true,
                     false);
             _player.setPlayWhenReady(true);
+
             return;
         }
 
@@ -297,7 +299,9 @@ public class PlayerService extends Service {
             _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
                     true,
                     false);
+
             _player.setPlayWhenReady(true);
+
             return;
         }
 
@@ -311,8 +315,8 @@ public class PlayerService extends Service {
             _player.seekTo(episode.getPlayPointAsLong());
         }
         _player.setPlayWhenReady(true);
-
         setNoticationToPlaying();
+
     }
 
     private MediaSource makeMediaSource(String url) {

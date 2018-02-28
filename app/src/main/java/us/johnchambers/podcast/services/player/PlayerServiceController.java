@@ -32,6 +32,9 @@ public class PlayerServiceController {
     private static boolean _serviceBound = false;
     private static Context _context = null;
 
+    private int _episodeCount = 0;
+    private int _episodeLimit = 6;
+
     public PlayerServiceController() {}
 
     public static PlayerServiceController getInstance() {
@@ -113,15 +116,22 @@ public class PlayerServiceController {
         if (episode != null) {
             PodcastDatabaseHelper.getInstance().updateNowPlayingEpisode(episode.getEid());
             PodcastDatabaseHelper.getInstance().updateNowPlayingPlaylist(episode.getPid());
-            _service.playEpisode(episode);
         }
         else {
             String nowPlayingEid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
             if (nowPlayingEid != NowPlaying.NO_EPISODE_FLAG) {
                 episode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(nowPlayingEid);
             }
-            _service.playEpisode(episode);
         }
+        if (!episodeLimitReached()) {
+            _service.playEpisode(episode);
+        } else {
+            //todo display or play are you listening notice
+            Toast.makeText(_context,
+                    "limit:" + String.valueOf(_episodeCount),
+                    Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private void playNextEpisode() {
@@ -137,7 +147,15 @@ public class PlayerServiceController {
         } else {
             //todo play end of playlist message
         }
+    }
 
+    private boolean episodeLimitReached() {
+        _episodeCount++;
+        if (_episodeCount > _episodeLimit) {
+            _episodeCount = 0;
+            return true;
+        }
+        return false;
     }
 
 
