@@ -73,11 +73,17 @@ public interface PodcastDao {
     @Query("update episodeTable set localdownloadurl = :downloadUrl where eid = :episodeId;")
     void updateEpisodeLocalUrl(String episodeId, String downloadUrl);
 
+    @Query("update episodeTable set play_point = :playPoint where eid = :episodeId;")
+    void updateEpisodePlayPoint(String episodeId, String playPoint);
+
     @Query("delete from episodeTable where pid = :podcastId;")
     void deleteEpisodeRowsByPid(String podcastId);
 
     @Query("delete from episodeTable where eid = :episodeId;")
     void deleteEpisodeRowsByEid(String episodeId);
+
+    @Query("SELECT * FROM episodetable WHERE pid = :podcastId and identity > :identity  ORDER BY identity ASC LIMIT 1;")
+    EpisodeTable getNextMediaPodcastPlaylist(String podcastId, int identity);
 
     @Delete
     void deleteEpisodeTableRow(EpisodeTable episodeTableRow);
@@ -103,5 +109,21 @@ public interface PodcastDao {
 
     @Delete
     void deleteDownloadQueueTableRow(DownloadQueueTable row);
+
+    //*********************************************************
+    //* Now Playing Table methods
+    //*********************************************************
+
+    @Update
+    void updateNowPlayingTableRow(NowPlayingTable nowPlayingTable);
+
+    @Query("SELECT * FROM NowPlayingTable WHERE keyname = :key LIMIT 1")
+    NowPlayingTable getNowPlayingTableByKey(String key);
+
+    @Query("SELECT count(*) FROM NowPlayingTable WHERE keyname = :key")
+    int getNowPlayingTableByKeyCount(String key);
+
+    @Insert
+    void insertNowPlayingTableRow(NowPlayingTable nowPlayingTable);
 
 }

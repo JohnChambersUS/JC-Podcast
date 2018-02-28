@@ -6,19 +6,12 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
 import android.media.session.MediaSession;
-import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Toast;
 
 
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -41,11 +34,14 @@ import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
+import org.greenrobot.eventbus.EventBus;
+
+import us.johnchambers.podcast.Events.player.MediaEndedEvent;
+import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.activity.MainActivity;
 import us.johnchambers.podcast.database.EpisodeTable;
 
-import static com.google.android.exoplayer2.Player.STATE_IDLE;
+import static com.google.android.exoplayer2.Player.STATE_ENDED;
 import static us.johnchambers.podcast.misc.Constants.*;
 
 public class PlayerService extends Service {
@@ -58,12 +54,16 @@ public class PlayerService extends Service {
     @NonNull private String _currUrl = "";
     @NonNull private EpisodeTable _currEpisode = new EpisodeTable();
     private boolean _running = false;
-    private long _contentPosition = 0;
+
     private PowerManager.WakeLock wakeLock;
 
     Notification.Action action2;
 
     MediaSession audioSession;
+
+    EventBus _eventBus = EventBus.getDefault();
+
+
 
     public PlayerService() {
         super();
@@ -73,7 +73,6 @@ public class PlayerService extends Service {
     public void onCreate() {
         super.onCreate();
         initService();
-
 
     }
 
@@ -280,6 +279,7 @@ public class PlayerService extends Service {
         String episodeAudioUrl = safeNull(episode.getAudioUrl());
         String currAudioUrl = safeNull(_currEpisode.getAudioUrl());
 
+
         if (episodeAudioUrl.equals("") && currAudioUrl.equals("")) {
             //nothing to play
             //show blank screen
@@ -290,8 +290,8 @@ public class PlayerService extends Service {
             _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
                     true,
                     false);
-            _player.seekTo(_contentPosition);
             _player.setPlayWhenReady(true);
+
             return;
         }
 
@@ -299,8 +299,9 @@ public class PlayerService extends Service {
             _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
                     true,
                     false);
-            _player.seekTo(_contentPosition);
+
             _player.setPlayWhenReady(true);
+
             return;
         }
 
@@ -310,9 +311,12 @@ public class PlayerService extends Service {
         _player.prepare(makeMediaSource(episode.getAudioUrl()),
                 true,
                 false);
+        if (episode.getPlayPointAsLong() > 0) {
+            _player.seekTo(episode.getPlayPointAsLong());
+        }
         _player.setPlayWhenReady(true);
-
         setNoticationToPlaying();
+
     }
 
     private MediaSource makeMediaSource(String url) {
@@ -379,7 +383,10 @@ public class PlayerService extends Service {
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            _contentPosition = _player.getContentPosition();
+            if (_player.getAudioFormat() == null) {
+                return;
+            }
+            _eventBus.post(new TimeUpdateEvent(_player.getContentPosition()));
 
             if (playWhenReady == false) {
                 setNoticationToPaused();
@@ -387,6 +394,10 @@ public class PlayerService extends Service {
 
             if (playWhenReady == true) {
                 setNoticationToPlaying();
+            }
+
+            if (playbackState == STATE_ENDED) {
+                _eventBus.post(new MediaEndedEvent());
             }
         }
 
@@ -507,6 +518,7 @@ public class PlayerService extends Service {
 
     }
     */
+
 
 
 

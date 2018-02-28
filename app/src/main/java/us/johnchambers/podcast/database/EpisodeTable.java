@@ -3,11 +3,14 @@ package us.johnchambers.podcast.database;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import us.johnchambers.podcast.misc.L;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
@@ -23,7 +26,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 public class EpisodeTable {
 
     @PrimaryKey(autoGenerate = true)
-    private int identity; //identity column
+    public int identity; //identity column
 
     String pid;
     String eid;
@@ -97,12 +100,32 @@ public class EpisodeTable {
         return played;
     }
 
+    @Ignore
+    public boolean getInProgressAsBoolean() {
+        if (inProgress == 1) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     public int getInProgress() {
         return inProgress;
     }
 
     public String getPlayPoint() {
         return playPoint;
+    }
+
+    public long getPlayPointAsLong() {
+        try {
+            return Long.parseLong(playPoint);
+        }
+        catch (Exception e) {
+            L.INSTANCE.i((Object) this, "0:0 play point");
+            return 0;
+        }
     }
 
 
@@ -151,21 +174,31 @@ public class EpisodeTable {
         }
     }
 
-    public void setInProgress(int inProgress) {
-        this.inProgress = inProgress;
+    public void setInProgress(int ip) {
+        inProgress = 0;
+        if (ip == 1) {
+            inProgress = 1;
+        }
     }
 
     public void setInProgressViaBoolean(boolean inProgress) {
-        if (inProgress) {
-            this.inProgress = 1;
-        }
-        else {
-            this.inProgress = 0;
-        }
+        //if (false) {
+        //    this.inProgress = 1;
+        //}
+        //else {
+        //    this.inProgress = 0;
+        //}
     }
 
     public void setPlayPoint(String playPoint) {
         this.playPoint = playPoint;
     }
+
+    @Ignore
+    public void setPlayPoint(long playPoint) {
+        String pp = Long.valueOf(playPoint).toString();
+        this.playPoint = pp;
+    }
+
 
 }

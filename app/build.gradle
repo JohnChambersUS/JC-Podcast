@@ -7,8 +7,8 @@ android {
         applicationId "us.johnchambers.podcast"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 4
-        versionName "1.4.0"
+        versionCode 6
+        versionName "1.6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -41,6 +41,7 @@ dependencies {
     annotationProcessor 'android.arch.persistence.room:compiler:1.0.0-alpha1'
     compile 'com.google.android.exoplayer:exoplayer:r2.5.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile 'org.greenrobot:eventbus:3.1.1'
 }
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'

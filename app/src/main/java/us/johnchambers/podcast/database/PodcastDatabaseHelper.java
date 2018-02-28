@@ -32,12 +32,30 @@ public class PodcastDatabaseHelper {
                     PodcastDatabase.class, "podcast-db")
                     .allowMainThreadQueries()
                     .build();
+            initTables();
         }
         return _instance;
     }
 
     public static synchronized PodcastDatabaseHelper getInstance() {
         return _instance;
+    }
+
+    private static void initTables() {
+
+
+        if (_database.dao().getNowPlayingTableByKeyCount(NowPlaying.EID) < 1) {
+            NowPlayingTable np1 = new NowPlayingTable();
+            np1.setKey(NowPlaying.EID);
+            np1.setValue("");
+            _database.dao().insertNowPlayingTableRow(np1);
+        }
+        if (_database.dao().getNowPlayingTableByKeyCount(NowPlaying.PLAYLIST) < 1) {
+            NowPlayingTable np2 = new NowPlayingTable();
+            np2.setKey(NowPlaying.PLAYLIST);
+            np2.setValue("");
+            _database.dao().insertNowPlayingTableRow(np2);
+        }
     }
 
     //******************************
@@ -103,6 +121,19 @@ public class PodcastDatabaseHelper {
         _database.dao().insertEpisodeTableRow(episodeTable);
     }
 
+    public void updateEpisodeTableRow(EpisodeTable episodeTable) {
+        _database.dao().updateEpisodeTableRow(episodeTable);
+    }
+
+    public void updateEpisodePlayPoint(String eid, String playPoint) {
+        _database.dao().updateEpisodePlayPoint(eid, playPoint);
+    }
+
+    public void updateEpisodePlayPoint(String eid, long playPoint) {
+        String pp = Long.valueOf(playPoint).toString();
+        _database.dao().updateEpisodePlayPoint(eid, pp);
+    }
+
     public boolean doesEpisodeExist(String pid, String eid) {
         return false;
     }
@@ -145,6 +176,47 @@ public class PodcastDatabaseHelper {
     public void deleteEpisodeRows(String pid) {
         _database.dao().deleteEpisodeRowsByPid(pid);
     }
+
+    //***********************************
+    //* Now playing table methods
+    //***********************************
+
+    public void updateNowPlayingEpisode(String eid) {
+
+        NowPlayingTable np = new NowPlayingTable();
+        np.setKey(NowPlaying.EID);
+        np.setValue(eid);
+        try {
+            _database.dao().updateNowPlayingTableRow(np);
+        }
+        catch (Exception e){
+
+        }
+    }
+
+    public void updateNowPlayingPlaylist(String playlist) {
+
+        NowPlayingTable np = new NowPlayingTable();
+        np.setKey(NowPlaying.PLAYLIST);
+        np.setValue(playlist);
+        try {
+            _database.dao().updateNowPlayingTableRow(np);
+        }
+        catch (Exception e){
+
+        }
+    }
+
+    public String getNowPlayingEpisodeId() {
+        NowPlayingTable np = _database.dao().getNowPlayingTableByKey(NowPlaying.EID);
+        return np.getValue();
+    }
+
+
+
+
+
+
 
     //***********************************
     //* Download Queue Table methods
@@ -192,6 +264,10 @@ public class PodcastDatabaseHelper {
         }
     }
 
+    public EpisodeTable getNextMediaPodcastPlaylist(EpisodeTable et) {
+        return _database.dao().getNextMediaPodcastPlaylist(et.getPid(), et.getIdentity());
+    }
+
     //*******************************************************
     //* wrapper methods to add new rows
     //*******************************************************
@@ -221,10 +297,10 @@ public class PodcastDatabaseHelper {
         currEpisode.setSummary(feedResponseWrapper.getCurrEpisodeSummary());
         currEpisode.setAudioUrl(feedResponseWrapper.getEpisodeDownloadLink());
         currEpisode.setPubDate(feedResponseWrapper.getCurrEpisodeDate());
-        currEpisode.setLength("0:0");
+        currEpisode.setLength("0");
         currEpisode.setPlayedViaBoolean(false);
         currEpisode.setInProgressViaBoolean(false);
-        currEpisode.setPlayPoint("0:0");
+        currEpisode.setPlayPoint("0");
         currEpisode.setLocalDownloadUrl(null);
 
         insertEpisodeTableRow(currEpisode);

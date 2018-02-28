@@ -2,7 +2,6 @@ package us.johnchambers.podcast.services.player;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
@@ -10,7 +9,17 @@ import android.widget.Toast;
 
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import us.johnchambers.podcast.Events.player.MediaEndedEvent;
+import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.database.EpisodeTable;
+import us.johnchambers.podcast.database.NowPlaying;
+import us.johnchambers.podcast.database.NowPlayingTable;
+import us.johnchambers.podcast.database.PodcastDatabase;
+import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+import us.johnchambers.podcast.misc.L;
 
 /**
  * Created by johnchambers on 1/22/18.
@@ -23,6 +32,9 @@ public class PlayerServiceController {
     private static boolean _serviceBound = false;
     private static Context _context = null;
 
+    private int _episodeCount = 0;
+    private int _episodeLimit = 6;
+
     public PlayerServiceController() {}
 
     public static PlayerServiceController getInstance() {
@@ -34,6 +46,7 @@ public class PlayerServiceController {
         if (_instance == null) {
             _instance = new PlayerServiceController();
             startService();
+            EventBus.getDefault().register(_instance);
         }
 
         return _instance;
@@ -97,9 +110,54 @@ public class PlayerServiceController {
         _service.rewindPlayer();
     }
 
+    // play episode without playlist
+    // assume it to be the podcast
     public void playEpisode(EpisodeTable episode) {
-        _service.playEpisode(episode);
+        if (episode != null) {
+            PodcastDatabaseHelper.getInstance().updateNowPlayingEpisode(episode.getEid());
+            PodcastDatabaseHelper.getInstance().updateNowPlayingPlaylist(episode.getPid());
+        }
+        else {
+            String nowPlayingEid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
+            if (nowPlayingEid != NowPlaying.NO_EPISODE_FLAG) {
+                episode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(nowPlayingEid);
+            }
+        }
+        if (!episodeLimitReached()) {
+            _service.playEpisode(episode);
+        } else {
+            //todo display or play are you listening notice
+            Toast.makeText(_context,
+                    "limit:" + String.valueOf(_episodeCount),
+                    Toast.LENGTH_LONG).show();
+        }
+
     }
+
+    private void playNextEpisode() {
+        String currEid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
+        if (currEid == NowPlaying.NO_EPISODE_FLAG) {
+            return;
+        }
+        EpisodeTable currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(currEid);
+        EpisodeTable nextEpisode = PodcastDatabaseHelper.getInstance().getNextMediaPodcastPlaylist(currEpisode);
+        //todo check for empty next et
+        if (nextEpisode != null) {
+            playEpisode(nextEpisode);
+        } else {
+            //todo play end of playlist message
+        }
+    }
+
+    private boolean episodeLimitReached() {
+        _episodeCount++;
+        if (_episodeCount > _episodeLimit) {
+            _episodeCount = 0;
+            return true;
+        }
+        return false;
+    }
+
 
     //*******************************************************
     //* service not started with new
@@ -130,6 +188,25 @@ public class PlayerServiceController {
             _serviceBound = false;
         }
     };
+
+    //****************************
+    //* Events
+    //****************************
+    @Subscribe
+    public void onEvent(TimeUpdateEvent event){
+        try {
+            String eid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
+            PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(eid, event.getMillis());
+        }
+        catch (Exception e) {
+            L.INSTANCE.i((Object) this, e.toString());
+        }
+    }
+
+    @Subscribe
+    public void onEvent(MediaEndedEvent event) {
+        playNextEpisode();
+    }
 
 
 
