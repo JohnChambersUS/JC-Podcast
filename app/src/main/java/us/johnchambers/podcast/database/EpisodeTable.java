@@ -10,6 +10,8 @@ import android.arch.persistence.room.PrimaryKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import us.johnchambers.podcast.misc.L;
+
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 /**
@@ -117,7 +119,13 @@ public class EpisodeTable {
     }
 
     public long getPlayPointAsLong() {
-        return Long.parseLong(playPoint);
+        try {
+            return Long.parseLong(playPoint);
+        }
+        catch (Exception e) {
+            L.INSTANCE.i((Object) this, "0:0 play point");
+            return 0;
+        }
     }
 
 
