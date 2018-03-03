@@ -76,6 +76,9 @@ public interface PodcastDao {
     @Query("update episodeTable set play_point = :playPoint where eid = :episodeId;")
     void updateEpisodePlayPoint(String episodeId, String playPoint);
 
+    @Query("update episodeTable set length = :duration where eid = :episodeId;")
+    void updateEpisodeDuration(String episodeId, String duration);
+
     @Query("delete from episodeTable where pid = :podcastId;")
     void deleteEpisodeRowsByPid(String podcastId);
 

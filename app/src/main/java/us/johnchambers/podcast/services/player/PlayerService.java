@@ -400,7 +400,8 @@ public class PlayerService extends Service {
             if (_player.getAudioFormat() == null) {
                 return;
             }
-            _eventBus.post(new TimeUpdateEvent(_player.getContentPosition()));
+            _eventBus.post(new TimeUpdateEvent(_player.getContentPosition(),
+                    _player.getDuration()));
 
             if (playWhenReady == false) {
                 setNoticationToPaused();

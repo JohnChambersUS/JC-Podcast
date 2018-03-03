@@ -6,14 +6,20 @@ package us.johnchambers.podcast.Events.player;
 
 public class TimeUpdateEvent {
 
-    private long _millis;
+    private long _currPosition;
+    private long _length;
 
-    public TimeUpdateEvent(long millis) {
-        _millis = millis;
+    public TimeUpdateEvent(long currPosition, long length) {
+        _currPosition = currPosition;
+        _length = length;
     }
 
-    public long getMillis() {
-        return _millis;
+    public long getCurrPosition() {
+        return _currPosition;
+    }
+
+    public long getLength() {
+        return _length;
     }
 
 }

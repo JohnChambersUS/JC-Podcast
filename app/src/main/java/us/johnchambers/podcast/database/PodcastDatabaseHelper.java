@@ -134,6 +134,11 @@ public class PodcastDatabaseHelper {
         _database.dao().updateEpisodePlayPoint(eid, pp);
     }
 
+    public void updateEpisodeDuration(String eid, long duration) {
+        String dur = Long.valueOf(duration).toString();
+        _database.dao().updateEpisodeDuration(eid, dur);
+    }
+
     public boolean doesEpisodeExist(String pid, String eid) {
         return false;
     }
