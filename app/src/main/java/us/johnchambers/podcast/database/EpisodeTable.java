@@ -96,6 +96,16 @@ public class EpisodeTable {
         return length;
     }
 
+    public long getLengthAsLong() {
+        try {
+            return Long.parseLong(length);
+        }
+        catch (Exception e) {
+            L.INSTANCE.i((Object) this, "unable to parse length");
+            return 0;
+        }
+    }
+
     public int getPlayed() {
         return played;
     }

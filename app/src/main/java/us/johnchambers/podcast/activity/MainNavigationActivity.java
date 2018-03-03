@@ -22,10 +22,12 @@ import android.widget.Toast;
 
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
+import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
@@ -77,6 +79,8 @@ public class MainNavigationActivity extends AppCompatActivity
         PlayerServiceController.getInstance(getApplicationContext()); //init player controller
 
         setUpdateAlarm();
+
+        EventBus.getDefault().register(this);
     }
 
 
@@ -214,4 +218,18 @@ public class MainNavigationActivity extends AppCompatActivity
     public void onPlayerFragmentDoesSomething() {}
 
     public void onAboutFragmentInteraction() {}
+
+
+    //****************************
+    //* Events
+    //****************************
+    @Subscribe
+    public void onEvent(ClosePlayerEvent event) {
+        _myFragmentManager.popBackstackEntry();
+    }
+
+
+
+
 }
+

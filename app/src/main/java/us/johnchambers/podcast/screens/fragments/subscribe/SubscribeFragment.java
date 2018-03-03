@@ -197,7 +197,7 @@ public class SubscribeFragment extends MyFragment {
             currEpisode.setSummary(_feedResponseWrapper.getCurrEpisodeSummary());
             currEpisode.setAudioUrl(_feedResponseWrapper.getEpisodeDownloadLink());
             currEpisode.setPubDate(_feedResponseWrapper.getCurrEpisodeDate());
-            currEpisode.setLength("0");
+            currEpisode.setLength("1");
             currEpisode.setPlayedViaBoolean(false);
             currEpisode.setInProgressViaBoolean(false);
             currEpisode.setPlayPoint("0");
