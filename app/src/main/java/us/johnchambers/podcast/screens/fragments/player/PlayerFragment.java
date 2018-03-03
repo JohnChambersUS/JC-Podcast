@@ -106,6 +106,7 @@ public class PlayerFragment extends MyFragment {
 
     @Override
     public void onDetach() {
+        PlayerServiceController.getInstance().pausePlayer();
         super.onDetach();
         mListener = null;
         PlayerServiceController.getInstance().stopPlayer();
@@ -120,7 +121,7 @@ public class PlayerFragment extends MyFragment {
     //* methods
     //*************************************
     public FragmentBackstackType getBackstackType() {
-        return FragmentBackstackType.ROOT;
+        return FragmentBackstackType.BRANCH;
     }
 
     public void attachPlayerToView() {

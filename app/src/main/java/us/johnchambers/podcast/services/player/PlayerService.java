@@ -36,12 +36,16 @@ import com.google.android.exoplayer2.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 
+import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.MediaEndedEvent;
 import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
 
+import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
+import static com.google.android.exoplayer2.Player.STATE_IDLE;
+import static com.google.android.exoplayer2.Player.STATE_READY;
 import static us.johnchambers.podcast.misc.Constants.*;
 
 public class PlayerService extends Service {
@@ -277,19 +281,28 @@ public class PlayerService extends Service {
 
         episode = safeNull(episode);
         String episodeAudioUrl = safeNull(episode.getAudioUrl());
-        String currAudioUrl = safeNull(_currEpisode.getAudioUrl());
 
-
-        if (episodeAudioUrl.equals("") && currAudioUrl.equals("")) {
-            //nothing to play
-            //show blank screen
+        if (episodeAudioUrl.equals("")) {
             return;
         }
+        else {
+            _player.prepare(makeMediaSource(episode.getAudioUrl()),
+                    true,
+                    false);
+            _player.seekTo(episode.getPlayPointAsLong());
+        }
 
+        setNoticationToPlaying();
+        _player.setPlayWhenReady(true);
+
+
+
+        /*
         if (episodeAudioUrl.equals("") && !currAudioUrl.equals("")) {
             _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
                     true,
                     false);
+            _player.seekTo(episode.getPlayPointAsLong());
             _player.setPlayWhenReady(true);
 
             return;
@@ -299,7 +312,7 @@ public class PlayerService extends Service {
             _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
                     true,
                     false);
-
+            _player.seekTo(episode.getPlayPointAsLong());
             _player.setPlayWhenReady(true);
 
             return;
@@ -311,11 +324,12 @@ public class PlayerService extends Service {
         _player.prepare(makeMediaSource(episode.getAudioUrl()),
                 true,
                 false);
-        if (episode.getPlayPointAsLong() > 0) {
-            _player.seekTo(episode.getPlayPointAsLong());
-        }
+
+        _player.seekTo(episode.getPlayPointAsLong());
+
         _player.setPlayWhenReady(true);
         setNoticationToPlaying();
+        */
 
     }
 
@@ -390,6 +404,7 @@ public class PlayerService extends Service {
 
             if (playWhenReady == false) {
                 setNoticationToPaused();
+                _eventBus.post(new AnyKeyEvent());
             }
 
             if (playWhenReady == true) {
@@ -399,6 +414,13 @@ public class PlayerService extends Service {
             if (playbackState == STATE_ENDED) {
                 _eventBus.post(new MediaEndedEvent());
             }
+
+            if ((playbackState != STATE_ENDED)
+                    && (playbackState != STATE_READY)
+                    && (playWhenReady == true)) {
+                _eventBus.post(new AnyKeyEvent());
+            }
+
         }
 
         @Override

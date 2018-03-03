@@ -23,6 +23,8 @@ public final class Constants {
     public static String EID_FLAG = "eid";
     public static String PLAYLIST_FLAG = "playlist";
 
+    public static int EPISODE_LIMIT = 6;
+
     private Constants() {}
 
 }
