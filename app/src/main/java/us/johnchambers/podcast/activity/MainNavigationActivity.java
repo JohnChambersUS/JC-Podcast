@@ -17,10 +17,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.widget.Toast;
 
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
 
+import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
@@ -90,6 +95,7 @@ public class MainNavigationActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        Toast.makeText(this, "back button pressed", Toast.LENGTH_LONG).show();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -99,38 +105,13 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager.popBackstackEntry();
     }
 
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        /*
-        switch (keyCode) {
-            //rewind
-            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-            case KeyEvent.KEYCODE_MEDIA_REWIND:
-            case KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD:
-            case KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD:
-                PlayerServiceController.getInstance().rewindPlayer();
-                break;
-            //play pause
-            case KeyEvent.KEYCODE_MEDIA_PAUSE:
-            case KeyEvent.KEYCODE_MEDIA_PLAY:
-            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-            case KeyEvent.KEYCODE_MEDIA_STOP:
-                PlayerServiceController.getInstance().flipPlayerState();
-                break;
-            //forward
-            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
-            case KeyEvent.KEYCODE_MEDIA_NEXT:
-            case KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD:
-            case KeyEvent.KEYCODE_MEDIA_STEP_FORWARD:
-                PlayerServiceController.getInstance().forwardPlayer();
-                break;
-            default:
-                return super.onKeyUp(keyCode, event);
-        }
-        */
+        EventBus.getDefault().post(new AnyKeyEvent());
+        super.onKeyUp(keyCode, event);
         return true;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

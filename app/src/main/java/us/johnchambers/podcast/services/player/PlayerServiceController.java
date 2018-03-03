@@ -12,6 +12,7 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.MediaEndedEvent;
 import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.database.EpisodeTable;
@@ -19,6 +20,7 @@ import us.johnchambers.podcast.database.NowPlaying;
 import us.johnchambers.podcast.database.NowPlayingTable;
 import us.johnchambers.podcast.database.PodcastDatabase;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.L;
 
 /**
@@ -33,7 +35,7 @@ public class PlayerServiceController {
     private static Context _context = null;
 
     private int _episodeCount = 0;
-    private int _episodeLimit = 6;
+    private int _episodeLimit = Constants.EPISODE_LIMIT;
 
     public PlayerServiceController() {}
 
@@ -86,6 +88,7 @@ public class PlayerServiceController {
     }
 
     public void stopPlayer() {
+        _episodeCount = 0;
         _service.stopPlayer();
     }
 
@@ -113,22 +116,27 @@ public class PlayerServiceController {
     // play episode without playlist
     // assume it to be the podcast
     public void playEpisode(EpisodeTable episode) {
+        //set the episode
         if (episode != null) {
+            //put episode in Now Playing
             PodcastDatabaseHelper.getInstance().updateNowPlayingEpisode(episode.getEid());
             PodcastDatabaseHelper.getInstance().updateNowPlayingPlaylist(episode.getPid());
         }
-        else {
+        else { //null episode
             String nowPlayingEid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
             if (nowPlayingEid != NowPlaying.NO_EPISODE_FLAG) {
                 episode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(nowPlayingEid);
+            } else {
+                episode = new EpisodeTable(); //pass empty episode table, never null
             }
         }
+
         if (!episodeLimitReached()) {
             _service.playEpisode(episode);
         } else {
             //todo display or play are you listening notice
             Toast.makeText(_context,
-                    "limit:" + String.valueOf(_episodeCount),
+                    "Are you still listening?",
                     Toast.LENGTH_LONG).show();
         }
 
@@ -208,6 +216,11 @@ public class PlayerServiceController {
         playNextEpisode();
     }
 
+    @Subscribe
+    public void onEvent(AnyKeyEvent event) {
+        //any interaction with the phone assumes user is aware of episodes playing
+        _episodeCount = 0;
+    }
 
 
 }

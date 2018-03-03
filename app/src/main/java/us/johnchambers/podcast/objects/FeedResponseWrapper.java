@@ -84,7 +84,12 @@ public class FeedResponseWrapper {
     }
 
     public void processEpisodesFromBottom() {
-        _currEpisode = _feed.getEntries().size();
+        try {
+            _currEpisode = _feed.getEntries().size();
+        }
+        catch (Exception e) {
+            _currEpisode = -1;
+        }
     }
 
     public boolean anyEpisodes() {
