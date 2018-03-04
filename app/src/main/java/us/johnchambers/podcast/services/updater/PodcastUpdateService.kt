@@ -91,7 +91,9 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
                     .getEpisodeTableRowByEpisodeId(newEpisodeId)
             //if not in DB, then add
             if (dbRow == null) {
-                PodcastDatabaseHelper.getInstance().addNewEpisodeRow(feedResponseWrapper)
+                val currEpisode = feedResponseWrapper.getFilledEpisodeTable()
+                PodcastDatabaseHelper.getInstance().insertEpisodeTableRow(currEpisode)
+                //PodcastDatabaseHelper.getInstance().addNewEpisodeRow(feedResponseWrapper)
                 L.i(this as Object,
                         "Adding episode " + feedResponseWrapper.currEpisodeTitle)
             }

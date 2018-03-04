@@ -182,6 +182,10 @@ public class PodcastDatabaseHelper {
         _database.dao().deleteEpisodeRowsByPid(pid);
     }
 
+    public EpisodeTable getNextMediaPodcastPlaylist(EpisodeTable et) {
+        return _database.dao().getNextMediaPodcastPlaylist(et.getPid(), et.getIdentity());
+    }
+
     //***********************************
     //* Now playing table methods
     //***********************************
@@ -226,7 +230,7 @@ public class PodcastDatabaseHelper {
     //***********************************
     //* Download Queue Table methods
     //***********************************
-
+/*
     public void insertDownloadQueueTableRow(DownloadQueueTable downloadQueueTableRow) {
         _database.dao().insertDownloadQueueTableRow(downloadQueueTableRow);
     }
@@ -268,15 +272,12 @@ public class PodcastDatabaseHelper {
             _database.dao().deleteDownloadQueueTableRow(rows.get(0));
         }
     }
-
-    public EpisodeTable getNextMediaPodcastPlaylist(EpisodeTable et) {
-        return _database.dao().getNextMediaPodcastPlaylist(et.getPid(), et.getIdentity());
-    }
+*/
 
     //*******************************************************
     //* wrapper methods to add new rows
     //*******************************************************
-
+/*
     public void addNewPodcastRow(FeedResponseWrapper feedResponseWrapper) {
         PodcastTable newRow = getNewPodcastTableRow();
         //Store image on disk
@@ -302,7 +303,7 @@ public class PodcastDatabaseHelper {
         currEpisode.setSummary(feedResponseWrapper.getCurrEpisodeSummary());
         currEpisode.setAudioUrl(feedResponseWrapper.getEpisodeDownloadLink());
         currEpisode.setPubDate(feedResponseWrapper.getCurrEpisodeDate());
-        currEpisode.setLength("0");
+        currEpisode.setLength("1");
         currEpisode.setPlayedViaBoolean(false);
         currEpisode.setInProgressViaBoolean(false);
         currEpisode.setPlayPoint("0");
@@ -310,6 +311,7 @@ public class PodcastDatabaseHelper {
 
         insertEpisodeTableRow(currEpisode);
     }
+    */
 
     //*************************************************
     //* Common public utility methods
@@ -323,6 +325,14 @@ public class PodcastDatabaseHelper {
                     Toast.LENGTH_LONG).show();
         }
         catch (Exception e) {}
+
+        String npEid = getNowPlayingEpisodeId();
+        String npPid = getEpisodeTableRowByEpisodeId(npEid).getPid();
+
+        if (pid.equals(npPid)) {
+            updateNowPlayingEpisode(NowPlaying.NO_EPISODE_FLAG);
+            updateNowPlayingPlaylist(NowPlaying.NO_PLAYLIST_FLAG);
+        }
 
         deleteEpisodeRows(pid);
         deletePodcastRow(pid);

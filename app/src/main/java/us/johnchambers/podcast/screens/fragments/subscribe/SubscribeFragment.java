@@ -171,38 +171,17 @@ public class SubscribeFragment extends MyFragment {
     }
 
     private void addNewPodcastToDB() {
-        PodcastTable newRow = PodcastDatabaseHelper.getInstance().getNewPodcastTableRow();
-        //Store image on disk
         MyFileManager.getInstance().addPodcastImage(_feedResponseWrapper.getPodcastImage(),
                 _feedResponseWrapper.getPodcastId());
-        //add items to podcast table row from wrapper
-        newRow.setPid(_feedResponseWrapper.getPodcastId());
-        newRow.setName(_feedResponseWrapper.getPodcastTitle());
-        newRow.setFeedUrl(_feedResponseWrapper.getFeedUrl());
-        newRow.setSubscriptionTypeViaPodcastMode(PodcastMode.Manual);
-        newRow.setDownloadInterval(0);
-        newRow.setLastDownloadDateViaDate(new Date());
-        //insert podcast table row
+
+        PodcastTable newRow = _feedResponseWrapper.getFilledPodcastTable();
         PodcastDatabaseHelper.getInstance().insertPodcastTableRow(newRow);
     }
 
     private void addAllEpisodesToDatabase() {
         _feedResponseWrapper.processEpisodesFromBottom();
         while (_feedResponseWrapper.prevEpisode()) {
-            EpisodeTable currEpisode = PodcastDatabaseHelper.getInstance().getNewEpisodeTableRow();
-
-            currEpisode.setPid(_feedResponseWrapper.getPodcastId());
-            currEpisode.setEid(_feedResponseWrapper.getEpisodeId());
-            currEpisode.setTitle(_feedResponseWrapper.getCurrEpisodeTitle());
-            currEpisode.setSummary(_feedResponseWrapper.getCurrEpisodeSummary());
-            currEpisode.setAudioUrl(_feedResponseWrapper.getEpisodeDownloadLink());
-            currEpisode.setPubDate(_feedResponseWrapper.getCurrEpisodeDate());
-            currEpisode.setLength("1");
-            currEpisode.setPlayedViaBoolean(false);
-            currEpisode.setInProgressViaBoolean(false);
-            currEpisode.setPlayPoint("0");
-            currEpisode.setLocalDownloadUrl(null);
-
+            EpisodeTable currEpisode = _feedResponseWrapper.getFilledEpisodeTable();
             PodcastDatabaseHelper.getInstance().insertEpisodeTableRow(currEpisode);
         }
     }

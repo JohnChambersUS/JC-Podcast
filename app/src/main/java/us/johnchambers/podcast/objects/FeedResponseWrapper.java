@@ -33,8 +33,13 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import us.johnchambers.podcast.database.EpisodeTable;
+import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+import us.johnchambers.podcast.database.PodcastMode;
+import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.HashMaker;
+import us.johnchambers.podcast.misc.MyFileManager;
 
 public class FeedResponseWrapper {
 
@@ -234,6 +239,40 @@ public class FeedResponseWrapper {
             episodeMap.put(getEpisodeId(), true);
         }
         return episodeMap;
+    }
+
+    public PodcastTable getFilledPodcastTable() {
+
+        PodcastTable newRow = PodcastDatabaseHelper.getInstance().getNewPodcastTableRow();
+
+        newRow.setPid(getPodcastId());
+        newRow.setName(getPodcastTitle());
+        newRow.setFeedUrl(getFeedUrl());
+        newRow.setSubscriptionTypeViaPodcastMode(PodcastMode.Manual);
+        newRow.setDownloadInterval(0);
+        newRow.setLastDownloadDateViaDate(new Date());
+
+        return newRow;
+    }
+
+    public EpisodeTable getFilledEpisodeTable() {
+
+        EpisodeTable currEpisode = PodcastDatabaseHelper.getInstance()
+                .getNewEpisodeTableRow();
+
+        currEpisode.setPid(getPodcastId());
+        currEpisode.setEid(getEpisodeId());
+        currEpisode.setTitle(getCurrEpisodeTitle());
+        currEpisode.setSummary(getCurrEpisodeSummary());
+        currEpisode.setAudioUrl(getEpisodeDownloadLink());
+        currEpisode.setPubDate(getCurrEpisodeDate());
+        currEpisode.setLength("1");
+        currEpisode.setPlayedViaBoolean(false);
+        currEpisode.setInProgressViaBoolean(false);
+        currEpisode.setPlayPoint("0");
+        currEpisode.setLocalDownloadUrl(null);
+
+        return currEpisode;
     }
 
 }
