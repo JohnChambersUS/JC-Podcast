@@ -94,7 +94,7 @@ public interface PodcastDao {
     //**********************************************
     // Download Queue Table methods
     //**********************************************
-
+/*
     @Insert
     void insertDownloadQueueTableRow(DownloadQueueTable downloadQueueTableRow);
 
@@ -112,7 +112,7 @@ public interface PodcastDao {
 
     @Delete
     void deleteDownloadQueueTableRow(DownloadQueueTable row);
-
+*/
     //*********************************************************
     //* Now Playing Table methods
     //*********************************************************
