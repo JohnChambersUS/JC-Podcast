@@ -65,7 +65,17 @@ public class MyFragmentManager {
         }
     }
 
+    private void closeAbout() {
+        if (_backstack.size() > 0) {
+            MyBackstackEntry topEntry = (MyBackstackEntry) _backstack.peek();
+            if (topEntry.getFragmentTag() == ABOUT_FRAGMENT) {
+                popBackstackEntry();
+            }
+        }
+    }
+
     private void activateFragment(int containerViewId, MyFragment frag, String fragmentName) {
+        closeAbout();
         _fragmentManager
                 .beginTransaction()
                 .add(containerViewId, frag, fragmentName)

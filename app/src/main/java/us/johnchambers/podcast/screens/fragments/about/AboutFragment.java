@@ -78,7 +78,7 @@ public class AboutFragment extends MyFragment {
     //* Common routines
     //************************************
     public FragmentBackstackType getBackstackType() {
-        return FragmentBackstackType.ROOT;
+        return FragmentBackstackType.BRANCH;
     }
 
     public interface OnFragmentInteractionListener {
