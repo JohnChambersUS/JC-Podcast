@@ -83,8 +83,25 @@ public class PlayerServiceController {
     }
 
     public EpisodeTable getCurrentEpisode() {
-        return _service.getCurrentEpisode();
+        String eid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
+        if (eid == NowPlaying.NO_EPISODE_FLAG) {
+            return new EpisodeTable();
+        }
+        else {
+            return PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(eid);
+        }
     }
+
+    public String getNowPlayingPodcastId() {
+        String eid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
+        if (eid == NowPlaying.NO_EPISODE_FLAG) {
+            return "";
+        }
+        else {
+            return PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(eid).getPid();
+        }
+    }
+
 
     public void stopService() {
        _service.shutdownService();

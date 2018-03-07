@@ -55,6 +55,7 @@ public class SubscribeFragment extends MyFragment {
 
     private OnFragmentInteractionListener mListener;
     private View _view;
+    private View _header;
 
     public SubscribeFragment() {
         // Required empty public constructor
@@ -82,6 +83,7 @@ public class SubscribeFragment extends MyFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         _view = inflater.inflate(R.layout.fragment_subscribe, container, false);
+        _header = inflater.inflate(R.layout.fragment_subscribe_header, null, false);
         setSubscribeButtonListener();
         getPodcastFeedInfo();
 
@@ -197,6 +199,7 @@ public class SubscribeFragment extends MyFragment {
     private void loadFeedInfo(String response, String feedUrl) {
         _adapter = new SubscribeEpisodeListAdapter(_view.getContext());
         ListView listView = (ListView) _view.findViewById(R.id.subscribeEpisodeListView);
+        listView.addHeaderView(_header);
         listView.setAdapter(_adapter);
 
         _feedResponseWrapper = new FeedResponseWrapper(response, feedUrl);
@@ -213,7 +216,7 @@ public class SubscribeFragment extends MyFragment {
     }
 
     public void setDefaultImage() {
-        ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_ResultImage));
+        ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_detail_image));
         Bitmap bitmap =  BitmapFactory.decodeResource(getContext().getResources(),
                 R.raw.missing_podcast_image);
         iv.setImageBitmap(bitmap);
@@ -221,7 +224,7 @@ public class SubscribeFragment extends MyFragment {
 
     public void addImageToSubscribeScreen(Bitmap bitmap) {
         _feedResponseWrapper.setPodcastImage(bitmap);
-        ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_ResultImage));
+        ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_detail_image));
         iv.setImageBitmap(bitmap);
     }
 

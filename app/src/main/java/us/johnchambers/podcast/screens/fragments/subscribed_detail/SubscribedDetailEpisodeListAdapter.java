@@ -34,6 +34,10 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
         _context = context;
     }
 
+    public EpisodeTable headerListGetItem(int pos) {
+        return getItem(pos - 1);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         _parentView = parent;

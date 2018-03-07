@@ -39,6 +39,7 @@ public class SubscribedDetailFragment extends MyFragment {
 
     private static PodcastTable _podcastTable = null;
     private static View _view;
+    private static View _header;
     private static SubscribedDetailEpisodeListAdapter _adapter;
     private static Context _context;
 
@@ -69,8 +70,13 @@ public class SubscribedDetailFragment extends MyFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         _view = inflater.inflate(R.layout.fragment_subscribed_detail, container, false);
+
+        _header = inflater.inflate(R.layout.fragment_subscribed_detail_header,
+                null, false);
+
         //todo populate image
         displayPodcastImage();
+
         //todo populate table
         populateEpisodeListView();
         addSubscribedDetailPlayListener();
@@ -116,19 +122,24 @@ public class SubscribedDetailFragment extends MyFragment {
     }
 
     private void displayPodcastImage() {
-        ImageView image = (ImageView) _view.findViewById(R.id.subscribe_detail_image);
+        ImageView image = (ImageView) _header.findViewById(R.id.subscribed_detail_image);
         Bitmap pcImage = MyFileManager.getInstance().getPodcastImage(_podcastTable.getPid());
         if (pcImage == null) {
             pcImage =  BitmapFactory.decodeResource(_context.getResources(),
                     R.raw.missing_podcast_image);
         }
         image.setImageBitmap(pcImage);
+
+
+        //ImageView headerImage = (ImageView) _header.findViewById(R.id.subscribe_detail_header_image);
+        //headerImage.setImageBitmap(pcImage);
     }
 
     private void populateEpisodeListView() {
 
         _adapter = new SubscribedDetailEpisodeListAdapter(_view.getContext());
         ListView listView = (ListView) _view.findViewById(R.id.subscribed_detail_episode_list_view);
+        listView.addHeaderView(_header);
         listView.setAdapter(_adapter);
 
         List<EpisodeTable> episodeList = PodcastDatabaseHelper.getInstance()
@@ -159,7 +170,7 @@ public class SubscribedDetailFragment extends MyFragment {
     //todo redo to remove download tap
     private void processRowTap(AdapterView listView, int position) {
 
-        EpisodeTable panelRow = _adapter.getItem(position);
+        EpisodeTable panelRow = _adapter.headerListGetItem(position);
         String audioUrl = PodcastDatabaseHelper.getInstance().getEpisodeAudioUrl((panelRow.getEid()));
 
         if (audioUrl == null) {

@@ -236,10 +236,6 @@ public class PlayerService extends Service {
         return _currUrl;
     }
 
-    public EpisodeTable getCurrentEpisode() {
-        return _currEpisode;
-    }
-
     public void shutdownService() {
         _player.stop();
         stopForeground(true);

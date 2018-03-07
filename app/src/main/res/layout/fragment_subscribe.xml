@@ -8,23 +8,13 @@
     android:background="@color/colorPrimaryDark"
     tools:context="us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment">
 
-    <ImageView
-        android:id="@+id/subscribe_ResultImage"
-        app:layout_heightPercent="30%"
-        app:layout_aspectRatio="100%"
-        android:layout_centerHorizontal="true"
-        android:scaleType="fitXY"
-        android:background="@color/colorPrimaryDark"
-        ></ImageView>
-
     <ListView
         android:id="@+id/subscribeEpisodeListView"
         android:layout_width="match_parent"
         android:background="@color/colorPrimaryDark"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        app:layout_heightPercent="70%"
-        android:layout_below="@id/subscribe_ResultImage"
+        app:layout_heightPercent="100%"
         ></ListView>
 
     <android.support.design.widget.FloatingActionButton

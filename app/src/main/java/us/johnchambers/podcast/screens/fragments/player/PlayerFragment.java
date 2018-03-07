@@ -19,6 +19,7 @@ import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.MyPlayer;
 import us.johnchambers.podcast.misc.Utils;
+import us.johnchambers.podcast.services.player.PlayerService;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.misc.Utils.*;
@@ -137,14 +138,13 @@ public class PlayerFragment extends MyFragment {
     private void setImage() {
         Bitmap podcastPicture = null;
 
-        EpisodeTable episodeTable = PlayerServiceController.getInstance().getCurrentEpisode();
-        String currUrl = Utils.safeNull((episodeTable.getAudioUrl()));
+        String pid = PlayerServiceController.getInstance().getNowPlayingPodcastId();
 
-        if (currUrl.equals("")) {
+        if (pid.equals("")) {
             podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
                     R.raw.nopodcast);
         } else {
-            podcastPicture = MyFileManager.getInstance().getPodcastImage(episodeTable.getPid());
+            podcastPicture = MyFileManager.getInstance().getPodcastImage(pid);
             if (podcastPicture == null) {
                 podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
                         R.raw.missing_podcast_image);
