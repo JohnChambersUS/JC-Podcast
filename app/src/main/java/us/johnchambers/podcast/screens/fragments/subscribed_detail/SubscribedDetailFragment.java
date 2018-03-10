@@ -1,12 +1,17 @@
 package us.johnchambers.podcast.screens.fragments.subscribed_detail;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,8 +19,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
+import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.DownloadQueueTable;
 import us.johnchambers.podcast.database.EpisodeTable;
@@ -42,6 +50,8 @@ public class SubscribedDetailFragment extends MyFragment {
     private static View _header;
     private static SubscribedDetailEpisodeListAdapter _adapter;
     private static Context _context;
+
+    private BottomNavigationView.OnNavigationItemSelectedListener _bottomNavigationListener;
 
     public SubscribedDetailFragment() {
         // Required empty public constructor
@@ -80,7 +90,13 @@ public class SubscribedDetailFragment extends MyFragment {
         //todo populate table
         populateEpisodeListView();
         addSubscribedDetailPlayListener();
-        setSubscribedButtonListener();
+
+        addNavigationListener();
+        BottomNavigationView navigation = (BottomNavigationView) _view.findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener);
+        navigation.setItemIconTintList(null);
+
+
         return _view;
     }
 
@@ -105,17 +121,6 @@ public class SubscribedDetailFragment extends MyFragment {
     //*******************************************
     //* Common methods
     //*******************************************
-
-    private void setSubscribedButtonListener() {
-        FloatingActionButton fab = (FloatingActionButton) _view.findViewById(R.id.fab_unsubscribe);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PodcastDatabaseHelper.getInstance().removeEntirePodcast( _podcastTable.getPid());
-                mListener.onSubscribedDetailFragmentUnsubscribe();
-            }
-        });
-    }
 
     public FragmentBackstackType getBackstackType() {
         return FragmentBackstackType.BRANCH;
@@ -198,4 +203,61 @@ public class SubscribedDetailFragment extends MyFragment {
         void onSubscribedDetailFragmentDoesSomething(String path);
         void onSubscribedDetailFragmentUnsubscribe();
     }
+
+    //*********************************
+    //* bottom menu listener
+    //*********************************
+
+    private boolean processNavigation(MenuItem item) {
+        if (item.getItemId() == R.id.bm_unsubscribe) {
+            unsubscribeDialog();
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    private void addNavigationListener() {
+
+        _bottomNavigationListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                processNavigation(item);
+                return true;
+            }
+
+        };
+
+    }
+
+    //***************************
+    //* Dialog
+    //***************************
+    private void unsubscribeDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+        builder.setMessage("")
+                .setTitle("Do you really want to unsubscribe from this podcast?");
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                PodcastDatabaseHelper.getInstance().removeEntirePodcast( _podcastTable.getPid());
+                mListener.onSubscribedDetailFragmentUnsubscribe();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+
 }

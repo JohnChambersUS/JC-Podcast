@@ -327,7 +327,12 @@ public class PodcastDatabaseHelper {
         catch (Exception e) {}
 
         String npEid = getNowPlayingEpisodeId();
-        String npPid = getEpisodeTableRowByEpisodeId(npEid).getPid();
+        String npPid = "";
+        try {
+            npPid = getEpisodeTableRowByEpisodeId(npEid).getPid();
+        } catch (Exception e) {
+            npPid = "";
+        }
 
         if (pid.equals(npPid)) {
             updateNowPlayingEpisode(NowPlaying.NO_EPISODE_FLAG);
