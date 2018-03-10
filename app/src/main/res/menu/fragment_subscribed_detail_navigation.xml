@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
 
     <item
-        android:id="@+id/dummy1"
-        android:icon="@drawable/ic_remove"
-        android:title="one"
+        android:id="@+id/bm_unsubscribe"
+        android:icon="@drawable/ic_remove_light"
+        android:title="REMOVE"
         android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
 

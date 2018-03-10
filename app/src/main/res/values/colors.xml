@@ -7,11 +7,8 @@
     <color name="semiLightBackground">#96DAF8</color>
     <color name="secondaryAccent">#F89C33</color>
     <color name="ultraDark">#191919</color>
+    <color name="semiWhite">#EEEEEE</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
 
-    <style name="jcTheme" parent="AppTheme.NoActionBar">
-        <item name="android:colorPrimary">#3C6EB4</item>
-        <item name="android:colorPrimaryDark">#394F80</item>
-        <item name="android:statusBarColor">#394F80</item>
-        <item name="android:navigationBarColor">#394F80</item>
-    </style>
 </resources>
