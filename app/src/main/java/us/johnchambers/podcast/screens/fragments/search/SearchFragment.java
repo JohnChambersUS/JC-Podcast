@@ -27,6 +27,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import java.net.URL;
+import java.net.URLEncoder;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.fragments.MyFragment;
@@ -133,6 +134,9 @@ public class SearchFragment extends MyFragment {
             et.setHint("I said, enter a term");
         }
         else {
+            try {
+                term = URLEncoder.encode(term, "utf-8");
+            } catch (Exception e) {}
             String searchString = "https://itunes.apple.com/search?media=podcast&entity=podcast&limit=100&term="
                     + term;
             try {
