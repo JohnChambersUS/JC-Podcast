@@ -19,6 +19,9 @@ import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.MyPlayer;
 import us.johnchambers.podcast.misc.Utils;
+import us.johnchambers.podcast.objects.Docket;
+import us.johnchambers.podcast.playlists.Playlist;
+import us.johnchambers.podcast.playlists.PlaylistFactory;
 import us.johnchambers.podcast.services.player.PlayerService;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
@@ -45,6 +48,9 @@ public class PlayerFragment extends MyFragment {
 
     private static MyPlayer _player;
 
+    private static Docket _currDocket;
+
+
     public PlayerFragment() {
         // Required empty public constructor
     }
@@ -66,6 +72,16 @@ public class PlayerFragment extends MyFragment {
         return fragment;
     }
 
+    public static PlayerFragment newInstance(Docket docket) {
+        PlayerFragment fragment = new PlayerFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        _currDocket = docket;
+        //PlayerServiceController.getInstance().playPlaylist(docket);
+        return fragment;
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +98,8 @@ public class PlayerFragment extends MyFragment {
         _playerView = (SimpleExoPlayerView) _view.findViewById(R.id.video_view);
         attachPlayerToView();
         playEpisode();
-        setImage();
+
+        //setImage();
         return _view;
     }
 
@@ -154,7 +171,8 @@ public class PlayerFragment extends MyFragment {
     }
 
     private void playEpisode() {
-        PlayerServiceController.getInstance().playEpisode(_currEpisode);
+        //PlayerServiceController.getInstance().playEpisode(_currEpisode);
+        PlayerServiceController.getInstance().playPlaylist(_currDocket);
     }
 
 }

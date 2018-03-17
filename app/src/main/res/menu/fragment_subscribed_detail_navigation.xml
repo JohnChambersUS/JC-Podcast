@@ -11,4 +11,14 @@
         />
 
 
+    <item
+        android:id="@+id/bm_play"
+        android:icon="@drawable/ic_play_light"
+        android:title="PLAY"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+
+
 </menu>

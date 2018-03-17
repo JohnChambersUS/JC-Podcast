@@ -19,12 +19,13 @@ import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.Events.player.MediaEndedEvent;
 import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.database.EpisodeTable;
-import us.johnchambers.podcast.database.NowPlaying;
-import us.johnchambers.podcast.database.NowPlayingTable;
-import us.johnchambers.podcast.database.PodcastDatabase;
+import us.johnchambers.podcast.objects.Docket;
+import us.johnchambers.podcast.playlists.NowPlaying;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.L;
+import us.johnchambers.podcast.playlists.Playlist;
+import us.johnchambers.podcast.playlists.PlaylistFactory;
 
 /**
  * Created by johnchambers on 1/22/18.
@@ -39,6 +40,8 @@ public class PlayerServiceController {
 
     private int _episodeCount = 0;
     private int _episodeLimit = Constants.EPISODE_LIMIT;
+
+    private Playlist _playlist;
 
     public PlayerServiceController() {}
 
@@ -186,6 +189,22 @@ public class PlayerServiceController {
         }
     }
 
+    private void playNextPlaylistEpisode() {
+        if (episodeLimitReached()) {
+            showStillWatchingDialog();
+            return;
+        }
+
+        EpisodeTable nextEpisode = _playlist.getNextEpisode();
+        if (nextEpisode.isEmpty()) {
+            //showEndOfPlaylistDialog();
+            //EventBus.getDefault().post(new ClosePlayerEvent());
+            return; //get out
+        }
+        NowPlaying.INSTANCE.update(_playlist.getPlaylistId(), nextEpisode.getEid());
+        _service.playEpisode(nextEpisode);
+    }
+
     private boolean episodeLimitReached() {
         _episodeCount++;
         if (_episodeCount > _episodeLimit) {
@@ -193,6 +212,18 @@ public class PlayerServiceController {
             return true;
         }
         return false;
+    }
+
+    //*********************************
+    //* playlist related functionality
+    //*********************************
+    public void playPlaylist(Docket docket) {
+        _playlist = PlaylistFactory.INSTANCE.getPlaylist(docket);
+        if (!_playlist.isEmpty()) {
+            playNextPlaylistEpisode();
+        } else {
+            showEmptyPlaylistDialog();
+        }
     }
 
 
@@ -232,9 +263,8 @@ public class PlayerServiceController {
     @Subscribe
     public void onEvent(TimeUpdateEvent event){
         try {
-            String eid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
-            PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(eid, event.getCurrPosition());
-            PodcastDatabaseHelper.getInstance().updateEpisodeDuration(eid, event.getLength());
+            NowPlaying.INSTANCE
+                    .updateEpisodePlayPointAndLength(event.getCurrPosition(), event.getLength());
         }
         catch (Exception e) {
             L.INSTANCE.i((Object) this, e.toString());
@@ -243,7 +273,7 @@ public class PlayerServiceController {
 
     @Subscribe
     public void onEvent(MediaEndedEvent event) {
-        playNextEpisode();
+        playNextPlaylistEpisode();
     }
 
     @Subscribe
@@ -272,7 +302,41 @@ public class PlayerServiceController {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
                 _episodeCount = 0;
-                playNextEpisode();
+                playNextPlaylistEpisode();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+    private void showEndOfPlaylistDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+        builder.setMessage("There are no more episodes in the episode queue.")
+                .setTitle("You have reached the end of the playlist.");
+
+        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+    private void showEmptyPlaylistDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+        builder.setMessage("")
+                .setTitle("There are no episodes in this playlist.");
+
+        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
             }
         });
 

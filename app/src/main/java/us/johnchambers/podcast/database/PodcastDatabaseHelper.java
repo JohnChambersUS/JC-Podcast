@@ -1,15 +1,12 @@
 package us.johnchambers.podcast.database;
 
-import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.widget.Toast;
 
-import java.util.Date;
 import java.util.List;
 
-import us.johnchambers.podcast.misc.MyFileManager;
-import us.johnchambers.podcast.objects.FeedResponseWrapper;
+import us.johnchambers.podcast.playlists.NowPlaying;
 
 
 /**
@@ -72,6 +69,10 @@ public class PodcastDatabaseHelper {
 
     public void insertPodcastTableRow(PodcastTable podcastTable) {
         _database.dao().insertPodcastTableRow(podcastTable);
+    }
+
+    public void updatePodcastTableRow(PodcastTable row) {
+        _database.dao().updatePodcastTableRow(row);
     }
 
     public boolean alreadySubscribedToPodcast(String podcastId) {
@@ -147,6 +148,11 @@ public class PodcastDatabaseHelper {
         return _database.dao().getEpisodeTableRowByPodcastIdNewestFirst(podcastId);
     }
 
+    public List<EpisodeTable> getEpisodesSortedOldest(String podcastId) {
+        return _database.dao().getEpisodeTableRowByPodcastIdOldestFirst(podcastId);
+    }
+
+
     public EpisodeTable getEpisodeTableRowByEpisodeId(String eid) {
         List<EpisodeTable> rows = _database.dao().getEpisodeTableRowByEpisodeId(eid);
         if (rows.size() > 0) {
@@ -221,6 +227,10 @@ public class PodcastDatabaseHelper {
         return np.getValue();
     }
 
+    public String getNowPlayingPlaylist() {
+        NowPlayingTable np = _database.dao().getNowPlayingTableByKey(NowPlaying.PLAYLIST);
+        return np.getValue();
+    }
 
 
 

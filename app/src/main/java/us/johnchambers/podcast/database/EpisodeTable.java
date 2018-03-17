@@ -10,7 +10,9 @@ import android.arch.persistence.room.PrimaryKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.L;
+import us.johnchambers.podcast.playlists.NowPlaying;
 
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
@@ -43,6 +45,11 @@ public class EpisodeTable {
     @ColumnInfo(name = "play_point")
     String playPoint;
     String localDownloadUrl;
+
+    public EpisodeTable() {
+        pid = Constants.NO_PID_FLAG;
+        eid = Constants.NO_EID_FLAG;
+    }
 
     public String getLocalDownloadUrl() {
         return localDownloadUrl;
@@ -208,6 +215,14 @@ public class EpisodeTable {
     public void setPlayPoint(long playPoint) {
         String pp = Long.valueOf(playPoint).toString();
         this.playPoint = pp;
+    }
+
+    public Boolean isEmpty() {
+        if ((pid.equals(Constants.NO_PID_FLAG)) && (eid.equals(Constants.NO_EID_FLAG))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

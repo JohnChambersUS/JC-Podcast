@@ -275,7 +275,10 @@ public class PlayerService extends Service {
 
     public void playEpisode(EpisodeTable episode) {
 
-        episode = safeNull(episode);
+        if (episode.isEmpty()) {
+            return;
+        }
+
         String episodeAudioUrl = safeNull(episode.getAudioUrl());
 
         if (episodeAudioUrl.equals("")) {

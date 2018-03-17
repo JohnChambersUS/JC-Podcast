@@ -7,8 +7,6 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,14 +21,15 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
+import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
 import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.database.DownloadQueueTable;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.MyFileManager;
+import us.johnchambers.podcast.objects.DocketEpisode;
+import us.johnchambers.podcast.objects.DocketPodcast;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 public class SubscribedDetailFragment extends MyFragment {
@@ -176,6 +175,12 @@ public class SubscribedDetailFragment extends MyFragment {
     private void processRowTap(AdapterView listView, int position) {
 
         EpisodeTable panelRow = _adapter.headerListGetItem(position);
+        EventBus.getDefault().post(new ResumePlaylistEvent(new DocketEpisode(panelRow.getEid())));
+
+
+
+
+        /*
         String audioUrl = PodcastDatabaseHelper.getInstance().getEpisodeAudioUrl((panelRow.getEid()));
 
         if (audioUrl == null) {
@@ -184,13 +189,15 @@ public class SubscribedDetailFragment extends MyFragment {
         }
 
         if (audioUrl.length() > 0) {
-            mListener.onSubscribedDetailFragmentDoesSomething(panelRow.getEid());
+            //mListener.onSubscribedDetailFragmentDoesSomething(panelRow.getEid());
+
 
         }
         else {
             Toast.makeText(_context, "Url for this episode is 0 length", Toast.LENGTH_LONG).show();
 
         }
+        */
 
     }
 
@@ -208,13 +215,15 @@ public class SubscribedDetailFragment extends MyFragment {
     //* bottom menu listener
     //*********************************
 
-    private boolean processNavigation(MenuItem item) {
+    private void processNavigation(MenuItem item) {
         if (item.getItemId() == R.id.bm_unsubscribe) {
             unsubscribeDialog();
-            return true;
         }
-        else {
-            return false;
+        if (item.getItemId() == R.id.bm_play) {
+
+            //picked up by main activity to flow
+            EventBus.getDefault()
+                    .post(new ResumePlaylistEvent(new DocketPodcast(_podcastTable.getPid())));
         }
     }
 

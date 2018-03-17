@@ -25,6 +25,17 @@ public final class Constants {
 
     public static int EPISODE_LIMIT = 6;
 
+    public static String PLAYBACK_MODE_BOOK = "book";
+    public static String PLAYBACK_MODE_PODCAST = "podcast";
+
+    public static String NO_CURRENT_EPISODE = "dummy";
+
+    public static String NO_PID_FLAG = "no_pid";
+    public static String NO_EID_FLAG = "no_eid";
+
+
+
     private Constants() {}
+
 
 }

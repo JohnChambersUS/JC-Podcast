@@ -17,7 +17,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.widget.Toast;
 
 
@@ -28,6 +27,7 @@ import java.util.Calendar;
 
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
+import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
@@ -226,6 +226,12 @@ public class MainNavigationActivity extends AppCompatActivity
     @Subscribe
     public void onEvent(ClosePlayerEvent event) {
         _myFragmentManager.popBackstackEntry();
+    }
+
+    @Subscribe
+    public void onEvent(ResumePlaylistEvent event) {
+        _myFragmentManager.activatePlayerFragment(event.getDocketPackage());
+        int x = 1;
     }
 
 
