@@ -43,6 +43,8 @@ public class PlayerServiceController {
 
     private Playlist _playlist;
 
+    private Boolean showDoneDialog = false;
+
     public PlayerServiceController() {}
 
     public static PlayerServiceController getInstance() {
@@ -196,8 +198,8 @@ public class PlayerServiceController {
 
         EpisodeTable nextEpisode = _playlist.getNextEpisode();
         if (nextEpisode.isEmpty()) {
-            //showEndOfPlaylistDialog();
-            //EventBus.getDefault().post(new ClosePlayerEvent());
+            showEndOfPlaylistDialog();
+            EventBus.getDefault().post(new ClosePlayerEvent());
             return; //get out
         }
         NowPlaying.INSTANCE.update(_playlist.getPlaylistId(), nextEpisode.getEid());
@@ -217,6 +219,7 @@ public class PlayerServiceController {
     //* playlist related functionality
     //*********************************
     public void playPlaylist(Docket docket) {
+        showDoneDialog = false;
         _playlist = PlaylistFactory.INSTANCE.getPlaylist(docket);
         if (!_playlist.isEmpty()) {
             playNextPlaylistEpisode();
@@ -311,6 +314,12 @@ public class PlayerServiceController {
     }
 
     private void showEndOfPlaylistDialog() {
+
+        //flip so only shows on first ending
+        showDoneDialog = !showDoneDialog;
+        if (!showDoneDialog) {
+            return;
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(_context);
         builder.setMessage("There are no more episodes in the episode queue.")
