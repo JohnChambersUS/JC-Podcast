@@ -55,8 +55,11 @@ public interface PodcastDao {
     @Query("SELECT * FROM EpisodeTable WHERE eid = :episodeId")
     List<EpisodeTable> getEpisodeTableRowByEpisodeId(String episodeId);
 
-    @Query("SELECT * FROM EpisodeTable WHERE pid = :podcastId order by publication_date DESC")
+    @Query("SELECT * FROM EpisodeTable WHERE pid = :podcastId order by identity DESC")
     List<EpisodeTable> getEpisodeTableRowByPodcastIdNewestFirst(String podcastId);
+
+    @Query("SELECT * FROM EpisodeTable WHERE pid = :podcastId order by identity ASC")
+    List<EpisodeTable> getEpisodeTableRowByPodcastIdOldestFirst(String podcastId);
 
     @Query("SELECT audio_url FROM EpisodeTable WHERE eid = :episodeId")
     String getEpisodeAudioUrl(String episodeId);

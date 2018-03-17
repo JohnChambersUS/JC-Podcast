@@ -241,6 +241,12 @@ public class FeedResponseWrapper {
         return episodeMap;
     }
 
+    public PodcastTable getFilledPodcastTable(String podcastMode) {
+        PodcastTable pt = getFilledPodcastTable();
+        pt.setMode(podcastMode);
+        return pt;
+    }
+
     public PodcastTable getFilledPodcastTable() {
 
         PodcastTable newRow = PodcastDatabaseHelper.getInstance().getNewPodcastTableRow();
@@ -251,6 +257,8 @@ public class FeedResponseWrapper {
         newRow.setSubscriptionTypeViaPodcastMode(PodcastMode.Manual);
         newRow.setDownloadInterval(0);
         newRow.setLastDownloadDateViaDate(new Date());
+        newRow.setMode(Constants.PLAYBACK_MODE_PODCAST);
+        newRow.setCurrentEpisode(Constants.NO_CURRENT_EPISODE);
 
         return newRow;
     }
