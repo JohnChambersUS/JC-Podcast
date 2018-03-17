@@ -12,5 +12,6 @@ object C {
         var TYPE_IS_EPISODE = "episode"
         var TYPE_IS_PODCAST = "podcast"
         var TYPE_IS_NOTHING = "nothing"
+        var TYPE_IS_EMPTY = "EMPTY"
     }
 }

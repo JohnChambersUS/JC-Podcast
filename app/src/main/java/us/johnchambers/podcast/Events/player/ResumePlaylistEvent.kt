@@ -15,5 +15,4 @@ class ResumePlaylistEvent(docket : Docket) {
         return _docket
     }
 
-
 }

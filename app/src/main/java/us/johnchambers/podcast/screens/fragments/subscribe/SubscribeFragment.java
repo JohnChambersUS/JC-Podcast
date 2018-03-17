@@ -45,18 +45,10 @@ import us.johnchambers.podcast.objects.FeedResponseWrapper;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 
 public class SubscribeFragment extends MyFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     SearchRow _searchRow;
     FeedResponseWrapper _feedResponseWrapper;
     SubscribeEpisodeListAdapter _adapter;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
     private View _view;
@@ -66,7 +58,6 @@ public class SubscribeFragment extends MyFragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static SubscribeFragment newInstance(SearchRow sr) {
         SubscribeFragment fragment = new SubscribeFragment();
         Bundle args = new Bundle();
@@ -78,10 +69,6 @@ public class SubscribeFragment extends MyFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -122,7 +109,6 @@ public class SubscribeFragment extends MyFragment {
             @Override
             public void onClick(View view) {
                 openSubscribeDialog();
-                //openPopupMenu("default");
             }
         });
     }
@@ -168,11 +154,7 @@ public class SubscribeFragment extends MyFragment {
     private void openPopupMenu(String value) {
         subscribePodcast("podcast");
     }
-
-
-
-
-
+    
     public void subscribePodcast(String mode) {
 
         //check to see if already subscribed

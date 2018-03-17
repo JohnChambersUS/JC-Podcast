@@ -10,7 +10,7 @@ import kotlin.math.E
 /**
  * Created by johnchambers on 3/11/18.
  */
-open class PodcastPlaylist(docket : Docket) : Playlist(docket) {
+class PodcastPlaylist(docket : Docket) : Playlist(docket) {
 
     var _podcastInfo : PodcastTable
 
@@ -95,8 +95,5 @@ open class PodcastPlaylist(docket : Docket) : Playlist(docket) {
             updatePlaylistInfo()
         }
     }
-
-
-
 
 }

@@ -10,7 +10,6 @@ import us.johnchambers.podcast.objects.FragmentBackstackType;
  */
 public abstract class MyFragment extends Fragment {
 
-
     public MyFragment() {}
 
     public abstract FragmentBackstackType getBackstackType();

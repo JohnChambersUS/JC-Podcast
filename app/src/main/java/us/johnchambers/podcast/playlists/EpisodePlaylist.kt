@@ -12,7 +12,7 @@ import us.johnchambers.podcast.objects.Docket
 class EpisodePlaylist(docket : Docket) : Playlist(docket) {
 
     var _podcastInfo : PodcastTable
-    lateinit var _startingEpisodeId : String
+    private var _startingEpisodeId : String
 
     init {
         var episodeRow = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(docket.getId())
@@ -26,7 +26,6 @@ class EpisodePlaylist(docket : Docket) : Playlist(docket) {
         _episodes = PodcastDatabaseHelper.getInstance().getEpisodesSortedNewest(episodeRow.pid)
         _startingEpisodeId = episodeRow.eid
 
-        //alignWithNowPlayingInfo()
         setCurrentEpisodeIndex()
     }
 
@@ -94,10 +93,7 @@ class EpisodePlaylist(docket : Docket) : Playlist(docket) {
     }
 
     override fun alignWithNowPlayingInfo() {
-        if (PodcastDatabaseHelper.getInstance().nowPlayingPlaylist.equals(_podcastInfo.pid)) {
-            _podcastInfo.currentEpisode = PodcastDatabaseHelper.getInstance().nowPlayingEpisodeId
-            updatePlaylistInfo()
-        }
+
     }
 
 

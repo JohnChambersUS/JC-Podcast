@@ -16,7 +16,6 @@ class EmptyPlaylist(docket : Docket) : Playlist(docket) {
 
     override fun setCurrentEpisodeIndex() {}
 
-
     override fun updatePlaylistInfo() {}
 
     override fun getNextEpisode(): EpisodeTable {

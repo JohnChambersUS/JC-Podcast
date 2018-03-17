@@ -39,7 +39,7 @@ public class PlayerServiceController {
     private static Context _context = null;
 
     private int _episodeCount = 0;
-    private int _episodeLimit = Constants.EPISODE_LIMIT;
+    private int _episodeLimit = 2; //Constants.EPISODE_LIMIT;
 
     private Playlist _playlist;
 
@@ -83,20 +83,6 @@ public class PlayerServiceController {
         _service.attachPlayerToView(playerView);
     }
 
-    public String getCurrentUrl() {
-        return _service.getCurrentUrl();
-    }
-
-    public EpisodeTable getCurrentEpisode() {
-        String eid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
-        if (eid == NowPlaying.NO_EPISODE_FLAG) {
-            return new EpisodeTable();
-        }
-        else {
-            return PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(eid);
-        }
-    }
-
     public String getNowPlayingPodcastId() {
         String eid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
         if (eid == NowPlaying.NO_EPISODE_FLAG) {
@@ -106,7 +92,6 @@ public class PlayerServiceController {
             return PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(eid).getPid();
         }
     }
-
 
     public void stopService() {
        _service.shutdownService();
@@ -135,59 +120,6 @@ public class PlayerServiceController {
 
     public void rewindPlayer() {
         _service.rewindPlayer();
-    }
-
-    // play episode without playlist
-    // assume it to be the podcast
-    public void playEpisode(EpisodeTable episode) {
-
-        //set the episode
-        if (episode != null) {
-            //put episode in Now Playing
-            PodcastDatabaseHelper.getInstance().updateNowPlayingEpisode(episode.getEid());
-            PodcastDatabaseHelper.getInstance().updateNowPlayingPlaylist(episode.getPid());
-        }
-        else { //null episode
-            String nowPlayingEid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
-            if (nowPlayingEid != NowPlaying.NO_EPISODE_FLAG) {
-                episode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(nowPlayingEid);
-            } else {
-                episode = new EpisodeTable(); //pass empty episode table, never null
-            }
-        }
-        //reset to beginning if has already been played
-        if (episode.getPlayPointAsLong() >= episode.getLengthAsLong()) {
-            episode.setPlayPoint(0);
-        }
-
-        _service.playEpisode(episode);
-
-    }
-
-    private void playNextEpisode() {
-
-        if (episodeLimitReached()) {
-            showStillWatchingDialog();
-            return;
-        }
-
-        String currEid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
-        if (currEid == NowPlaying.NO_EPISODE_FLAG) {
-            return;
-        }
-
-        EpisodeTable currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(currEid);
-        EpisodeTable nextEpisode = PodcastDatabaseHelper.getInstance().getNextMediaPodcastPlaylist(currEpisode);
-        while ((nextEpisode != null) &&
-                (nextEpisode.getPlayPointAsLong() >= nextEpisode.getLengthAsLong())) {
-            nextEpisode = PodcastDatabaseHelper.getInstance().getNextMediaPodcastPlaylist(nextEpisode);
-        }
-
-        if (nextEpisode != null) {
-            playEpisode(nextEpisode);
-        } else {
-            //todo play end of playlist message
-        }
     }
 
     private void playNextPlaylistEpisode() {
@@ -227,7 +159,6 @@ public class PlayerServiceController {
             showEmptyPlaylistDialog();
         }
     }
-
 
     //*******************************************************
     //* service not started with new
@@ -296,6 +227,8 @@ public class PlayerServiceController {
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
+                //todo is causing MEDIA_ENDING event in player and makes it skip episode
+                //todo figure out how to do this without triggering double event
                 EventBus.getDefault().post(new ClosePlayerEvent());
             }
         });

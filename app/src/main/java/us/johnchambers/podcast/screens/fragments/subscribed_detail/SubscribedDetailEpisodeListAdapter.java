@@ -59,18 +59,4 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
 
         return convertView;
     }
-
-    public void updateStatusIconToDownloading(AdapterView listView, int position) {
-        View viewRow = listView.getChildAt(position -
-                listView.getFirstVisiblePosition());
-        ImageView status = (ImageView) viewRow.findViewById(R.id.row_subscribed_detail_episode_status);
-        status.setImageDrawable(_context.getDrawable(R.drawable.ic_pause));
-    }
-
-    public void updateStatusIconToPlay(AdapterView listView, int position) {
-        View viewRow = listView.getChildAt(position -
-                listView.getFirstVisiblePosition());
-        ImageView status = (ImageView) viewRow.findViewById(R.id.row_subscribed_detail_episode_status);
-        status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
-    }
 }

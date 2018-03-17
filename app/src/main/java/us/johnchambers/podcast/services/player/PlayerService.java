@@ -14,6 +14,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 
 import com.android.volley.Response;
@@ -50,13 +51,9 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
-import us.johnchambers.podcast.misc.ImageHelper;
-import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
 
-import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
-import static com.google.android.exoplayer2.Player.STATE_IDLE;
 import static com.google.android.exoplayer2.Player.STATE_READY;
 import static us.johnchambers.podcast.misc.Constants.*;
 
@@ -80,7 +77,6 @@ public class PlayerService extends Service {
     EventBus _eventBus = EventBus.getDefault();
 
 
-
     public PlayerService() {
         super();
     }
@@ -89,7 +85,6 @@ public class PlayerService extends Service {
     public void onCreate() {
         super.onCreate();
         initService();
-
     }
 
     @Override
@@ -100,7 +95,6 @@ public class PlayerService extends Service {
     @Override
     public void onRebind(Intent intent) {
         super.onRebind(intent);
-
     }
 
     //********************************
@@ -114,14 +108,6 @@ public class PlayerService extends Service {
             _context = getApplicationContext();
             makeForegroundService();
             createEmptyPlayer();
-
-            //mas();
-/*
-            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    "MyWakelockTag");
-            wakeLock.acquire();
-            */
         }
     }
     // Only run once for setup
@@ -145,7 +131,6 @@ public class PlayerService extends Service {
 
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nm.notify(_id, theNo);
-
     }
 
     private void setNoticationToPlaying() {
@@ -206,7 +191,6 @@ public class PlayerService extends Service {
         }
 
         return notif.build();
-
     }
 
     // Only run once for setup
@@ -223,15 +207,6 @@ public class PlayerService extends Service {
             return value;
         }
     }
-
-    private EpisodeTable safeNull(EpisodeTable value) {
-        if ((value == null) || !(value instanceof EpisodeTable)) {
-            return new EpisodeTable();
-        } else {
-            return value;
-        }
-    }
-
 
     //************************************
     //* common public methods
@@ -306,43 +281,6 @@ public class PlayerService extends Service {
 
         setNoticationToPlaying();
         _player.setPlayWhenReady(true);
-
-
-
-        /*
-        if (episodeAudioUrl.equals("") && !currAudioUrl.equals("")) {
-            _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
-                    true,
-                    false);
-            _player.seekTo(episode.getPlayPointAsLong());
-            _player.setPlayWhenReady(true);
-
-            return;
-        }
-
-        if (episodeAudioUrl.equals(currAudioUrl)) {
-            _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
-                    true,
-                    false);
-            _player.seekTo(episode.getPlayPointAsLong());
-            _player.setPlayWhenReady(true);
-
-            return;
-        }
-
-        //if get this far then change to new url
-
-        _currEpisode = episode;
-        _player.prepare(makeMediaSource(episode.getAudioUrl()),
-                true,
-                false);
-
-        _player.seekTo(episode.getPlayPointAsLong());
-
-        _player.setPlayWhenReady(true);
-        setNoticationToPlaying();
-        */
-
     }
 
     private MediaSource makeMediaSource(String url) {
@@ -424,7 +362,7 @@ public class PlayerService extends Service {
                 setNoticationToPlaying();
             }
 
-            if (playbackState == STATE_ENDED) {
+            if ((playbackState == STATE_ENDED) && (playWhenReady == true)) {
                 _eventBus.post(new MediaEndedEvent());
             }
 
@@ -456,104 +394,6 @@ public class PlayerService extends Service {
 
         }
     };
-
-    //*************************************************
-    //* media key listener
-    //*************************************************
-/*
-    public void mas() {
-
-
-        audioSession = new MediaSession(getApplicationContext(), "TAG");
-
-        audioSession.setCallback(new MediaSession.Callback() {
-
-            @Override
-            public boolean onMediaButtonEvent(final Intent mediaButtonIntent) {
-
-                Toast.makeText(_context, "my text", Toast.LENGTH_LONG).show();
-
-                flipPlayerState();
-
-                String intentAction = mediaButtonIntent.getAction();
-                KeyEvent event = (KeyEvent) mediaButtonIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-                int action = event.getAction();
-                if (action != KeyEvent.ACTION_DOWN) {
-                    //return super.onMediaButtonEvent(mediaButtonIntent);
-                }
-                */
-/*
-                switch (event) {
-                    //rewind
-                    case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                    case KeyEvent.KEYCODE_MEDIA_REWIND:
-                    case KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD:
-                    case KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD:
-                        PlayerServiceController.getInstance().rewindPlayer();
-                        break;
-                    //play pause
-                    case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                    case KeyEvent.KEYCODE_MEDIA_PLAY:
-                    case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                    case KeyEvent.KEYCODE_MEDIA_STOP:
-                        PlayerServiceController.getInstance().flipPlayerState();
-                        break;
-                    //forward
-                    case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
-                    case KeyEvent.KEYCODE_MEDIA_NEXT:
-                    case KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD:
-                    case KeyEvent.KEYCODE_MEDIA_STEP_FORWARD:
-                        PlayerServiceController.getInstance().forwardPlayer();
-                        break;
-                    default:
-                        return super.onKeyUp(keyCode, event);
-                }
-                */
-
-
-
-/*
-
-                return super.onMediaButtonEvent(mediaButtonIntent);
-            }
-
-
-        });
-
-        PlaybackState state = new PlaybackState.Builder()
-                .setActions(PlaybackState.ACTION_PLAY_PAUSE)
-                .setState(PlaybackState.STATE_PLAYING, 0, 0, 0)
-                .build();
-        audioSession.setPlaybackState(state);
-
-        //audioSession.setFlags();
-
-        audioSession.setActive(true);
-
-    }
-
-    */
-
-    //***************************
-    //* on key listener
-    //**************************
-    /*
-    public void setOnKeyListener() {
-
-        new View.OnKeyListener() {
-
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                Toast.makeText(_context, "on key", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-        };
-
-
-    }
-    */
-
 
     //******************************
     //* volley section
