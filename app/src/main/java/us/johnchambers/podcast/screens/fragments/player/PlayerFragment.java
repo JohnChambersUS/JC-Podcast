@@ -98,7 +98,6 @@ public class PlayerFragment extends MyFragment {
         _playerView = (SimpleExoPlayerView) _view.findViewById(R.id.video_view);
         attachPlayerToView();
         playEpisode();
-
         //setImage();
         return _view;
     }
