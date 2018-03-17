@@ -124,7 +124,6 @@ public class PlayerServiceController {
     }
 
     public void flipPlayerState() {
-        Toast.makeText(_context, "IN PLAYER", Toast.LENGTH_LONG).show();
         _service.flipPlayerState();
     }
 

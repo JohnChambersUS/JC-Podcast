@@ -99,7 +99,6 @@ public class MainNavigationActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(this, "back button pressed", Toast.LENGTH_LONG).show();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
