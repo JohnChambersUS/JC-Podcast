@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.Binder;
@@ -14,6 +16,9 @@ import android.os.PowerManager;
 import android.support.annotation.NonNull;
 
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -36,11 +41,18 @@ import com.google.android.exoplayer2.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.net.URL;
+
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.MediaEndedEvent;
 import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
+import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+import us.johnchambers.podcast.database.PodcastTable;
+import us.johnchambers.podcast.misc.ImageHelper;
+import us.johnchambers.podcast.misc.MyFileManager;
+import us.johnchambers.podcast.misc.VolleyQueue;
 
 import static com.google.android.exoplayer2.Player.STATE_BUFFERING;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
@@ -275,6 +287,7 @@ public class PlayerService extends Service {
 
     public void playEpisode(EpisodeTable episode) {
 
+        setDefaultImage(episode);
         if (episode.isEmpty()) {
             return;
         }
@@ -542,6 +555,58 @@ public class PlayerService extends Service {
     */
 
 
+    //******************************
+    //* volley section
+    //******************************
+    public void setDefaultImage(EpisodeTable episode) {
+
+        if (episode.isEmpty()) {
+            Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                    R.raw.nopodcast);
+            _playerView.setDefaultArtwork(podcastPicture);
+            return;
+        }
+
+        PodcastTable pt = PodcastDatabaseHelper.getInstance().getPodcastRow(episode.getPid());
+        String url = pt.getLogoUrl();
+        if (url.equals("")) {
+            Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                    R.raw.missing_podcast_image);
+            _playerView.setDefaultArtwork(podcastPicture);
+            return;
+        }
+
+        try {
+            url = new URL(url).toString();
+        } catch (Exception e) {
+            Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                    R.raw.missing_podcast_image);
+            _playerView.setDefaultArtwork(podcastPicture);
+            return;
+        }
+
+        ImageRequest ir = new ImageRequest(url,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        _playerView.setDefaultArtwork(response);;
+                    }
+                },
+                500,
+                500,
+                Bitmap.Config.ARGB_8888,
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError e) {
+                        Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                                R.raw.missing_podcast_image);
+                        _playerView.setDefaultArtwork(podcastPicture);
+                    }
+                }
+        );
+
+        VolleyQueue.getInstance().getRequestQueue().add(ir);
+    }
 
 
 }

@@ -72,7 +72,7 @@ public class FeedResponseWrapper {
             String one = mat.group(0);
             return one;
         } catch (Exception e) {
-            return null;
+            return "";
         }
     }
 
@@ -259,6 +259,7 @@ public class FeedResponseWrapper {
         newRow.setLastDownloadDateViaDate(new Date());
         newRow.setMode(Constants.PLAYBACK_MODE_PODCAST);
         newRow.setCurrentEpisode(Constants.NO_CURRENT_EPISODE);
+        newRow.setLogoUrl(getLogoUrl());
 
         return newRow;
     }
