@@ -45,7 +45,6 @@ object NowPlaying {
     fun updateEpisodePlayPointAndLength(playPoint : Long, length : Long) {
         PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(getEpisodeId(), playPoint)
         PodcastDatabaseHelper.getInstance().updateEpisodeDuration(getEpisodeId(), length)
-
     }
 
 }

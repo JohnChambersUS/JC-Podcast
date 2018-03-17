@@ -28,8 +28,6 @@ import kotlin.collections.HashMap
  */
 class PodcastUpdateService : IntentService("PodcastUpdateService") {
 
-    //private Stack<PodcastTable> podcastStack = new Stack();
-
     var podcastStack = Stack<PodcastTable>()
     var _intent : Intent? = null
     var _notificationId = 23457
@@ -135,7 +133,5 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
         notificationManager.cancel(_notificationId)
         notificationManager.cancelAll()
     }
-
-
 
 }

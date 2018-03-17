@@ -33,14 +33,6 @@ import us.johnchambers.podcast.objects.DocketPodcast;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 public class SubscribedDetailFragment extends MyFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -68,16 +60,11 @@ public class SubscribedDetailFragment extends MyFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         _view = inflater.inflate(R.layout.fragment_subscribed_detail, container, false);
 
         _header = inflater.inflate(R.layout.fragment_subscribed_detail_header,
@@ -94,7 +81,6 @@ public class SubscribedDetailFragment extends MyFragment {
         BottomNavigationView navigation = (BottomNavigationView) _view.findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener);
         navigation.setItemIconTintList(null);
-
 
         return _view;
     }
@@ -133,10 +119,6 @@ public class SubscribedDetailFragment extends MyFragment {
                     R.raw.missing_podcast_image);
         }
         image.setImageBitmap(pcImage);
-
-
-        //ImageView headerImage = (ImageView) _header.findViewById(R.id.subscribe_detail_header_image);
-        //headerImage.setImageBitmap(pcImage);
     }
 
     private void populateEpisodeListView() {
@@ -163,42 +145,14 @@ public class SubscribedDetailFragment extends MyFragment {
             public void onItemClick(AdapterView<?> adapter, View v, int position,
                                     long arg3)
             {
-                //EpisodeTable row = _adapter.getItem(position);
-
-                //todo do something
                 processRowTap(adapter, position);
             }
         });
     }
 
-    //todo redo to remove download tap
     private void processRowTap(AdapterView listView, int position) {
-
         EpisodeTable panelRow = _adapter.headerListGetItem(position);
         EventBus.getDefault().post(new ResumePlaylistEvent(new DocketEpisode(panelRow.getEid())));
-
-
-
-
-        /*
-        String audioUrl = PodcastDatabaseHelper.getInstance().getEpisodeAudioUrl((panelRow.getEid()));
-
-        if (audioUrl == null) {
-            Toast.makeText(_context, "Url for this episode is null", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        if (audioUrl.length() > 0) {
-            //mListener.onSubscribedDetailFragmentDoesSomething(panelRow.getEid());
-
-
-        }
-        else {
-            Toast.makeText(_context, "Url for this episode is 0 length", Toast.LENGTH_LONG).show();
-
-        }
-        */
-
     }
 
     //******************************
@@ -206,8 +160,6 @@ public class SubscribedDetailFragment extends MyFragment {
     //******************************
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onSubscribedDetailFragmentDoesSomething(String path);
         void onSubscribedDetailFragmentUnsubscribe();
     }
 
@@ -267,6 +219,5 @@ public class SubscribedDetailFragment extends MyFragment {
 
         dialog.show();
     }
-
 
 }

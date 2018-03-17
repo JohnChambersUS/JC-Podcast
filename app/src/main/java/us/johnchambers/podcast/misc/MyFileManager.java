@@ -82,15 +82,4 @@ public class MyFileManager {
         return _context;
     }
 
-
-
-
-
-
-
-
-
-
-
-
 } //END OF MY FILE MANAGER

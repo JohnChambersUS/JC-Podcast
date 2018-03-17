@@ -95,7 +95,6 @@ public class PodcastDatabaseHelper {
         }
     }
 
-
     public String getPodcastFeedUrl(String podcastId) {
         List<PodcastTable> ptl = _database.dao().getPodcastTableRowByPodcastId(podcastId);
         if (ptl.size() > 0) {
@@ -231,97 +230,6 @@ public class PodcastDatabaseHelper {
         NowPlayingTable np = _database.dao().getNowPlayingTableByKey(NowPlaying.PLAYLIST);
         return np.getValue();
     }
-
-
-
-
-
-
-    //***********************************
-    //* Download Queue Table methods
-    //***********************************
-/*
-    public void insertDownloadQueueTableRow(DownloadQueueTable downloadQueueTableRow) {
-        _database.dao().insertDownloadQueueTableRow(downloadQueueTableRow);
-    }
-
-    public boolean isEpisodeInDownloadQueue(String eid) {
-        List<DownloadQueueTable> rows = _database.dao().getDownLoadQueueRowsByEpisodeId(eid);
-        if (rows.size() > 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    public DownloadQueueTable getNextDownloadCandidate() {
-        return _database.dao().getNextDownloadCandidate();
-    }
-
-    public void setDownloadReference(String eid, long ref) {
-        List<DownloadQueueTable> rows = _database.dao().getDownLoadQueueRowsByEpisodeId(eid);
-        if (rows.size() > 0) {
-            DownloadQueueTable row = rows.get(0);
-            row.setDownloadReference(ref);
-            _database.dao().updateDownloadQueueTableRow(row);
-        }
-    }
-
-    public int getDownloadInProgressCount() {
-        return _database.dao().getAllDownloadsInProgress().size();
-    }
-
-    public List<DownloadQueueTable> getAllDownloadsInProgress() {
-        return _database.dao().getAllDownloadsInProgress();
-    }
-
-    public void deleteDownloadQueueTableByEid(String eid) {
-        List<DownloadQueueTable> rows = _database.dao().getDownLoadQueueRowsByEpisodeId(eid);
-        if (rows.size() > 0) {
-            _database.dao().deleteDownloadQueueTableRow(rows.get(0));
-        }
-    }
-*/
-
-    //*******************************************************
-    //* wrapper methods to add new rows
-    //*******************************************************
-/*
-    public void addNewPodcastRow(FeedResponseWrapper feedResponseWrapper) {
-        PodcastTable newRow = getNewPodcastTableRow();
-        //Store image on disk
-        MyFileManager.getInstance().addPodcastImage(feedResponseWrapper.getPodcastImage(),
-                feedResponseWrapper.getPodcastId());
-        //add items to podcast table row from wrapper
-        newRow.setPid(feedResponseWrapper.getPodcastId());
-        newRow.setName(feedResponseWrapper.getPodcastTitle());
-        newRow.setFeedUrl(feedResponseWrapper.getFeedUrl());
-        newRow.setSubscriptionTypeViaPodcastMode(PodcastMode.Manual);
-        newRow.setDownloadInterval(0);
-        newRow.setLastDownloadDateViaDate(new Date());
-        //insert podcast table row
-        insertPodcastTableRow(newRow);
-    }
-
-    public void addNewEpisodeRow(FeedResponseWrapper feedResponseWrapper) {
-        EpisodeTable currEpisode = getNewEpisodeTableRow();
-
-        currEpisode.setPid(feedResponseWrapper.getPodcastId());
-        currEpisode.setEid(feedResponseWrapper.getEpisodeId());
-        currEpisode.setTitle(feedResponseWrapper.getCurrEpisodeTitle());
-        currEpisode.setSummary(feedResponseWrapper.getCurrEpisodeSummary());
-        currEpisode.setAudioUrl(feedResponseWrapper.getEpisodeDownloadLink());
-        currEpisode.setPubDate(feedResponseWrapper.getCurrEpisodeDate());
-        currEpisode.setLength("1");
-        currEpisode.setPlayedViaBoolean(false);
-        currEpisode.setInProgressViaBoolean(false);
-        currEpisode.setPlayPoint("0");
-        currEpisode.setLocalDownloadUrl(null);
-
-        insertEpisodeTableRow(currEpisode);
-    }
-    */
 
     //*************************************************
     //* Common public utility methods

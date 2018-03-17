@@ -55,8 +55,6 @@ public class PodcastTable {
         this.currentEpisode = currentEpisode;
     }
 
-
-
     public int getIdentity() {
         return identity;
     }

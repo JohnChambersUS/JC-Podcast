@@ -37,7 +37,6 @@ public interface PodcastDao {
     @Delete
     void deletePodcastTableRow(PodcastTable podcastTableRow);
 
-
     //*******************************************
     //* Episode table methods
     //*******************************************
@@ -94,28 +93,6 @@ public interface PodcastDao {
     @Delete
     void deleteEpisodeTableRow(EpisodeTable episodeTableRow);
 
-    //**********************************************
-    // Download Queue Table methods
-    //**********************************************
-/*
-    @Insert
-    void insertDownloadQueueTableRow(DownloadQueueTable downloadQueueTableRow);
-
-    @Query("SELECT * FROM DownloadQueueTable WHERE eid = :episodeId")
-    List<DownloadQueueTable> getDownLoadQueueRowsByEpisodeId(String episodeId);
-
-    @Query("select * from downloadqueuetable where downloadreference = 0 order by identity asc limit 1;")
-    DownloadQueueTable getNextDownloadCandidate();
-
-    @Query("select * from downloadqueuetable where downloadreference > 0;")
-    List<DownloadQueueTable> getAllDownloadsInProgress();
-
-    @Update
-    void updateDownloadQueueTableRow(DownloadQueueTable downloadQueueTable);
-
-    @Delete
-    void deleteDownloadQueueTableRow(DownloadQueueTable row);
-*/
     //*********************************************************
     //* Now Playing Table methods
     //*********************************************************

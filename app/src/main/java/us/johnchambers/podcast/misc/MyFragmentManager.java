@@ -116,28 +116,9 @@ public class MyFragmentManager {
         }
     }
 
-    public void activatePlayerFragment(String url) {
-        if (!alreadyOnTop(PLAYER_FRAGMENT)) {
-            PlayerFragment p = PlayerFragment.newInstance(url);
-            activateFragment(R.id.player_placeholder,
-                    p,
-                    PLAYER_FRAGMENT);
-        }
-    }
-
     public void activatePlayerFragment(Docket docket) {
         if (!alreadyOnTop(PLAYER_FRAGMENT)) {
             PlayerFragment p = PlayerFragment.newInstance(docket);
-            activateFragment(R.id.player_placeholder,
-                    p,
-                    PLAYER_FRAGMENT);
-        }
-    }
-
-
-    public void activatePlayerFragment() {
-        if (!alreadyOnTop(PLAYER_FRAGMENT)) {
-            PlayerFragment p = PlayerFragment.newInstance();
             activateFragment(R.id.player_placeholder,
                     p,
                     PLAYER_FRAGMENT);

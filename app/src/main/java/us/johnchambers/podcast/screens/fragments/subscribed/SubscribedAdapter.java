@@ -24,7 +24,6 @@ public class SubscribedAdapter extends ArrayAdapter<PodcastTable> {
 
     private Context _context;
 
-
     public SubscribedAdapter(Context context) {
         super(context,
                 R.layout.row_subscribed,
@@ -52,7 +51,6 @@ public class SubscribedAdapter extends ArrayAdapter<PodcastTable> {
         podcastName.setText(currPodcast.getName());
 
         image.setImageBitmap(pcImage);
-
 
         return convertView;
     }

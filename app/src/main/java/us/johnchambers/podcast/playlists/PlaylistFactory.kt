@@ -18,11 +18,10 @@ object PlaylistFactory {
             return EpisodePlaylist(docket)
         }
 
-
-
+        if (docket._docketType.equals(C.dockett.TYPE_IS_EMPTY)) {
+            return EmptyPlaylist(docket)
+        }
 
         return EmptyPlaylist(DocketPlaylist("dummy"))
-
-
     }
 }

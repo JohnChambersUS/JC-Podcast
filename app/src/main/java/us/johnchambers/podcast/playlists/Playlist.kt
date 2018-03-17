@@ -35,9 +35,4 @@ abstract class Playlist(docket : Docket) {
 
     abstract protected fun alignWithNowPlayingInfo()
 
-
-
-
-
-
 }
