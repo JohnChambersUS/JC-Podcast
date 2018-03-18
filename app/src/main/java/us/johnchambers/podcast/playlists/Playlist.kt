@@ -29,7 +29,7 @@ abstract class Playlist(docket : Docket) {
 
     abstract fun setCurrentEpisode(eid : String)
 
-    fun getPlaylistId() : String {
+    open fun getPlaylistId() : String {
         return _docket.getId()
     }
 

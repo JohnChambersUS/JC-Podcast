@@ -134,6 +134,7 @@ public class PlayerServiceController {
             EventBus.getDefault().post(new ClosePlayerEvent());
             return; //get out
         }
+        String p = _playlist.getPlaylistId();
         NowPlaying.INSTANCE.update(_playlist.getPlaylistId(), nextEpisode.getEid());
         _service.playEpisode(nextEpisode);
     }

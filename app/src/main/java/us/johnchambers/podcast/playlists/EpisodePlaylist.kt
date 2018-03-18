@@ -96,5 +96,9 @@ class EpisodePlaylist(docket : Docket) : Playlist(docket) {
 
     }
 
+    override fun getPlaylistId() : String {
+        return _podcastInfo.pid
+    }
+
 
 }
