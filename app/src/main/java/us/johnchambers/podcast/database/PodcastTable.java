@@ -27,6 +27,33 @@ public class PodcastTable {
     private int downloadInterval = 0;
     @ColumnInfo(name = "last_download_date")
     private String lastDownloadDate;
+    private String mode;
+    private String currentEpisode;
+    private String logoUrl;
+
+    public String getLogoUrl() {
+        return logoUrl;
+    }
+
+    public void setLogoUrl(String logoUrl) {
+        this.logoUrl = logoUrl;
+    }
+
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public String getCurrentEpisode() {
+        return currentEpisode;
+    }
+
+    public void setCurrentEpisode(String currentEpisode) {
+        this.currentEpisode = currentEpisode;
+    }
 
     public int getIdentity() {
         return identity;

@@ -2,9 +2,11 @@ package us.johnchambers.podcast.services.player;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
@@ -12,14 +14,18 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
+import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.Events.player.MediaEndedEvent;
 import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.database.EpisodeTable;
-import us.johnchambers.podcast.database.NowPlaying;
-import us.johnchambers.podcast.database.NowPlayingTable;
-import us.johnchambers.podcast.database.PodcastDatabase;
+import us.johnchambers.podcast.objects.Docket;
+import us.johnchambers.podcast.playlists.NowPlaying;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.L;
+import us.johnchambers.podcast.playlists.Playlist;
+import us.johnchambers.podcast.playlists.PlaylistFactory;
 
 /**
  * Created by johnchambers on 1/22/18.
@@ -33,7 +39,11 @@ public class PlayerServiceController {
     private static Context _context = null;
 
     private int _episodeCount = 0;
-    private int _episodeLimit = 6;
+    private int _episodeLimit = 2; //Constants.EPISODE_LIMIT;
+
+    private Playlist _playlist;
+
+    private Boolean showDoneDialog = false;
 
     public PlayerServiceController() {}
 
@@ -73,12 +83,14 @@ public class PlayerServiceController {
         _service.attachPlayerToView(playerView);
     }
 
-    public String getCurrentUrl() {
-        return _service.getCurrentUrl();
-    }
-
-    public EpisodeTable getCurrentEpisode() {
-        return _service.getCurrentEpisode();
+    public String getNowPlayingPodcastId() {
+        String eid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
+        if (eid == NowPlaying.NO_EPISODE_FLAG) {
+            return "";
+        }
+        else {
+            return PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(eid).getPid();
+        }
     }
 
     public void stopService() {
@@ -86,6 +98,7 @@ public class PlayerServiceController {
     }
 
     public void stopPlayer() {
+        _episodeCount = 0;
         _service.stopPlayer();
     }
 
@@ -98,7 +111,6 @@ public class PlayerServiceController {
     }
 
     public void flipPlayerState() {
-        Toast.makeText(_context, "IN PLAYER", Toast.LENGTH_LONG).show();
         _service.flipPlayerState();
     }
 
@@ -110,43 +122,21 @@ public class PlayerServiceController {
         _service.rewindPlayer();
     }
 
-    // play episode without playlist
-    // assume it to be the podcast
-    public void playEpisode(EpisodeTable episode) {
-        if (episode != null) {
-            PodcastDatabaseHelper.getInstance().updateNowPlayingEpisode(episode.getEid());
-            PodcastDatabaseHelper.getInstance().updateNowPlayingPlaylist(episode.getPid());
-        }
-        else {
-            String nowPlayingEid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
-            if (nowPlayingEid != NowPlaying.NO_EPISODE_FLAG) {
-                episode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(nowPlayingEid);
-            }
-        }
-        if (!episodeLimitReached()) {
-            _service.playEpisode(episode);
-        } else {
-            //todo display or play are you listening notice
-            Toast.makeText(_context,
-                    "limit:" + String.valueOf(_episodeCount),
-                    Toast.LENGTH_LONG).show();
-        }
-
-    }
-
-    private void playNextEpisode() {
-        String currEid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
-        if (currEid == NowPlaying.NO_EPISODE_FLAG) {
+    private void playNextPlaylistEpisode() {
+        if (episodeLimitReached()) {
+            showStillWatchingDialog();
             return;
         }
-        EpisodeTable currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(currEid);
-        EpisodeTable nextEpisode = PodcastDatabaseHelper.getInstance().getNextMediaPodcastPlaylist(currEpisode);
-        //todo check for empty next et
-        if (nextEpisode != null) {
-            playEpisode(nextEpisode);
-        } else {
-            //todo play end of playlist message
+
+        EpisodeTable nextEpisode = _playlist.getNextEpisode();
+        if (nextEpisode.isEmpty()) {
+            showEndOfPlaylistDialog();
+            EventBus.getDefault().post(new ClosePlayerEvent());
+            return; //get out
         }
+        String p = _playlist.getPlaylistId();
+        NowPlaying.INSTANCE.update(_playlist.getPlaylistId(), nextEpisode.getEid());
+        _service.playEpisode(nextEpisode);
     }
 
     private boolean episodeLimitReached() {
@@ -158,6 +148,18 @@ public class PlayerServiceController {
         return false;
     }
 
+    //*********************************
+    //* playlist related functionality
+    //*********************************
+    public void playPlaylist(Docket docket) {
+        showDoneDialog = false;
+        _playlist = PlaylistFactory.INSTANCE.getPlaylist(docket);
+        if (!_playlist.isEmpty()) {
+            playNextPlaylistEpisode();
+        } else {
+            showEmptyPlaylistDialog();
+        }
+    }
 
     //*******************************************************
     //* service not started with new
@@ -195,8 +197,8 @@ public class PlayerServiceController {
     @Subscribe
     public void onEvent(TimeUpdateEvent event){
         try {
-            String eid = PodcastDatabaseHelper.getInstance().getNowPlayingEpisodeId();
-            PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(eid, event.getMillis());
+            NowPlaying.INSTANCE
+                    .updateEpisodePlayPointAndLength(event.getCurrPosition(), event.getLength());
         }
         catch (Exception e) {
             L.INSTANCE.i((Object) this, e.toString());
@@ -205,9 +207,85 @@ public class PlayerServiceController {
 
     @Subscribe
     public void onEvent(MediaEndedEvent event) {
-        playNextEpisode();
+        playNextPlaylistEpisode();
     }
 
+    @Subscribe
+    public void onEvent(AnyKeyEvent event) {
+        //any interaction with the phone assumes user is aware of episodes playing
+        _episodeCount = 0;
+    }
+
+    //***************************
+    //* Dialog
+    //***************************
+    private void showStillWatchingDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+        builder.setMessage("")
+                .setTitle("Are you still listening?");
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                //todo is causing MEDIA_ENDING event in player and makes it skip episode
+                //todo figure out how to do this without triggering double event
+                EventBus.getDefault().post(new ClosePlayerEvent());
+            }
+        });
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                _episodeCount = 0;
+                playNextPlaylistEpisode();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+    private void showEndOfPlaylistDialog() {
+
+        //flip so only shows on first ending
+        showDoneDialog = !showDoneDialog;
+        if (!showDoneDialog) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+        builder.setMessage("There are no more episodes in the episode queue.")
+                .setTitle("You have reached the end of the playlist.");
+
+        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+    private void showEmptyPlaylistDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+        builder.setMessage("")
+                .setTitle("There are no episodes in this playlist.");
+
+        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
 
 
 }

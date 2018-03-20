@@ -5,7 +5,4 @@ package us.johnchambers.podcast.Events.player
  */
 class MediaEndedEvent {
 
-
-
-
 }

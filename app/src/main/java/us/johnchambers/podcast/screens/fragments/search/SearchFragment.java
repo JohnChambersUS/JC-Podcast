@@ -27,6 +27,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 
 import java.net.URL;
+import java.net.URLEncoder;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.fragments.MyFragment;
@@ -34,19 +35,11 @@ import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.misc.VolleyQueue;
 
 public class SearchFragment extends MyFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     private static Context _context = null;
     private static View _view;
 
     private SearchDisplayAdapter _adapter;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -58,8 +51,6 @@ public class SearchFragment extends MyFragment {
     public static SearchFragment newInstance() {
         SearchFragment fragment = new SearchFragment();
         Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,11 +58,6 @@ public class SearchFragment extends MyFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
     }
 
     @Override
@@ -115,7 +101,6 @@ public class SearchFragment extends MyFragment {
         mListener = null;
     }
 
-
     //*******************************************
     //* Common methods
     //*******************************************
@@ -133,6 +118,9 @@ public class SearchFragment extends MyFragment {
             et.setHint("I said, enter a term");
         }
         else {
+            try {
+                term = URLEncoder.encode(term, "utf-8");
+            } catch (Exception e) {}
             String searchString = "https://itunes.apple.com/search?media=podcast&entity=podcast&limit=100&term="
                     + term;
             try {
@@ -181,7 +169,6 @@ public class SearchFragment extends MyFragment {
             }
         });
     }
-
 
     private void addListenerGoSearchButton() {
 
@@ -266,7 +253,6 @@ public class SearchFragment extends MyFragment {
 
         VolleyQueue.getInstance().getRequestQueue().add(ir);
     }
-
 
     //***********************************************
     //* Interfaces

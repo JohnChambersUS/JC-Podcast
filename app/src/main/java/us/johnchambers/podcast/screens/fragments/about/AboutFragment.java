@@ -13,14 +13,6 @@ import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 public class AboutFragment extends MyFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,10 +30,6 @@ public class AboutFragment extends MyFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -78,11 +66,10 @@ public class AboutFragment extends MyFragment {
     //* Common routines
     //************************************
     public FragmentBackstackType getBackstackType() {
-        return FragmentBackstackType.ROOT;
+        return FragmentBackstackType.BRANCH;
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onAboutFragmentInteraction();
     }
 }

@@ -37,7 +37,6 @@ public interface PodcastDao {
     @Delete
     void deletePodcastTableRow(PodcastTable podcastTableRow);
 
-
     //*******************************************
     //* Episode table methods
     //*******************************************
@@ -55,8 +54,11 @@ public interface PodcastDao {
     @Query("SELECT * FROM EpisodeTable WHERE eid = :episodeId")
     List<EpisodeTable> getEpisodeTableRowByEpisodeId(String episodeId);
 
-    @Query("SELECT * FROM EpisodeTable WHERE pid = :podcastId order by publication_date DESC")
+    @Query("SELECT * FROM EpisodeTable WHERE pid = :podcastId order by identity DESC")
     List<EpisodeTable> getEpisodeTableRowByPodcastIdNewestFirst(String podcastId);
+
+    @Query("SELECT * FROM EpisodeTable WHERE pid = :podcastId order by identity ASC")
+    List<EpisodeTable> getEpisodeTableRowByPodcastIdOldestFirst(String podcastId);
 
     @Query("SELECT audio_url FROM EpisodeTable WHERE eid = :episodeId")
     String getEpisodeAudioUrl(String episodeId);
@@ -76,6 +78,9 @@ public interface PodcastDao {
     @Query("update episodeTable set play_point = :playPoint where eid = :episodeId;")
     void updateEpisodePlayPoint(String episodeId, String playPoint);
 
+    @Query("update episodeTable set length = :duration where eid = :episodeId;")
+    void updateEpisodeDuration(String episodeId, String duration);
+
     @Query("delete from episodeTable where pid = :podcastId;")
     void deleteEpisodeRowsByPid(String podcastId);
 
@@ -87,28 +92,6 @@ public interface PodcastDao {
 
     @Delete
     void deleteEpisodeTableRow(EpisodeTable episodeTableRow);
-
-    //**********************************************
-    // Download Queue Table methods
-    //**********************************************
-
-    @Insert
-    void insertDownloadQueueTableRow(DownloadQueueTable downloadQueueTableRow);
-
-    @Query("SELECT * FROM DownloadQueueTable WHERE eid = :episodeId")
-    List<DownloadQueueTable> getDownLoadQueueRowsByEpisodeId(String episodeId);
-
-    @Query("select * from downloadqueuetable where downloadreference = 0 order by identity asc limit 1;")
-    DownloadQueueTable getNextDownloadCandidate();
-
-    @Query("select * from downloadqueuetable where downloadreference > 0;")
-    List<DownloadQueueTable> getAllDownloadsInProgress();
-
-    @Update
-    void updateDownloadQueueTableRow(DownloadQueueTable downloadQueueTable);
-
-    @Delete
-    void deleteDownloadQueueTableRow(DownloadQueueTable row);
 
     //*********************************************************
     //* Now Playing Table methods

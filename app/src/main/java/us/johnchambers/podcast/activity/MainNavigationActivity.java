@@ -17,14 +17,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 
+import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
+import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
+import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.Constants;
+import us.johnchambers.podcast.objects.EmptyDocket;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
@@ -72,6 +80,8 @@ public class MainNavigationActivity extends AppCompatActivity
         PlayerServiceController.getInstance(getApplicationContext()); //init player controller
 
         setUpdateAlarm();
+
+        EventBus.getDefault().register(this);
     }
 
 
@@ -99,38 +109,13 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager.popBackstackEntry();
     }
 
+
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
-        /*
-        switch (keyCode) {
-            //rewind
-            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-            case KeyEvent.KEYCODE_MEDIA_REWIND:
-            case KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD:
-            case KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD:
-                PlayerServiceController.getInstance().rewindPlayer();
-                break;
-            //play pause
-            case KeyEvent.KEYCODE_MEDIA_PAUSE:
-            case KeyEvent.KEYCODE_MEDIA_PLAY:
-            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-            case KeyEvent.KEYCODE_MEDIA_STOP:
-                PlayerServiceController.getInstance().flipPlayerState();
-                break;
-            //forward
-            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
-            case KeyEvent.KEYCODE_MEDIA_NEXT:
-            case KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD:
-            case KeyEvent.KEYCODE_MEDIA_STEP_FORWARD:
-                PlayerServiceController.getInstance().forwardPlayer();
-                break;
-            default:
-                return super.onKeyUp(keyCode, event);
-        }
-        */
+        EventBus.getDefault().post(new AnyKeyEvent());
+        super.onKeyUp(keyCode, event);
         return true;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -163,7 +148,7 @@ public class MainNavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_show_subscribed) {
             _myFragmentManager.activateSubscribedFragment();
         } else if (id == R.id.nav_player) {
-            _myFragmentManager.activatePlayerFragment();
+            _myFragmentManager.activatePlayerFragment(new EmptyDocket());
         } else if (id == R.id.nav_update_podcasts) {
             Intent intent = new Intent() ;
             intent.setClassName("us.johnchambers.podcast" ,
@@ -191,7 +176,6 @@ public class MainNavigationActivity extends AppCompatActivity
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.HOUR_OF_DAY, Constants.UPDATE_HOUR);
         cal.set(Calendar.MINUTE, Constants.UPDATE_MINUTE);
-
 
         Intent intent = new Intent(this, us.johnchambers.podcast.services.updater.PodcastUpdateBroadcastReceiver.class);
 
@@ -221,11 +205,6 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager.activateSubscribedDetailFragment(pt);
     }
 
-    //play the stream
-    public void onSubscribedDetailFragmentDoesSomething(String episodeId) {
-        _myFragmentManager.activatePlayerFragment(episodeId);
-    }
-
     public void onSubscribedDetailFragmentUnsubscribe() {
         _myFragmentManager.activateSubscribedFragment();
     }
@@ -233,4 +212,23 @@ public class MainNavigationActivity extends AppCompatActivity
     public void onPlayerFragmentDoesSomething() {}
 
     public void onAboutFragmentInteraction() {}
+
+
+    //****************************
+    //* Events
+    //****************************
+    @Subscribe
+    public void onEvent(ClosePlayerEvent event) {
+        _myFragmentManager.popBackstackEntry();
+    }
+
+    @Subscribe
+    public void onEvent(ResumePlaylistEvent event) {
+        _myFragmentManager.activatePlayerFragment(event.getDocketPackage());
+    }
+
+
+
+
 }
+

@@ -12,6 +12,7 @@ import java.util.Stack;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.objects.Docket;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
@@ -65,7 +66,17 @@ public class MyFragmentManager {
         }
     }
 
+    private void closeAbout() {
+        if (_backstack.size() > 0) {
+            MyBackstackEntry topEntry = (MyBackstackEntry) _backstack.peek();
+            if (topEntry.getFragmentTag() == ABOUT_FRAGMENT) {
+                popBackstackEntry();
+            }
+        }
+    }
+
     private void activateFragment(int containerViewId, MyFragment frag, String fragmentName) {
+        closeAbout();
         _fragmentManager
                 .beginTransaction()
                 .add(containerViewId, frag, fragmentName)
@@ -105,18 +116,9 @@ public class MyFragmentManager {
         }
     }
 
-    public void activatePlayerFragment(String url) {
+    public void activatePlayerFragment(Docket docket) {
         if (!alreadyOnTop(PLAYER_FRAGMENT)) {
-            PlayerFragment p = PlayerFragment.newInstance(url);
-            activateFragment(R.id.player_placeholder,
-                    p,
-                    PLAYER_FRAGMENT);
-        }
-    }
-
-    public void activatePlayerFragment() {
-        if (!alreadyOnTop(PLAYER_FRAGMENT)) {
-            PlayerFragment p = PlayerFragment.newInstance();
+            PlayerFragment p = PlayerFragment.newInstance(docket);
             activateFragment(R.id.player_placeholder,
                     p,
                     PLAYER_FRAGMENT);

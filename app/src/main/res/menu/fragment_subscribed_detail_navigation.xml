@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/bm_unsubscribe"
+        android:icon="@drawable/ic_remove_light"
+        android:title="REMOVE"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        />
+
+
+    <item
+        android:id="@+id/bm_play"
+        android:icon="@drawable/ic_play_light"
+        android:title="PLAY"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+
+
+</menu>

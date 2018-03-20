@@ -14,25 +14,14 @@ import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
-import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.MyFileManager;
-import us.johnchambers.podcast.misc.MyPlayer;
-import us.johnchambers.podcast.misc.Utils;
+import us.johnchambers.podcast.objects.Docket;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
-import us.johnchambers.podcast.misc.Utils.*;
 
 
 public class PlayerFragment extends MyFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private static Context _context = null;
     private View _view;
@@ -40,38 +29,24 @@ public class PlayerFragment extends MyFragment {
     private OnFragmentInteractionListener mListener;
 
     private SimpleExoPlayerView _playerView;
-    public static EpisodeTable _currEpisode = null;
 
-    private static MyPlayer _player;
+    private static Docket _currDocket;
 
     public PlayerFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
-    public static PlayerFragment newInstance() {
+    public static PlayerFragment newInstance(Docket docket) {
         PlayerFragment fragment = new PlayerFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
-        _currEpisode = null;
-        return fragment;
-    }
-
-    public static PlayerFragment newInstance(String episodeId) {
-        PlayerFragment fragment = new PlayerFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        _currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episodeId);
+        _currDocket = docket;
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     } //end of onCreate
 
     @Override
@@ -81,7 +56,6 @@ public class PlayerFragment extends MyFragment {
         _playerView = (SimpleExoPlayerView) _view.findViewById(R.id.video_view);
         attachPlayerToView();
         playEpisode();
-        setImage();
         return _view;
     }
 
@@ -106,6 +80,7 @@ public class PlayerFragment extends MyFragment {
 
     @Override
     public void onDetach() {
+        PlayerServiceController.getInstance().pausePlayer();
         super.onDetach();
         mListener = null;
         PlayerServiceController.getInstance().stopPlayer();
@@ -120,7 +95,7 @@ public class PlayerFragment extends MyFragment {
     //* methods
     //*************************************
     public FragmentBackstackType getBackstackType() {
-        return FragmentBackstackType.ROOT;
+        return FragmentBackstackType.BRANCH;
     }
 
     public void attachPlayerToView() {
@@ -129,31 +104,11 @@ public class PlayerFragment extends MyFragment {
     }
 
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onPlayerFragmentDoesSomething();
     }
 
-    private void setImage() {
-        Bitmap podcastPicture = null;
-
-        EpisodeTable episodeTable = PlayerServiceController.getInstance().getCurrentEpisode();
-        String currUrl = Utils.safeNull((episodeTable.getAudioUrl()));
-
-        if (currUrl.equals("")) {
-            podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
-                    R.raw.nopodcast);
-        } else {
-            podcastPicture = MyFileManager.getInstance().getPodcastImage(episodeTable.getPid());
-            if (podcastPicture == null) {
-                podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
-                        R.raw.missing_podcast_image);
-            }
-        }
-        _playerView.setDefaultArtwork(podcastPicture);
-    }
-
     private void playEpisode() {
-        PlayerServiceController.getInstance().playEpisode(_currEpisode);
+        PlayerServiceController.getInstance().playPlaylist(_currDocket);
     }
 
 }

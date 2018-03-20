@@ -6,14 +6,20 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.NonNull;
+import android.view.View;
 
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -36,12 +42,19 @@ import com.google.android.exoplayer2.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.net.URL;
+
+import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.MediaEndedEvent;
 import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
+import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+import us.johnchambers.podcast.database.PodcastTable;
+import us.johnchambers.podcast.misc.VolleyQueue;
 
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
+import static com.google.android.exoplayer2.Player.STATE_READY;
 import static us.johnchambers.podcast.misc.Constants.*;
 
 public class PlayerService extends Service {
@@ -64,7 +77,6 @@ public class PlayerService extends Service {
     EventBus _eventBus = EventBus.getDefault();
 
 
-
     public PlayerService() {
         super();
     }
@@ -73,7 +85,6 @@ public class PlayerService extends Service {
     public void onCreate() {
         super.onCreate();
         initService();
-
     }
 
     @Override
@@ -84,7 +95,6 @@ public class PlayerService extends Service {
     @Override
     public void onRebind(Intent intent) {
         super.onRebind(intent);
-
     }
 
     //********************************
@@ -98,14 +108,6 @@ public class PlayerService extends Service {
             _context = getApplicationContext();
             makeForegroundService();
             createEmptyPlayer();
-
-            //mas();
-/*
-            PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
-            wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    "MyWakelockTag");
-            wakeLock.acquire();
-            */
         }
     }
     // Only run once for setup
@@ -129,7 +131,6 @@ public class PlayerService extends Service {
 
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nm.notify(_id, theNo);
-
     }
 
     private void setNoticationToPlaying() {
@@ -190,7 +191,6 @@ public class PlayerService extends Service {
         }
 
         return notif.build();
-
     }
 
     // Only run once for setup
@@ -208,15 +208,6 @@ public class PlayerService extends Service {
         }
     }
 
-    private EpisodeTable safeNull(EpisodeTable value) {
-        if ((value == null) || !(value instanceof EpisodeTable)) {
-            return new EpisodeTable();
-        } else {
-            return value;
-        }
-    }
-
-
     //************************************
     //* common public methods
     //************************************
@@ -230,10 +221,6 @@ public class PlayerService extends Service {
 
     public String getCurrentUrl() {
         return _currUrl;
-    }
-
-    public EpisodeTable getCurrentEpisode() {
-        return _currEpisode;
     }
 
     public void shutdownService() {
@@ -275,48 +262,25 @@ public class PlayerService extends Service {
 
     public void playEpisode(EpisodeTable episode) {
 
-        episode = safeNull(episode);
+        setDefaultImage(episode);
+        if (episode.isEmpty()) {
+            return;
+        }
+
         String episodeAudioUrl = safeNull(episode.getAudioUrl());
-        String currAudioUrl = safeNull(_currEpisode.getAudioUrl());
 
-
-        if (episodeAudioUrl.equals("") && currAudioUrl.equals("")) {
-            //nothing to play
-            //show blank screen
+        if (episodeAudioUrl.equals("")) {
             return;
         }
-
-        if (episodeAudioUrl.equals("") && !currAudioUrl.equals("")) {
-            _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
+        else {
+            _player.prepare(makeMediaSource(episode.getAudioUrl()),
                     true,
                     false);
-            _player.setPlayWhenReady(true);
-
-            return;
-        }
-
-        if (episodeAudioUrl.equals(currAudioUrl)) {
-            _player.prepare(makeMediaSource(_currEpisode.getAudioUrl()),
-                    true,
-                    false);
-
-            _player.setPlayWhenReady(true);
-
-            return;
-        }
-
-        //if get this far then change to new url
-
-        _currEpisode = episode;
-        _player.prepare(makeMediaSource(episode.getAudioUrl()),
-                true,
-                false);
-        if (episode.getPlayPointAsLong() > 0) {
             _player.seekTo(episode.getPlayPointAsLong());
         }
-        _player.setPlayWhenReady(true);
-        setNoticationToPlaying();
 
+        setNoticationToPlaying();
+        _player.setPlayWhenReady(true);
     }
 
     private MediaSource makeMediaSource(String url) {
@@ -386,19 +350,28 @@ public class PlayerService extends Service {
             if (_player.getAudioFormat() == null) {
                 return;
             }
-            _eventBus.post(new TimeUpdateEvent(_player.getContentPosition()));
+            _eventBus.post(new TimeUpdateEvent(_player.getContentPosition(),
+                    _player.getDuration()));
 
             if (playWhenReady == false) {
                 setNoticationToPaused();
+                _eventBus.post(new AnyKeyEvent());
             }
 
             if (playWhenReady == true) {
                 setNoticationToPlaying();
             }
 
-            if (playbackState == STATE_ENDED) {
+            if ((playbackState == STATE_ENDED) && (playWhenReady == true)) {
                 _eventBus.post(new MediaEndedEvent());
             }
+
+            if ((playbackState != STATE_ENDED)
+                    && (playbackState != STATE_READY)
+                    && (playWhenReady == true)) {
+                _eventBus.post(new AnyKeyEvent());
+            }
+
         }
 
         @Override
@@ -422,104 +395,58 @@ public class PlayerService extends Service {
         }
     };
 
-    //*************************************************
-    //* media key listener
-    //*************************************************
-/*
-    public void mas() {
+    //******************************
+    //* volley section
+    //******************************
+    public void setDefaultImage(EpisodeTable episode) {
 
+        if (episode.isEmpty()) {
+            Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                    R.raw.nopodcast);
+            _playerView.setDefaultArtwork(podcastPicture);
+            return;
+        }
 
-        audioSession = new MediaSession(getApplicationContext(), "TAG");
+        PodcastTable pt = PodcastDatabaseHelper.getInstance().getPodcastRow(episode.getPid());
+        String url = pt.getLogoUrl();
+        if (url.equals("")) {
+            Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                    R.raw.missing_podcast_image);
+            _playerView.setDefaultArtwork(podcastPicture);
+            return;
+        }
 
-        audioSession.setCallback(new MediaSession.Callback() {
+        try {
+            url = new URL(url).toString();
+        } catch (Exception e) {
+            Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                    R.raw.missing_podcast_image);
+            _playerView.setDefaultArtwork(podcastPicture);
+            return;
+        }
 
-            @Override
-            public boolean onMediaButtonEvent(final Intent mediaButtonIntent) {
-
-                Toast.makeText(_context, "my text", Toast.LENGTH_LONG).show();
-
-                flipPlayerState();
-
-                String intentAction = mediaButtonIntent.getAction();
-                KeyEvent event = (KeyEvent) mediaButtonIntent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
-                int action = event.getAction();
-                if (action != KeyEvent.ACTION_DOWN) {
-                    //return super.onMediaButtonEvent(mediaButtonIntent);
+        ImageRequest ir = new ImageRequest(url,
+                new Response.Listener<Bitmap>() {
+                    @Override
+                    public void onResponse(Bitmap response) {
+                        _playerView.setDefaultArtwork(response);;
+                    }
+                },
+                500,
+                500,
+                Bitmap.Config.ARGB_8888,
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError e) {
+                        Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+                                R.raw.missing_podcast_image);
+                        _playerView.setDefaultArtwork(podcastPicture);
+                    }
                 }
-                */
-/*
-                switch (event) {
-                    //rewind
-                    case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-                    case KeyEvent.KEYCODE_MEDIA_REWIND:
-                    case KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD:
-                    case KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD:
-                        PlayerServiceController.getInstance().rewindPlayer();
-                        break;
-                    //play pause
-                    case KeyEvent.KEYCODE_MEDIA_PAUSE:
-                    case KeyEvent.KEYCODE_MEDIA_PLAY:
-                    case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-                    case KeyEvent.KEYCODE_MEDIA_STOP:
-                        PlayerServiceController.getInstance().flipPlayerState();
-                        break;
-                    //forward
-                    case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
-                    case KeyEvent.KEYCODE_MEDIA_NEXT:
-                    case KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD:
-                    case KeyEvent.KEYCODE_MEDIA_STEP_FORWARD:
-                        PlayerServiceController.getInstance().forwardPlayer();
-                        break;
-                    default:
-                        return super.onKeyUp(keyCode, event);
-                }
-                */
+        );
 
-
-
-/*
-
-                return super.onMediaButtonEvent(mediaButtonIntent);
-            }
-
-
-        });
-
-        PlaybackState state = new PlaybackState.Builder()
-                .setActions(PlaybackState.ACTION_PLAY_PAUSE)
-                .setState(PlaybackState.STATE_PLAYING, 0, 0, 0)
-                .build();
-        audioSession.setPlaybackState(state);
-
-        //audioSession.setFlags();
-
-        audioSession.setActive(true);
-
+        VolleyQueue.getInstance().getRequestQueue().add(ir);
     }
-
-    */
-
-    //***************************
-    //* on key listener
-    //**************************
-    /*
-    public void setOnKeyListener() {
-
-        new View.OnKeyListener() {
-
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                Toast.makeText(_context, "on key", Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-        };
-
-
-    }
-    */
-
-
 
 
 }

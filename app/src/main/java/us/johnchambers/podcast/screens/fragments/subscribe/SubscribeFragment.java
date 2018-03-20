@@ -1,11 +1,13 @@
 package us.johnchambers.podcast.screens.fragments.subscribe;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.PopupMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -24,8 +26,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
@@ -33,6 +37,7 @@ import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastMode;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
@@ -40,27 +45,19 @@ import us.johnchambers.podcast.objects.FeedResponseWrapper;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 
 public class SubscribeFragment extends MyFragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
     SearchRow _searchRow;
     FeedResponseWrapper _feedResponseWrapper;
     SubscribeEpisodeListAdapter _adapter;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private OnFragmentInteractionListener mListener;
     private View _view;
+    private View _header;
 
     public SubscribeFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static SubscribeFragment newInstance(SearchRow sr) {
         SubscribeFragment fragment = new SubscribeFragment();
         Bundle args = new Bundle();
@@ -72,16 +69,13 @@ public class SubscribeFragment extends MyFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         _view = inflater.inflate(R.layout.fragment_subscribe, container, false);
+        _header = inflater.inflate(R.layout.fragment_subscribe_header, null, false);
         setSubscribeButtonListener();
         getPodcastFeedInfo();
 
@@ -114,49 +108,61 @@ public class SubscribeFragment extends MyFragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(),
-                        "Subscribing to " + _feedResponseWrapper.getPodcastTitle(),
-                        Toast.LENGTH_SHORT).show();
-                openPopupMenu("default");
+                openSubscribeDialog();
             }
         });
     }
 
+    private void openSubscribeDialog() {
+        final String[] mode = new String[1];
+        mode[0] = Constants.PLAYBACK_MODE_PODCAST;
+        final String[] choices = new String[]{"Podcast", "Book"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Choose a listening mode:");
+
+        builder.setSingleChoiceItems(choices, 0,
+                new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                if (choices[whichButton] == "Podcast") {
+                    mode[0] = Constants.PLAYBACK_MODE_PODCAST;
+                }
+                else {
+                    mode[0] = Constants.PLAYBACK_MODE_BOOK;
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+                subscribePodcast(mode[0]);
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+
+        dialog.show();
+    }
+
+
     private void openPopupMenu(String value) {
         subscribePodcast("podcast");
     }
-
-    private void openPopupMenu() {
-
-        View button = (View) _view.findViewById(R.id.fab_subscribe);
-        PopupMenu popup = new PopupMenu(button.getContext(), button, Gravity.CENTER_VERTICAL);
-
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            Toast.makeText(getContext(),
-                    _feedResponseWrapper.getPodcastId(),
-                    Toast.LENGTH_SHORT).show();
-            item.collapseActionView();
-            subscribePodcast(item.toString());
-            return true;
-        }
-        });
-
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.subscribe_options_menu, popup.getMenu());
-        popup.show();
-    }
-
-    public void subscribePodcast(String item) {
+    
+    public void subscribePodcast(String mode) {
 
         //check to see if already subscribed
         boolean subscribed = PodcastDatabaseHelper
                 .getInstance()
                 .alreadySubscribedToPodcast(_feedResponseWrapper.getPodcastId());
         if (!subscribed) {
-            addNewPodcastToDB();
+            addNewPodcastToDB(mode);
             addAllEpisodesToDatabase();
             mListener.onCloseSubscribeFragment();
             Toast.makeText(getContext(),
@@ -170,39 +176,18 @@ public class SubscribeFragment extends MyFragment {
         }
     }
 
-    private void addNewPodcastToDB() {
-        PodcastTable newRow = PodcastDatabaseHelper.getInstance().getNewPodcastTableRow();
-        //Store image on disk
+    private void addNewPodcastToDB(String mode) {
         MyFileManager.getInstance().addPodcastImage(_feedResponseWrapper.getPodcastImage(),
                 _feedResponseWrapper.getPodcastId());
-        //add items to podcast table row from wrapper
-        newRow.setPid(_feedResponseWrapper.getPodcastId());
-        newRow.setName(_feedResponseWrapper.getPodcastTitle());
-        newRow.setFeedUrl(_feedResponseWrapper.getFeedUrl());
-        newRow.setSubscriptionTypeViaPodcastMode(PodcastMode.Manual);
-        newRow.setDownloadInterval(0);
-        newRow.setLastDownloadDateViaDate(new Date());
-        //insert podcast table row
+
+        PodcastTable newRow = _feedResponseWrapper.getFilledPodcastTable(mode);
         PodcastDatabaseHelper.getInstance().insertPodcastTableRow(newRow);
     }
 
     private void addAllEpisodesToDatabase() {
         _feedResponseWrapper.processEpisodesFromBottom();
         while (_feedResponseWrapper.prevEpisode()) {
-            EpisodeTable currEpisode = PodcastDatabaseHelper.getInstance().getNewEpisodeTableRow();
-
-            currEpisode.setPid(_feedResponseWrapper.getPodcastId());
-            currEpisode.setEid(_feedResponseWrapper.getEpisodeId());
-            currEpisode.setTitle(_feedResponseWrapper.getCurrEpisodeTitle());
-            currEpisode.setSummary(_feedResponseWrapper.getCurrEpisodeSummary());
-            currEpisode.setAudioUrl(_feedResponseWrapper.getEpisodeDownloadLink());
-            currEpisode.setPubDate(_feedResponseWrapper.getCurrEpisodeDate());
-            currEpisode.setLength("0");
-            currEpisode.setPlayedViaBoolean(false);
-            currEpisode.setInProgressViaBoolean(false);
-            currEpisode.setPlayPoint("0");
-            currEpisode.setLocalDownloadUrl(null);
-
+            EpisodeTable currEpisode = _feedResponseWrapper.getFilledEpisodeTable();
             PodcastDatabaseHelper.getInstance().insertEpisodeTableRow(currEpisode);
         }
     }
@@ -218,6 +203,7 @@ public class SubscribeFragment extends MyFragment {
     private void loadFeedInfo(String response, String feedUrl) {
         _adapter = new SubscribeEpisodeListAdapter(_view.getContext());
         ListView listView = (ListView) _view.findViewById(R.id.subscribeEpisodeListView);
+        listView.addHeaderView(_header);
         listView.setAdapter(_adapter);
 
         _feedResponseWrapper = new FeedResponseWrapper(response, feedUrl);
@@ -234,7 +220,7 @@ public class SubscribeFragment extends MyFragment {
     }
 
     public void setDefaultImage() {
-        ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_ResultImage));
+        ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_detail_image));
         Bitmap bitmap =  BitmapFactory.decodeResource(getContext().getResources(),
                 R.raw.missing_podcast_image);
         iv.setImageBitmap(bitmap);
@@ -242,7 +228,7 @@ public class SubscribeFragment extends MyFragment {
 
     public void addImageToSubscribeScreen(Bitmap bitmap) {
         _feedResponseWrapper.setPodcastImage(bitmap);
-        ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_ResultImage));
+        ImageView iv = (ImageView)_view.findViewById((R.id.subscribe_detail_image));
         iv.setImageBitmap(bitmap);
     }
 

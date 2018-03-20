@@ -34,6 +34,10 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
         _context = context;
     }
 
+    public EpisodeTable headerListGetItem(int pos) {
+        return getItem(pos - 1);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         _parentView = parent;
@@ -54,19 +58,5 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
         status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
 
         return convertView;
-    }
-
-    public void updateStatusIconToDownloading(AdapterView listView, int position) {
-        View viewRow = listView.getChildAt(position -
-                listView.getFirstVisiblePosition());
-        ImageView status = (ImageView) viewRow.findViewById(R.id.row_subscribed_detail_episode_status);
-        status.setImageDrawable(_context.getDrawable(R.drawable.ic_pause));
-    }
-
-    public void updateStatusIconToPlay(AdapterView listView, int position) {
-        View viewRow = listView.getChildAt(position -
-                listView.getFirstVisiblePosition());
-        ImageView status = (ImageView) viewRow.findViewById(R.id.row_subscribed_detail_episode_status);
-        status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
     }
 }
