@@ -1,10 +1,14 @@
 package us.johnchambers.podcast.screens.fragments.subscribed_detail;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,8 +17,8 @@ import java.util.ArrayList;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
-import us.johnchambers.podcast.database.PodcastDatabaseHelper;
-import us.johnchambers.podcast.database.PodcastTable;
+
+
 
 /**
  * Created by johnchambers on 8/19/17.
@@ -57,6 +61,44 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
         //todo add icon if partially played
         status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
 
+        setProgress(convertView, episode);
+
         return convertView;
+    }
+
+    private void setProgress(View convertView, EpisodeTable episodeInfo) {
+
+        GradientDrawable left = new GradientDrawable();
+        left.setShape(GradientDrawable.RECTANGLE);
+        left.setColor(_context.getResources().getColor(R.color.semiLightBackground));
+
+        GradientDrawable right = new GradientDrawable();
+        right.setShape(GradientDrawable.RECTANGLE);
+        right.setColor(_context.getResources().getColor(R.color.lightBackground));
+
+        GradientDrawable[] ar = new GradientDrawable[] {left, right};
+        LayerDrawable layer = new LayerDrawable(ar);
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity)_context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+
+        long playPoint = episodeInfo.getPlayPointAsLong();
+        long length = episodeInfo.getLengthAsLong();
+
+        float ratio = 0;
+        if (playPoint != 0) {
+            if (playPoint >= length) {
+                ratio = 1;
+            } else {
+                ratio = (((float)playPoint) / length);
+            }
+        }
+
+        int size = Math.round(width * ratio);
+
+        layer.setLayerInset(1, size, 0, 0, 0);
+
+        convertView.setBackground(layer);
     }
 }
