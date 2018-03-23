@@ -189,6 +189,10 @@ public class MainNavigationActivity extends AppCompatActivity
                 pendingIntent);
     }
 
+    private void setMediaReceiver() {
+
+    }
+
     //************************************************
     //* Interface implementations
     //***********************************************
