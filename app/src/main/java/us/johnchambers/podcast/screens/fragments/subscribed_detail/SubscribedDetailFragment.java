@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +28,7 @@ import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.objects.DocketEpisode;
 import us.johnchambers.podcast.objects.DocketPodcast;
@@ -137,6 +139,24 @@ public class SubscribedDetailFragment extends MyFragment {
 
     }
 
+    private void updateEpisodeListView(int position) {
+
+        ListView listView = (ListView) _view.findViewById(R.id.subscribed_detail_episode_list_view);
+        Parcelable state = listView.onSaveInstanceState();
+
+        _adapter = new SubscribedDetailEpisodeListAdapter(_view.getContext());
+        listView.setAdapter(_adapter);
+
+        List<EpisodeTable> episodeList = PodcastDatabaseHelper.getInstance()
+                .getEpisodesSortedNewest(_podcastTable.getPid());
+
+        for (EpisodeTable episode : episodeList) {
+            _adapter.add(episode);
+        }
+
+        listView.onRestoreInstanceState(state);
+    }
+
     private void addSubscribedDetailPlayListener() {
         ListView lv = (ListView)_view.findViewById(R.id.subscribed_detail_episode_list_view);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -152,7 +172,61 @@ public class SubscribedDetailFragment extends MyFragment {
 
     private void processRowTap(AdapterView listView, int position) {
         EpisodeTable panelRow = _adapter.headerListGetItem(position);
-        EventBus.getDefault().post(new ResumePlaylistEvent(new DocketEpisode(panelRow.getEid())));
+        displayRowMenu(panelRow, position);
+        //EventBus.getDefault().post(new ResumePlaylistEvent(new DocketEpisode(panelRow.getEid())));
+    }
+
+    private void displayRowMenu(final EpisodeTable row, final int position) {
+
+        CharSequence colors[] = new CharSequence[] {"Play",
+                "Reset to beginning",
+                "Mark as played"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(_context);
+        builder.setTitle("Pick an option:");
+        builder.setItems(colors, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch(which) {
+                    case 0: EventBus.getDefault().post(new ResumePlaylistEvent(new DocketEpisode(row.getEid())));
+                        break;
+                    case 1: PodcastDatabaseHelper.getInstance().updateEpisodeDuration(row.getEid(), 1);
+                        PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(row.getEid(), 0);
+                        updateEpisodeListView(position);
+                        break;
+                    case 2: EpisodeTable dbRow = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(row.getPid());
+                        PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(row.getEid(),
+                                row.getLengthAsLong());
+                        updateEpisodeListView(position);
+                        break;
+                }
+             }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+
+
+        /*
+        builder.setItems(colors) { dialog, which ->
+                when (which) {
+            0 -> { toast("zero")
+            }
+            1 -> {toast("one")
+            }
+            2 -> {toast("twop")
+            }
+            3 -> {toast("three")
+            }
+        }
+        }
+        builder.show()
+        */
     }
 
     //******************************

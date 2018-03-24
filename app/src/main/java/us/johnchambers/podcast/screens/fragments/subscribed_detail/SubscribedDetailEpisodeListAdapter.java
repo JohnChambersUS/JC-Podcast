@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -59,7 +60,7 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
         String t = episode.getTitle();
         title.setText(t.toString());
         //todo add icon if partially played
-        status.setImageDrawable(_context.getDrawable(R.drawable.ic_play));
+        status.setImageDrawable(_context.getDrawable(R.drawable.ic_hamburger_dark));
 
         setProgress(convertView, episode);
 
@@ -101,4 +102,6 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
 
         convertView.setBackground(layer);
     }
+
+
 }
