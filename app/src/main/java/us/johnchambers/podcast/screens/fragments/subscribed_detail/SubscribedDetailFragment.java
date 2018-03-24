@@ -19,9 +19,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
+import us.johnchambers.podcast.Events.player.PlayerClosedEvent;
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
@@ -61,6 +64,7 @@ public class SubscribedDetailFragment extends MyFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -292,6 +296,14 @@ public class SubscribedDetailFragment extends MyFragment {
         AlertDialog dialog = builder.create();
 
         dialog.show();
+    }
+
+    //****************************
+    //* Events
+    //****************************
+    @Subscribe
+    public void onEvent(PlayerClosedEvent event) {
+        updateEpisodeListView(1);
     }
 
 }
