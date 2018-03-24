@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -26,11 +28,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
@@ -38,6 +43,7 @@ import us.johnchambers.podcast.database.PodcastMode;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.Constants;
+import us.johnchambers.podcast.objects.DocketPodcast;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
@@ -53,6 +59,8 @@ public class SubscribeFragment extends MyFragment {
     private OnFragmentInteractionListener mListener;
     private View _view;
     private View _header;
+
+    private BottomNavigationView.OnNavigationItemSelectedListener _bottomNavigationListener;
 
     public SubscribeFragment() {
         // Required empty public constructor
@@ -76,7 +84,12 @@ public class SubscribeFragment extends MyFragment {
                              Bundle savedInstanceState) {
         _view = inflater.inflate(R.layout.fragment_subscribe, container, false);
         _header = inflater.inflate(R.layout.fragment_subscribe_header, null, false);
-        setSubscribeButtonListener();
+        //setSubscribeButtonListener();
+        addNavigationListener();
+        BottomNavigationView navigation = (BottomNavigationView) _view.findViewById(R.id.navigation2);
+        navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener);
+        navigation.setItemIconTintList(null);
+
         getPodcastFeedInfo();
 
         return _view;
@@ -102,15 +115,29 @@ public class SubscribeFragment extends MyFragment {
     //****************************
     //* common routines
     //***************************
+    
+    //*********************************
+    //* bottom menu listener
+    //*********************************
 
-    private void setSubscribeButtonListener() {
-        FloatingActionButton fab = (FloatingActionButton) _view.findViewById(R.id.fab_subscribe);
-        fab.setOnClickListener(new View.OnClickListener() {
+    private void processNavigation(MenuItem item) {
+        if (item.getItemId() == R.id.bm_subscribe) {
+            openSubscribeDialog();
+        }
+
+    }
+
+    private void addNavigationListener() {
+
+        _bottomNavigationListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                openSubscribeDialog();
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                processNavigation(item);
+                return true;
             }
-        });
+
+        };
+
     }
 
     private void openSubscribeDialog() {
