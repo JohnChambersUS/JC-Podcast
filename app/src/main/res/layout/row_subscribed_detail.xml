@@ -41,6 +41,9 @@
         android:layout_toRightOf="@id/row_subscribed_detail_episode_title"
         android:layout_centerVertical="true"
         android:paddingRight="8dp"
+        android:tint="@color/colorPrimaryDark"
+        android:foregroundTintMode="add"
+        android:foregroundTint="@color/colorPrimaryDark"
         >
     </ImageView>
 
