@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import us.johnchambers.podcast.R;
 
@@ -40,7 +42,23 @@ public class SubscribeEpisodeListAdapter extends ArrayAdapter<SubscribeEpisodeRo
         TextView date = (TextView) convertView.findViewById(R.id.subscribeEpisodeRowDate);
         TextView title = (TextView) convertView.findViewById(R.id.subscribeEpisodeRowTitle);
 
-        date.setText(ser.getDateAsString());
+        String d = ser.getDateAsString();
+        String[] dSplit1 = d.split(" ");
+        String[] dSplit2 = dSplit1[0].split("-");
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        cal.set(Calendar.YEAR, Integer.parseInt(dSplit2[0]));
+        cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(dSplit2[1]));
+        SimpleDateFormat format1;
+        if ((year - 2000) == cal.get(Calendar.YEAR)) {
+            format1 = new SimpleDateFormat("MMM dd");
+        }
+        else {
+            format1 = new SimpleDateFormat("MMM dd, 20yy");
+        }
+        String formattedDate = format1.format(cal.getTime());
+        date.setText(formattedDate);
+
         title.setText(ser.getTitle());
 
         return convertView;

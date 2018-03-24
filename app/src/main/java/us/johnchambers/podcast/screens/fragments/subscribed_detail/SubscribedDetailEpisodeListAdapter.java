@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
@@ -55,9 +58,26 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
         TextView date = (TextView) convertView.findViewById(R.id.row_subscribed_episode_detail_date);
         TextView title = (TextView) convertView.findViewById(R.id.row_subscribed_detail_episode_title);
         ImageView status = (ImageView) convertView.findViewById(R.id.row_subscribed_detail_episode_status);
+
         String d = episode.getPubDate();
-        date.setText(d.toString());
+        String[] dSplit1 = d.split(" ");
+        String[] dSplit2 = dSplit1[0].split("-");
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        cal.set(Calendar.YEAR, Integer.parseInt(dSplit2[0]));
+        cal.set(Calendar.DAY_OF_YEAR, Integer.parseInt(dSplit2[1]));
+        SimpleDateFormat format1;
+        if ((year - 2000) == cal.get(Calendar.YEAR)) {
+            format1 = new SimpleDateFormat("MMM dd");
+        }
+        else {
+            format1 = new SimpleDateFormat("MMM dd, 20yy");
+        }
+        String formattedDate = format1.format(cal.getTime());
+        date.setText(formattedDate);
+
         String t = episode.getTitle();
+
         title.setText(t.toString());
         //todo add icon if partially played
         status.setImageDrawable(_context.getDrawable(R.drawable.ic_hamburger_dark));
