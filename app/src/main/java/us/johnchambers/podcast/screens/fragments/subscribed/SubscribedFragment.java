@@ -11,8 +11,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.List;
 
+import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
@@ -40,6 +44,7 @@ public class SubscribedFragment extends MyFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
     }
 
@@ -67,6 +72,16 @@ public class SubscribedFragment extends MyFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
     }
 
     //*******************************************
@@ -114,5 +129,13 @@ public class SubscribedFragment extends MyFragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onSubscribedFragmentRowItemClicked(PodcastTable pt);
+    }
+
+    //****************************
+    //* Events
+    //****************************
+    @Subscribe
+    public void onEvent(ClosePlayerEvent event) {
+
     }
 }
