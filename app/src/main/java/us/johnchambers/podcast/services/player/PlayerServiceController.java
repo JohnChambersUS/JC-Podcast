@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AlertDialog;
-import android.widget.Toast;
 
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
@@ -39,7 +38,7 @@ public class PlayerServiceController {
     private static Context _context = null;
 
     private int _episodeCount = 0;
-    private int _episodeLimit = 2; //Constants.EPISODE_LIMIT;
+    private int _episodeLimit = Constants.EPISODE_LIMIT;
 
     private Playlist _playlist;
 

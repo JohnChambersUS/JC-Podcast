@@ -4,17 +4,26 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.AudioManager;
 import android.media.session.MediaSession;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Toast;
 
 
 import com.android.volley.Response;
@@ -43,6 +52,7 @@ import com.google.android.exoplayer2.util.Util;
 import org.greenrobot.eventbus.EventBus;
 
 import java.net.URL;
+import java.util.Iterator;
 
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.MediaEndedEvent;
@@ -53,6 +63,7 @@ import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.VolleyQueue;
 
+import static android.media.AudioManager.STREAM_MUSIC;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 import static com.google.android.exoplayer2.Player.STATE_READY;
 import static us.johnchambers.podcast.misc.Constants.*;
@@ -72,10 +83,10 @@ public class PlayerService extends Service {
 
     Notification.Action action2;
 
-    MediaSession audioSession;
-
     EventBus _eventBus = EventBus.getDefault();
 
+    MediaSessionCompat _mediaSession;
+    AudioManager _audioManager;
 
     public PlayerService() {
         super();
@@ -109,6 +120,7 @@ public class PlayerService extends Service {
             makeForegroundService();
             createEmptyPlayer();
         }
+        setMediaReceiver();
     }
     // Only run once for setup
     private void makeForegroundService() {
@@ -281,6 +293,8 @@ public class PlayerService extends Service {
 
         setNoticationToPlaying();
         _player.setPlayWhenReady(true);
+        requestAudioFocus();
+
     }
 
     private MediaSource makeMediaSource(String url) {
@@ -447,6 +461,78 @@ public class PlayerService extends Service {
 
         VolleyQueue.getInstance().getRequestQueue().add(ir);
     }
+
+    //*******************************************
+    //* Catch media buttons
+    //*******************************************
+
+    public void setMediaReceiver() {
+        ComponentName mediaButtonReceiver = new ComponentName(_context, RemoteControlReceiver.class);
+
+        _mediaSession = new MediaSessionCompat(_context, "jc.podcast.player",
+                mediaButtonReceiver, null);
+
+        _mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+            MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        _mediaSession.setCallback(new MediaSessionCompat.Callback() {
+            @Override
+            public boolean onMediaButtonEvent(Intent mediaButtonEvent) {
+                Bundle extras = mediaButtonEvent.getExtras();
+                java.util.Set keys = extras.keySet();
+                Iterator itr = keys.iterator();
+                while (itr.hasNext()) {
+                    Object curr = itr.next();
+                    Object val = extras.get(curr.toString());
+                    processMediaKey((KeyEvent) val);
+                }
+                _eventBus.post(new AnyKeyEvent());
+                return super.onMediaButtonEvent(mediaButtonEvent);
+            }
+        });
+        _mediaSession.setActive(true);
+    }
+
+    private void processMediaKey(KeyEvent k) {
+        int code = k.getKeyCode();
+        switch(code) {
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEYCODE_MEDIA_PLAY:
+            case KeyEvent.KEYCODE_MEDIA_PAUSE:
+                flipPlayerState();
+                break;
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+            case KeyEvent.KEYCODE_MEDIA_SKIP_FORWARD:
+            case KeyEvent.KEYCODE_MEDIA_STEP_FORWARD:
+                forwardPlayer();
+                break;
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KeyEvent.KEYCODE_MEDIA_SKIP_BACKWARD:
+            case KeyEvent.KEYCODE_MEDIA_STEP_BACKWARD:
+                rewindPlayer();
+                break;
+        }
+
+    }
+
+    private boolean requestAudioFocus() {
+        try {
+            _audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+            Integer result = _audioManager.requestAudioFocus(null, STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+            Integer r = AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+
+            if (result.intValue() == r.intValue()) {
+                return true;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
 
 
 }

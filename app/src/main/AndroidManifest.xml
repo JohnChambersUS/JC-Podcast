@@ -42,7 +42,13 @@
             android:name=".services.player.PlayerService"
             android:enabled="true"
             android:exported="true"
-            android:stopWithTask="true" />
+            android:stopWithTask="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="android.media.browse.MediaBrowserService" />
+            </intent-filter>
+        </service>
 
         <receiver android:name=".services.player.PlayerNotificationBroadcastReceiver" />
 
@@ -54,7 +60,15 @@
         <receiver
             android:name=".services.updater.PodcastUpdateBroadcastReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
+        <receiver
+            android:name=".services.player.RemoteControlReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

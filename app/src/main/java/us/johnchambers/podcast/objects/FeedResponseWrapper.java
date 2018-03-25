@@ -5,6 +5,7 @@ package us.johnchambers.podcast.objects;
  */
 
 import android.graphics.Bitmap;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,6 +21,8 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.feed.synd.SyndImage;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.impl.XmlFixerReader;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.StringReader;
 import java.net.URL;
@@ -50,6 +53,8 @@ public class FeedResponseWrapper {
     private String _podcastId;
     private Bitmap _podcastImage = null;
     private String _feedUrl;
+    private boolean _error = false;
+    private String _errorMessage = "";
 
 
     public FeedResponseWrapper(String response, String feedUrl) {
@@ -103,6 +108,7 @@ public class FeedResponseWrapper {
 
     public boolean nextEpisode() {
         _currEpisode++;
+
         return (_currEpisode < (Integer)_feed.getEntries().size());
     }
 
@@ -189,9 +195,21 @@ public class FeedResponseWrapper {
             _feed = input.build(new XmlFixerReader(stringReader));
         }
         catch(Exception e) {
-            int y = 1;
+            _error = true;
+            _errorMessage = e.getMessage();
         }
-        String x = "asdf";
+        if ((_feed == null) && (_error == false)) {
+            _error = true;
+            _errorMessage = "Bad data file, unable to load podcast.";
+        }
+    }
+
+    public boolean dataIsValid() {
+        return !_error;
+    }
+
+    public String getErrorMessage() {
+        return _errorMessage;
     }
 
     public String getPodcastId() {

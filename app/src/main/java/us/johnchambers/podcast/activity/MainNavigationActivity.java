@@ -32,7 +32,7 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.Constants;
-import us.johnchambers.podcast.objects.EmptyDocket;
+import us.johnchambers.podcast.objects.DocketEmpty;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
@@ -148,7 +148,7 @@ public class MainNavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_show_subscribed) {
             _myFragmentManager.activateSubscribedFragment();
         } else if (id == R.id.nav_player) {
-            _myFragmentManager.activatePlayerFragment(new EmptyDocket());
+            _myFragmentManager.activatePlayerFragment(new DocketEmpty());
         } else if (id == R.id.nav_update_podcasts) {
             Intent intent = new Intent() ;
             intent.setClassName("us.johnchambers.podcast" ,
@@ -187,6 +187,10 @@ public class MainNavigationActivity extends AppCompatActivity
                 cal.getTimeInMillis(),
                 Constants.UPDATE_INTERVAL,
                 pendingIntent);
+    }
+
+    private void setMediaReceiver() {
+
     }
 
     //************************************************

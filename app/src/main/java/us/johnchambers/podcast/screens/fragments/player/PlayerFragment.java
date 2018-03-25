@@ -11,6 +11,11 @@ import android.view.ViewGroup;
 
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
+import us.johnchambers.podcast.Events.player.PlayerClosedEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
@@ -84,6 +89,7 @@ public class PlayerFragment extends MyFragment {
         super.onDetach();
         mListener = null;
         PlayerServiceController.getInstance().stopPlayer();
+        EventBus.getDefault().post(new PlayerClosedEvent());
     }
 
     @Override
@@ -110,5 +116,7 @@ public class PlayerFragment extends MyFragment {
     private void playEpisode() {
         PlayerServiceController.getInstance().playPlaylist(_currDocket);
     }
+
+
 
 }
