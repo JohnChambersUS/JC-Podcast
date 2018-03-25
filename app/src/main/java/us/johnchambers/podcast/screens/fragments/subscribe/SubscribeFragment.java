@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -59,6 +60,7 @@ public class SubscribeFragment extends MyFragment {
     private OnFragmentInteractionListener mListener;
     private View _view;
     private View _header;
+    private Context _context;
 
     private BottomNavigationView.OnNavigationItemSelectedListener _bottomNavigationListener;
 
@@ -104,6 +106,7 @@ public class SubscribeFragment extends MyFragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+        _context = context;
     }
 
     @Override
@@ -234,6 +237,13 @@ public class SubscribeFragment extends MyFragment {
         listView.setAdapter(_adapter);
 
         _feedResponseWrapper = new FeedResponseWrapper(response, feedUrl);
+        boolean valid = _feedResponseWrapper.dataIsValid();
+        if (!_feedResponseWrapper.dataIsValid()) {
+            Toast.makeText(getContext(), "BAD DATA! UNABLE TO LOAD PODCAST INFO. " + _feedResponseWrapper.getErrorMessage(),
+                    Toast.LENGTH_LONG).show();
+            mListener.onCloseSubscribeFragment();
+            return;
+        }
 
         while (_feedResponseWrapper.nextEpisode()) {
             SubscribeEpisodeRow ser = new SubscribeEpisodeRow();
