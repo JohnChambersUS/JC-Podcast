@@ -1,6 +1,6 @@
 # JC Podcast
 Android podcast player 
 
-Codename: Gyro
+Codename: Halo
 
 Copyright © 2018 John Chambers All Rights Reserved
