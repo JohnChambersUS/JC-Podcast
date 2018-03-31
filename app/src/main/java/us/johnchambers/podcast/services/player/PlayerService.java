@@ -502,6 +502,9 @@ public class PlayerService extends Service {
     }
 
     private void processMediaKey(KeyEvent k) {
+        if (k.getAction() != KeyEvent.ACTION_DOWN) {
+            return;
+        }
         int code = k.getKeyCode();
         switch(code) {
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
