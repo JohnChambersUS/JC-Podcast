@@ -9,6 +9,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Date;
 
+import us.johnchambers.podcast.R;
+
 /**
  * Created by johnchambers on 7/25/17.
  */
@@ -68,8 +70,8 @@ public class MyFileManager {
             bitmap = BitmapFactory.decodeStream(new FileInputStream(f));
         }
         catch (Exception e) {
-            String ex = e.toString();
-            bitmap = null;
+            bitmap = BitmapFactory.decodeResource(_context.getResources(),
+                    R.raw.missing_podcast_image);
         }
         return bitmap;
     }

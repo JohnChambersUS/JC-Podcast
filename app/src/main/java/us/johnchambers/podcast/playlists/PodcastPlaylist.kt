@@ -10,53 +10,13 @@ import kotlin.math.E
 /**
  * Created by johnchambers on 3/11/18.
  */
-class PodcastPlaylist(docket : Docket) : Playlist(docket) {
+open class PodcastPlaylist(playlist : String) : Playlist(playlist) {
 
     var _podcastInfo : PodcastTable
 
     init {
-        _podcastInfo = PodcastDatabaseHelper.getInstance().getPodcastRow(docket.getId())
-        _episodes = PodcastDatabaseHelper.getInstance().getEpisodesSortedNewest(docket.getId())
-        alignWithNowPlayingInfo()
-        setCurrentEpisodeIndex()
-    }
-
-    override fun isEmpty(): Boolean {
-        return _episodes.isEmpty()
-    }
-
-    override fun setCurrentEpisodeIndex() {
-        if (_episodes.size < 1) return
-
-        if (_podcastInfo.currentEpisode == Constants.NO_CURRENT_EPISODE) {
-            _podcastInfo.currentEpisode = _episodes.first().eid
-            if (_podcastInfo.mode == Constants.PLAYBACK_MODE_BOOK) {
-                _podcastInfo.currentEpisode = _episodes.last().eid
-            }
-            updatePlaylistInfo()
-        }
-
-        if (_episodes.isEmpty()) {
-            _episodeIndex = -1
-            return
-        }
-        var foundIt = false
-        _episodeIndex = 0
-        while ((!foundIt) && (_episodeIndex < _episodes.size)) {
-            if (_podcastInfo.currentEpisode.equals(_episodes.get(_episodeIndex).eid)) {
-                //if current is completed set to next up, will set to -1 if first is done
-                if (_episodes.get(_episodeIndex).playPointAsLong >= _episodes.get(_episodeIndex).lengthAsLong ) {
-                    _episodeIndex--
-                }
-                foundIt = true
-            } else {
-                _episodeIndex++
-            }
-        }
-        if (!foundIt) {
-            _episodeIndex = -1
-        }
-        _episodeIndex++ //point to one after you want to play for get next
+        _podcastInfo = PodcastDatabaseHelper.getInstance().getPodcastRow(_plalyistId)
+        _episodes = PodcastDatabaseHelper.getInstance().getEpisodesSortedNewest(_plalyistId)
     }
 
     //private, protected
@@ -65,28 +25,49 @@ class PodcastPlaylist(docket : Docket) : Playlist(docket) {
     }
 
     override fun getNextEpisode() : EpisodeTable {
+        //if no episodes return empty
         if (_episodes.isEmpty()) return EpisodeTable()
 
-        var returnET = EpisodeTable()
-
-        var foundIt = false
-        while ((!foundIt) && (--_episodeIndex > -1)) {
-            var epi = _episodes.get(_episodeIndex)
-            var pp = epi.playPointAsLong
-            var l = epi.lengthAsLong
-            var comp = pp.compareTo(l)
-
-            if (comp.equals(-1)) {
-                returnET = epi
-                foundIt = true
-            }
+        //if have and episode index, find it or first unplayed one before it
+        if (_episodeIndex > -1) {
+            do {
+                var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
+                _episodes.set(_episodeIndex, currEpisode)
+                if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
+                    return currEpisode
+                }
+            } while (--_episodeIndex > -1)
         }
-        return returnET //no more unplayed episodes so returning blank
-    }
 
-    override fun setCurrentEpisode(eid: String) {
-        _podcastInfo.currentEpisode = eid;
-        updatePlaylistInfo()
+        //if -1 start from top down and look for played or partially played
+        _episodeIndex = 0
+        do {
+            var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
+            _episodes.set(_episodeIndex, currEpisode)
+            if (currEpisode.playPointAsLong > 0) { //found a played one
+                if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
+                    return currEpisode
+                }
+                else {
+                    if (_episodeIndex == 0) {
+                        return EpisodeTable()
+                    }
+                    else {
+                        _episodeIndex--
+                        return _episodes.get(_episodeIndex)
+                    }
+                }
+            }
+        } while (++_episodeIndex < _episodes.size)
+
+        //if there are no unplayed episodes, then play 0 episode.
+        _episodeIndex = 0
+        var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
+        if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
+            return currEpisode
+        }
+
+        return EpisodeTable()
     }
 
     override fun alignWithNowPlayingInfo() {

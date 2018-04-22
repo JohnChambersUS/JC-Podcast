@@ -16,6 +16,10 @@
             android:icon="@drawable/ic_player_combo"
             android:title="Now Playing" />
         <item
+            android:id="@+id/nav_latest_playlist"
+            android:icon="@drawable/ic_player_combo"
+            android:title="Most Recent Episodes" />
+        <item
             android:id="@+id/nav_update_podcasts"
             android:icon="@drawable/ic_update_combo"
             android:title="Update Podcasts" />

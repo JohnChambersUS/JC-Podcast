@@ -156,6 +156,8 @@ public class MainNavigationActivity extends AppCompatActivity
             this.startService(intent);
         } else if (id == R.id.nav_about) {
             _myFragmentManager.activateAboutFragment();
+        } else if (id == R.id.nav_latest_playlist) {
+            _myFragmentManager.activateLatestPlaylistFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

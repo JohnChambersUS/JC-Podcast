@@ -1,20 +1,19 @@
 package us.johnchambers.podcast.playlists
 
 import us.johnchambers.podcast.database.EpisodeTable
+import us.johnchambers.podcast.misc.C
 import us.johnchambers.podcast.objects.Docket
 
 /**
  * Created by johnchambers on 3/11/18.
  */
-class EmptyPlaylist(docket : Docket) : Playlist(docket) {
+class EmptyPlaylist() : Playlist(C.playlist.DUMMY) {
 
     override fun isEmpty(): Boolean {
         return true;
     }
 
     override fun alignWithNowPlayingInfo() {}
-
-    override fun setCurrentEpisodeIndex() {}
 
     override fun updatePlaylistInfo() {}
 

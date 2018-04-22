@@ -5,17 +5,20 @@ package us.johnchambers.podcast.misc;
  */
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import java.util.Stack;
 
 import us.johnchambers.podcast.R;
+import us.johnchambers.podcast.database.LatestPlaylistTable;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.objects.Docket;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
+import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
 import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
@@ -34,6 +37,7 @@ public class MyFragmentManager {
     private final String SUBSCRIBED_DETAIL_FRAGMENT = "SUBSCRIBED_DETAIL_FRAGMENT";
     private final String PLAYER_FRAGMENT = "PLAYER_FRAGMENT";
     private final String ABOUT_FRAGMENT = "ABOUT_FRAGMENT";
+    private final String LATEST_PLAYLIST_FRAGMENT = "LATEST_PLAYLIST_FRAGMENT";
 
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
@@ -81,6 +85,7 @@ public class MyFragmentManager {
                 .beginTransaction()
                 .add(containerViewId, frag, fragmentName)
                 .commit();
+        _fragmentManager.beginTransaction().show(frag).commit();
         addToBackstack(frag.getBackstackType(), fragmentName);
     }
 
@@ -131,6 +136,15 @@ public class MyFragmentManager {
             activateFragment(R.id.about_placeholder,
                     fragment,
                     ABOUT_FRAGMENT);
+        }
+    }
+
+    public void activateLatestPlaylistFragment() {
+        if (!alreadyOnTop(ABOUT_FRAGMENT)) {
+            LatestPlaylistFragment fragment = LatestPlaylistFragment.newInstance();
+            activateFragment(R.id.latest_playlist_placeholder,
+                    fragment,
+                    LATEST_PLAYLIST_FRAGMENT);
         }
     }
 
