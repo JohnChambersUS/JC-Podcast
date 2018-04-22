@@ -65,6 +65,11 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
 
     }
 
+    override fun getEpisodes() : MutableList<EpisodeTable> {
+        refreshEpisodeList()
+        return _episodes
+    }
+
     private fun refreshEpisodeList() {
         _episodes.clear()
         var episodeIds = PodcastDatabaseHelper.getInstance().updatedLatestPlaylist

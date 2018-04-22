@@ -104,15 +104,16 @@ class LatestPlaylistFragment : MyFragment() {
                     var event = ResumePlaylistEvent(docket)
                     EventBus.getDefault().post(event)
                 }
-                1 -> { var y = 2
-                   // PodcastDatabaseHelper.getInstance().updateEpisodeDuration(row.getEid(), 1)
-                    //PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(row.getEid(), 0)
+                1 -> {
+                    var eid = _playlist.getEpisodes().get(row).eid
+                    PodcastDatabaseHelper.getInstance().updateEpisodeDuration(eid, 1)
+                    PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(eid, 0)
                     //updateEpisodeListView(position)
                 }
                 2 -> { var z = 3
-                    //val dbRow = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(row.getPid())
-                    //PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(row.getEid(),
-                    //        row.getLengthAsLong())
+                    var updateRow = _playlist.getEpisodes().get(row)
+                    PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(updateRow.eid,
+                            updateRow.lengthAsLong)
                     //updateEpisodeListView(position)
                 }
             }
