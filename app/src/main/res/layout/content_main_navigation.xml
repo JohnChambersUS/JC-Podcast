@@ -33,13 +33,19 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/player_placeholder"
+        android:id="@+id/about_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/about_placeholder"
+        android:id="@+id/latest_playlist_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/player_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>

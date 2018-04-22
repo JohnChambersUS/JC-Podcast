@@ -231,6 +231,26 @@ public class PodcastDatabaseHelper {
         return np.getValue();
     }
 
+    //************************************
+    //* Latest Playlist methods
+    //************************************
+
+    public List<LatestPlaylistTable> getUpdatedLatestPlaylist() {
+        _database.dao().deleteAllFromLatestPlaylistTable();
+        List<String> episodes = _database.dao().fillLatestPlaylistTable();
+        for(String episode : episodes) {
+            LatestPlaylistTable lt = new LatestPlaylistTable();
+            lt.setEid(episode);
+            _database.dao().insertLatestPlaylistTableRow(lt);
+        }
+        return getCurrentLatestPlaylist();
+    }
+
+    public List<LatestPlaylistTable> getCurrentLatestPlaylist() {
+        return _database.dao().getLatestPlaylistTable();
+    }
+
+
     //*************************************************
     //* Common public utility methods
     //*************************************************

@@ -2,6 +2,8 @@ package us.johnchambers.podcast.screens.fragments.subscribed_detail;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -57,7 +60,6 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
 
         TextView date = (TextView) convertView.findViewById(R.id.row_subscribed_episode_detail_date);
         TextView title = (TextView) convertView.findViewById(R.id.row_subscribed_detail_episode_title);
-        ImageView status = (ImageView) convertView.findViewById(R.id.row_subscribed_detail_episode_status);
 
         String d = episode.getPubDate();
         String[] dSplit1 = d.split(" ");
@@ -79,8 +81,6 @@ public class SubscribedDetailEpisodeListAdapter extends ArrayAdapter<EpisodeTabl
         String t = episode.getTitle();
 
         title.setText(t.toString());
-        //todo add icon if partially played
-        status.setImageDrawable(_context.getDrawable(R.drawable.ic_hamburger_dark));
 
         setProgress(convertView, episode);
 
