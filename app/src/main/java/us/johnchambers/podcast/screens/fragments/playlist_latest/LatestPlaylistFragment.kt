@@ -28,6 +28,9 @@ import us.johnchambers.podcast.Events.player.ResumePlaylistEvent
 import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.objects.*
+import android.support.v7.widget.DefaultItemAnimator
+
+
 
 
 /**
@@ -75,6 +78,12 @@ class LatestPlaylistFragment : MyFragment() {
             adapter = _viewAdapter
         }
 
+        _recyclerView.setItemAnimator(null)
+
+
+
+
+
         addNavigationListener()
         val navigation = view.findViewById(R.id.navigation) as BottomNavigationView
         navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener)
@@ -108,13 +117,16 @@ class LatestPlaylistFragment : MyFragment() {
                     var eid = _playlist.getEpisodes().get(row).eid
                     PodcastDatabaseHelper.getInstance().updateEpisodeDuration(eid, 1)
                     PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(eid, 0)
-                    //updateEpisodeListView(position)
+                    var updatedEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(eid)
+                    _playlist.getEpisodes() //will refresh episode list
+                    _recyclerView.adapter.notifyItemChanged(row)
                 }
                 2 -> { var z = 3
                     var updateRow = _playlist.getEpisodes().get(row)
                     PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(updateRow.eid,
                             updateRow.lengthAsLong)
-                    //updateEpisodeListView(position)
+                    _playlist.getEpisodes() //will refresh episode list
+                    _recyclerView.adapter.notifyItemChanged(row)
                 }
             }
         }
@@ -122,7 +134,6 @@ class LatestPlaylistFragment : MyFragment() {
         builder.setNegativeButton("Cancel") { dialog, id -> dialog.cancel() }
 
         builder.show()
-
     }
 
     //*********************************
