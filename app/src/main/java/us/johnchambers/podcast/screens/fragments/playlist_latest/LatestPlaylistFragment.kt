@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import us.johnchambers.podcast.Events.latest.LatestRowActionButtonPressedEvent
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent
+import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.objects.*
 
@@ -53,10 +54,9 @@ class LatestPlaylistFragment : MyFragment() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        EventBus.getDefault().register(this)
         super.onCreate(savedInstanceState)
+        EventBus.getDefault().register(this)
         _playlist = PlaylistFactory.getPlaylist(DocketLatest())
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -80,17 +80,12 @@ class LatestPlaylistFragment : MyFragment() {
         navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener)
         navigation.itemIconTintList = null
 
-
-
-
-
         return view;
     }
 
     override fun getBackstackType() : FragmentBackstackType {
         return FragmentBackstackType.ROOT
     }
-
 
     @Subscribe
     fun onEvent(event : LatestRowActionButtonPressedEvent) {
@@ -104,8 +99,11 @@ class LatestPlaylistFragment : MyFragment() {
         builder.setItems(colors) { dialog, which ->
             when (which) {
                 0 -> {
-                    var x = 1
-                }//EventBus.getDefault().post(ResumePlaylistEvent(DocketEpisode(row.getEid())))
+                   _playlist.setCurrentEpisodeIndex(row)
+                    var docket = DocketEmbededPlaylist(_playlist)
+                    var event = ResumePlaylistEvent(docket)
+                    EventBus.getDefault().post(event)
+                }
                 1 -> { var y = 2
                    // PodcastDatabaseHelper.getInstance().updateEpisodeDuration(row.getEid(), 1)
                     //PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(row.getEid(), 0)
@@ -124,9 +122,7 @@ class LatestPlaylistFragment : MyFragment() {
 
         builder.show()
 
-
     }
-
 
     //*********************************
     //* bottom menu listener
