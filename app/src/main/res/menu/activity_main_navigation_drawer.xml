@@ -17,8 +17,8 @@
             android:title="Now Playing" />
         <item
             android:id="@+id/nav_latest_playlist"
-            android:icon="@drawable/ic_player_combo"
-            android:title="Most Recent Episodes" />
+            android:icon="@drawable/ic_new_regular"
+            android:title="What's New?" />
         <item
             android:id="@+id/nav_update_podcasts"
             android:icon="@drawable/ic_update_combo"

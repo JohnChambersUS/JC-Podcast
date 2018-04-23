@@ -35,13 +35,21 @@
     <ImageButton
         android:id="@+id/row_latest_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_hamburger_dark"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_more_vertical"
         android:layout_toRightOf="@id/row_latest_episode_name"
         app:layout_widthPercent="10%"
+        app:layout_aspectRatio="100%"
+        android:paddingRight="8dp"
+        android:tint="@color/colorPrimaryDark"
+        android:foregroundTintMode="add"
+        android:foregroundTint="@color/colorPrimaryDark"
         android:layout_centerVertical="true"
         android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentTop="true"
         />
+
 
 </android.support.percent.PercentRelativeLayout>
 

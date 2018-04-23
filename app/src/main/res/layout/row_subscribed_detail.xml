@@ -15,7 +15,7 @@
         android:layout_centerVertical="true"
         android:padding="8dp"
         android:textSize="18sp"
-        app:layout_widthPercent="19%"
+        app:layout_widthPercent="20%"
         android:textColor="@color/colorPrimaryDark"
         >
     </TextView>
@@ -27,7 +27,7 @@
         android:layout_centerVertical="true"
         android:paddingRight="8dp"
         android:textSize="18sp"
-        app:layout_widthPercent="65%"
+        app:layout_widthPercent="70%"
         android:layout_toRightOf="@id/row_subscribed_episode_detail_date"
         android:textColor="@color/colorPrimaryDark"
         >
@@ -35,7 +35,7 @@
 
     <ImageView
         android:id="@+id/row_subscribed_detail_episode_status"
-        app:layout_widthPercent="8%"
+        app:layout_widthPercent="10%"
         app:layout_aspectRatio="100%"
         android:scaleType="fitCenter"
         android:layout_toRightOf="@id/row_subscribed_detail_episode_title"
@@ -44,22 +44,7 @@
         android:tint="@color/colorPrimaryDark"
         android:foregroundTintMode="add"
         android:foregroundTint="@color/colorPrimaryDark"
-        android:src="@drawable/ic_play"
-        >
-    </ImageView>
-
-    <ImageView
-        android:id="@+id/row_subscribed_detail_episode_status2"
-        app:layout_widthPercent="8%"
-        app:layout_aspectRatio="100%"
-        android:scaleType="fitCenter"
-        android:layout_toRightOf="@id/row_subscribed_detail_episode_status"
-        android:layout_centerVertical="true"
-        android:paddingRight="8dp"
-        android:tint="@color/colorPrimaryDark"
-        android:foregroundTintMode="add"
-        android:foregroundTint="@color/colorPrimaryDark"
-        android:src="@drawable/ic_hamburger_dark"
+        android:src="@drawable/ic_more_vertical"
         >
     </ImageView>
 
