@@ -29,8 +29,7 @@ import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.objects.*
 import android.support.v7.widget.DefaultItemAnimator
-
-
+import us.johnchambers.podcast.Events.player.PlayerClosedEvent
 
 
 /**
@@ -80,10 +79,6 @@ class LatestPlaylistFragment : MyFragment() {
 
         _recyclerView.setItemAnimator(null)
 
-
-
-
-
         addNavigationListener()
         val navigation = view.findViewById(R.id.navigation) as BottomNavigationView
         navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener)
@@ -94,6 +89,44 @@ class LatestPlaylistFragment : MyFragment() {
 
     override fun getBackstackType() : FragmentBackstackType {
         return FragmentBackstackType.ROOT
+    }
+
+    //*********************************
+    //* local methods
+    //*********************************
+    private fun refreshEpisodeView() {
+        _playlist.getEpisodes() //will refresh list
+        _recyclerView.adapter.notifyDataSetChanged()
+    }
+
+
+    //*********************************
+    //* bottom menu listener
+    //*********************************
+
+    private fun processNavigation(item: MenuItem) {
+        if (item.itemId == R.id.bm_play) {
+            var docket = DocketEmbededPlaylist(_playlist)
+            var event = ResumePlaylistEvent(docket)
+            EventBus.getDefault().post(event)
+        }
+    }
+
+    private fun addNavigationListener() {
+
+        _bottomNavigationListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            processNavigation(item)
+            true
+        }
+
+    }
+
+    //**************************
+    //* event listener
+    //**************************
+    @Subscribe
+    fun onEvent(event: PlayerClosedEvent) {
+        refreshEpisodeView()
     }
 
     @Subscribe
@@ -108,7 +141,7 @@ class LatestPlaylistFragment : MyFragment() {
         builder.setItems(colors) { dialog, which ->
             when (which) {
                 0 -> {
-                   _playlist.setCurrentEpisodeIndex(row)
+                    _playlist.setCurrentEpisodeIndex(row)
                     var docket = DocketEmbededPlaylist(_playlist)
                     var event = ResumePlaylistEvent(docket)
                     EventBus.getDefault().post(event)
@@ -136,26 +169,6 @@ class LatestPlaylistFragment : MyFragment() {
         builder.show()
     }
 
-    //*********************************
-    //* bottom menu listener
-    //*********************************
-
-    private fun processNavigation(item: MenuItem) {
-        if (item.itemId == R.id.bm_play) {
-            var docket = DocketEmbededPlaylist(_playlist)
-            var event = ResumePlaylistEvent(docket)
-            EventBus.getDefault().post(event)
-        }
-    }
-
-    private fun addNavigationListener() {
-
-        _bottomNavigationListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            processNavigation(item)
-            true
-        }
-
-    }
 
 
 }
