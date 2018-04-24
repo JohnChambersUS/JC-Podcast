@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 
+import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent;
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
@@ -232,6 +233,12 @@ public class MainNavigationActivity extends AppCompatActivity
     public void onEvent(ResumePlaylistEvent event) {
         _myFragmentManager.activatePlayerFragment(event.getDocketPackage());
     }
+
+    @Subscribe
+    public void onEvent(OpenSubscribedDetailEvent event) {
+        _myFragmentManager.activateSubscribedDetailFragment(event.getPodcast());
+    }
+
 
 
 
