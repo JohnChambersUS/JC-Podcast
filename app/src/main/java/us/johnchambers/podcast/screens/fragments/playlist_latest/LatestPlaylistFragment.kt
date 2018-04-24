@@ -65,24 +65,32 @@ class LatestPlaylistFragment : MyFragment() {
                               savedInstanceState: Bundle?): View? {
 
         var view = inflater.inflate(R.layout.fragment_latest_playlist, container, false)
-        //todo init recycler view
-        _viewManager = LinearLayoutManager(context)
-        _viewAdapter = LatestPlaylistRecyclerAdapter(_playlist.getEpisodes())
 
-        _recyclerView = view.findViewById(R.id.latest_recycler_view) as RecyclerView
-
-        _recyclerView.apply {
-            setHasFixedSize(false)
-            layoutManager = _viewManager
-            adapter = _viewAdapter
+        if (_playlist.getEpisodes().size == 0) {
+            var noEpisodesMessage = view.findViewById(R.id.no_episodes_message)
+            var recyclerView = view.findViewById(R.id.latest_recycler_view)
+            noEpisodesMessage.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
         }
+        else {
+            _viewManager = LinearLayoutManager(context)
+            _viewAdapter = LatestPlaylistRecyclerAdapter(_playlist.getEpisodes())
 
-        _recyclerView.setItemAnimator(null)
+            _recyclerView = view.findViewById(R.id.latest_recycler_view) as RecyclerView
 
-        addNavigationListener()
-        val navigation = view.findViewById(R.id.navigation) as BottomNavigationView
-        navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener)
-        navigation.itemIconTintList = null
+            _recyclerView.apply {
+                setHasFixedSize(false)
+                layoutManager = _viewManager
+                adapter = _viewAdapter
+            }
+
+            _recyclerView.setItemAnimator(null)
+
+            addNavigationListener()
+            val navigation = view.findViewById(R.id.navigation) as BottomNavigationView
+            navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener)
+            navigation.itemIconTintList = null
+        }
 
         return view;
     }
