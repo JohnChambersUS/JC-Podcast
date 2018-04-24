@@ -131,11 +131,4 @@ public class SubscribedFragment extends MyFragment {
         void onSubscribedFragmentRowItemClicked(PodcastTable pt);
     }
 
-    //****************************
-    //* Events
-    //****************************
-    @Subscribe
-    public void onEvent(ClosePlayerEvent event) {
-
-    }
 }

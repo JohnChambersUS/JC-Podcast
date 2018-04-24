@@ -29,6 +29,8 @@ import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.objects.*
 import android.support.v7.widget.DefaultItemAnimator
+import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent
+import us.johnchambers.podcast.Events.latest.SubscribedDetailClosedEvent
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent
 
 
@@ -107,7 +109,6 @@ class LatestPlaylistFragment : MyFragment() {
         _recyclerView.adapter.notifyDataSetChanged()
     }
 
-
     //*********************************
     //* bottom menu listener
     //*********************************
@@ -133,6 +134,11 @@ class LatestPlaylistFragment : MyFragment() {
     //* event listener
     //**************************
     @Subscribe
+    fun onEvent(event: SubscribedDetailClosedEvent) {
+        refreshEpisodeView()
+    }
+
+    @Subscribe
     fun onEvent(event: PlayerClosedEvent) {
         refreshEpisodeView()
     }
@@ -142,7 +148,7 @@ class LatestPlaylistFragment : MyFragment() {
         var row = event.row
 
         // add popup menu
-        val colors = arrayOf<CharSequence>("Play this episode", "Reset to beginning", "Mark as played")
+        val colors = arrayOf<CharSequence>("Play this episode", "Reset to beginning", "Mark as played", "Go to podcast")
 
         val builder = AlertDialog.Builder(context)
         builder.setTitle("Pick an option:")
@@ -162,12 +168,17 @@ class LatestPlaylistFragment : MyFragment() {
                     _playlist.getEpisodes() //will refresh episode list
                     _recyclerView.adapter.notifyItemChanged(row)
                 }
-                2 -> { var z = 3
+                2 -> {
                     var updateRow = _playlist.getEpisodes().get(row)
                     PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(updateRow.eid,
                             updateRow.lengthAsLong)
                     _playlist.getEpisodes() //will refresh episode list
                     _recyclerView.adapter.notifyItemChanged(row)
+                }
+                3 -> {
+                    var pid = _playlist.getEpisodes().get(row).pid
+                    var pt = PodcastDatabaseHelper.getInstance().getPodcastRow(pid)
+                    EventBus.getDefault().post(OpenSubscribedDetailEvent(pt))
                 }
             }
         }

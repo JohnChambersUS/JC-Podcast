@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import us.johnchambers.podcast.Events.latest.SubscribedDetailClosedEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent;
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
@@ -107,6 +108,7 @@ public class SubscribedDetailFragment extends MyFragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        EventBus.getDefault().post(new SubscribedDetailClosedEvent());
     }
 
     //*******************************************
