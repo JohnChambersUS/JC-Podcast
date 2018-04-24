@@ -284,6 +284,8 @@ public class PlayerServiceController {
         AlertDialog dialog = builder.create();
 
         dialog.show();
+
+        EventBus.getDefault().post(new ClosePlayerEvent());
     }
 
 
