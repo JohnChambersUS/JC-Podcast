@@ -15,6 +15,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:gravity="center"
         android:padding="@dimen/std_margin"
+        android:textColor="@color/white"
         />
 
     <ListView
