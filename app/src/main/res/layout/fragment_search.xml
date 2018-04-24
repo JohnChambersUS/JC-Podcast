@@ -30,7 +30,7 @@
 
             app:layout_constraintTop_toTopOf="@id/bgTextView"
             app:layout_constraintBottom_toBottomOf="@id/bgTextView"
-            android:background="@color/secondaryAccent"
+            android:background="@color/colorAccent"
             app:layout_constraintEnd_toEndOf="@id/bgTextView"
 
 

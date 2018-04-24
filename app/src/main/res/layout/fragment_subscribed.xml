@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     android:id="@+id/subscribed_view"
     tools:context="us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment"
-    android:background="@color/lightBackground">
+    android:background="@color/secondaryAccent"
+    >
 
     <TextView
         android:id="@+id/noSubscriptionsMessage"
