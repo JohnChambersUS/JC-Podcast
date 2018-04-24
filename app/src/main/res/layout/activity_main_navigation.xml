@@ -7,14 +7,16 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
-    android:background="#666666"
+    android:background="@color/secondaryAccent"
     >
 
-    <ImageView
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@raw/background"
-        android:scaleType="fitXY"
+        android:text="A Different Podcast App"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textColor="@color/white"
+        android:gravity="center"
         />
 
     <include

@@ -1,4 +1,4 @@
-# JC Podcast
+# ADPA, A Different Podcast App
 Android podcast player 
 
 Codename: Indigo

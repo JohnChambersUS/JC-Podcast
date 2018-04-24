@@ -14,15 +14,15 @@
         <item
             android:id="@+id/nav_player"
             android:icon="@drawable/ic_player_combo"
-            android:title="Now Playing" />
+            android:title="Resume" />
         <item
             android:id="@+id/nav_latest_playlist"
             android:icon="@drawable/ic_new_regular"
-            android:title="What's New?" />
+            android:title="What's New in Podcasts?" />
         <item
             android:id="@+id/nav_update_podcasts"
             android:icon="@drawable/ic_update_combo"
-            android:title="Update Podcasts" />
+            android:title="Update Subscriptions" />
     </group>
 
     <item
