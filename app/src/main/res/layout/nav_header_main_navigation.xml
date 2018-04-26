@@ -22,7 +22,7 @@
                 android:id="@+id/top_text"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="ADPA"
+                android:text="Different"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 app:layout_constraintLeft_toRightOf="@id/logo"
                 android:paddingLeft="@dimen/std_margin"

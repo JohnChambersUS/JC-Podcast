@@ -44,7 +44,6 @@ public class SubscribedFragment extends MyFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
     }
 
