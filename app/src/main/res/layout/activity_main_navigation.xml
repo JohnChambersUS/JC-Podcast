@@ -10,13 +10,11 @@
     android:background="@color/secondaryAccent"
     >
 
-    <TextView
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="A Different Podcast App"
-        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
-        android:textColor="@color/white"
-        android:gravity="center"
+        android:background="@raw/background"
+        android:scaleType="fitXY"
         />
 
     <include

@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
         MyFileManager.getInstance(this).makeStorageDirectories();
 
-        new CountDownTimer(2000, 1000) {
+        new CountDownTimer(1000, 1000) {
             public void onFinish() {
                 Intent startActivity = new Intent(MainActivity.this, MainNavigationActivity.class);
                 startActivity(startActivity);

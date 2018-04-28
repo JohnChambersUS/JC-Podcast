@@ -64,7 +64,7 @@ public class MyFileManager {
 
     public Bitmap getPodcastImage(String pid) {
         File subDir = new File(_appDir, PODCAST_IMAGES_DIR);
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         try {
             File f = new File(subDir, pid + ".png");
             bitmap = BitmapFactory.decodeStream(new FileInputStream(f));
@@ -73,7 +73,13 @@ public class MyFileManager {
             bitmap = BitmapFactory.decodeResource(_context.getResources(),
                     R.raw.missing_podcast_image);
         }
-        return bitmap;
+        if (bitmap == null) {
+            return BitmapFactory.decodeResource(_context.getResources(),
+                    R.raw.missing_podcast_image);
+        }
+        else {
+            return bitmap;
+        }
     }
 
     public String getPodcastDownloadDir() {
