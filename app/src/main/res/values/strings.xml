@@ -13,8 +13,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="background_attrib">
-        Thanks to user Cheskapoon on Pixabay.com for creating the megaphone background image,
-        and for licensing the Image under the Creative Commons CC0 license
-        as free to use for commercial use.
+        A Different Podcast Player (formerly named JC Podcast) does not collect or maintain any private information. It uses the Android permission READ_PHONE_STATE so it can pause the player when the phone rings and restart the player when the phone is hung up. That\'s it.
     </string>
 </resources>
