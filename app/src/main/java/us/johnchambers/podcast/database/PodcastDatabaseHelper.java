@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import us.johnchambers.podcast.playlists.LatestPlaylist;
 import us.johnchambers.podcast.playlists.NowPlaying;
 
 
@@ -231,6 +232,26 @@ public class PodcastDatabaseHelper {
         return np.getValue();
     }
 
+    //************************************
+    //* Latest Playlist methods
+    //************************************
+
+    public List<LatestPlaylistTable> getUpdatedLatestPlaylist() {
+        _database.dao().deleteAllFromLatestPlaylistTable();
+        List<String> episodes = _database.dao().fillLatestPlaylistTable();
+        for(String episode : episodes) {
+            LatestPlaylistTable lt = new LatestPlaylistTable();
+            lt.setEid(episode);
+            _database.dao().insertLatestPlaylistTableRow(lt);
+        }
+        return getCurrentLatestPlaylist();
+    }
+
+    public List<LatestPlaylistTable> getCurrentLatestPlaylist() {
+        return _database.dao().getLatestPlaylistTable();
+    }
+
+
     //*************************************************
     //* Common public utility methods
     //*************************************************
@@ -244,6 +265,27 @@ public class PodcastDatabaseHelper {
         }
         catch (Exception e) {}
 
+        //********* remove latest if needed
+        List<LatestPlaylistTable> latestEpisodes = getCurrentLatestPlaylist();
+        for (LatestPlaylistTable latest :latestEpisodes) {
+            EpisodeTable et = getEpisodeTableRowByEpisodeId(latest.getEid());
+            if (et.pid.equals(pid)) {
+                _database.dao().deleteLatestPlaylistTableRow(latest);
+            }
+        }
+        EpisodeTable et = getEpisodeTableRowByEpisodeId(getNowPlayingEpisodeId());
+        if (et.pid.equals(pid)) {
+            List<LatestPlaylistTable> lt = getCurrentLatestPlaylist();
+            if (lt.size() > 0) {
+                updateNowPlayingEpisode(lt.get(0).getEid());
+            }
+            else {
+                updateNowPlayingEpisode(NowPlaying.NO_EPISODE_FLAG);
+                updateNowPlayingPlaylist(NowPlaying.NO_PLAYLIST_FLAG);
+            }
+        }
+
+        //************* remove now playing if needed *************
         String npEid = getNowPlayingEpisodeId();
         String npPid = "";
         try {

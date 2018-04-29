@@ -7,32 +7,57 @@ import us.johnchambers.podcast.objects.Docket
 /**
  * Created by johnchambers on 3/11/18.
  */
-abstract class Playlist(docket : Docket) {
+abstract class Playlist(playlistId : String) {
 
     lateinit var _docket : Docket
-    lateinit var _episodes : List<EpisodeTable>
+    lateinit var _episodes : MutableList<EpisodeTable>
     var _episodeIndex = -1
+    var _plalyistId = playlistId
 
     init {
-        _docket = docket
+
     }
 
-    init {}
+    open fun isEmpty() : Boolean {
+        return _episodes.isEmpty()
+    }
 
-    abstract fun isEmpty() : Boolean
+    open fun setCurrentEpisodeIndex(index : Int) {
+        if ((index > -1) && (index < _episodes.size))
+            _episodeIndex = index;
+        else
+            _episodeIndex = -1
+    }
 
-    abstract fun setCurrentEpisodeIndex()
 
     abstract protected fun updatePlaylistInfo()
 
     abstract fun getNextEpisode(): EpisodeTable
 
-    abstract fun setCurrentEpisode(eid : String)
+    open fun setCurrentEpisode(eid : String) {
+        if (_episodes.size < 1) {
+            _episodeIndex = -1
+            return
+        }
+
+        _episodeIndex = _episodes.size - 1
+        do {
+            if (_episodes.get(_episodeIndex).eid.equals(eid))
+                break
+            else
+                _episodeIndex--
+
+        } while (_episodeIndex > -1)
+    }
 
     open fun getPlaylistId() : String {
-        return _docket.getId()
+        return _plalyistId
     }
 
     abstract protected fun alignWithNowPlayingInfo()
+
+    open fun getEpisodes() : MutableList<EpisodeTable> {
+        return _episodes
+    }
 
 }

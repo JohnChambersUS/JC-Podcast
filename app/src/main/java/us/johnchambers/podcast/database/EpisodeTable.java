@@ -140,6 +140,7 @@ public class EpisodeTable {
             return Long.parseLong(playPoint);
         }
         catch (Exception e) {
+            String ex = e.getMessage();
             L.INSTANCE.i((Object) this, "0:0 play point");
             return 0;
         }

@@ -21,6 +21,8 @@ import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -87,6 +89,11 @@ public class PlayerService extends Service {
 
     MediaSessionCompat _mediaSession;
     AudioManager _audioManager;
+    PhoneStateListener _phoneStateListener;
+    TelephonyManager _telephoneManager;
+
+    boolean _playerPhoneState = false;
+
 
     public PlayerService() {
         super();
@@ -121,6 +128,7 @@ public class PlayerService extends Service {
             createEmptyPlayer();
         }
         setMediaReceiver();
+        setPhoneListener();
     }
     // Only run once for setup
     private void makeForegroundService() {
@@ -494,6 +502,9 @@ public class PlayerService extends Service {
     }
 
     private void processMediaKey(KeyEvent k) {
+        if (k.getAction() != KeyEvent.ACTION_DOWN) {
+            return;
+        }
         int code = k.getKeyCode();
         switch(code) {
             case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
@@ -532,7 +543,30 @@ public class PlayerService extends Service {
         return false;
     }
 
+    //**************************************
+    //* phone listener
+    //**************************************
+    private void setPhoneListener() {
+
+        _phoneStateListener = new PhoneStateListener() {
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber){
+                switch (state) {
+                    case TelephonyManager.CALL_STATE_IDLE: requestAudioFocus();
+                        _player.setPlayWhenReady(_playerPhoneState);
+                        break;
+                    default: _playerPhoneState = _player.getPlayWhenReady();
+                        _player.setPlayWhenReady(false);
+                        break;
+                }
+            }
+
+        };
+        _telephoneManager =  (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+        _telephoneManager.listen(_phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+    }
 
 
 
-}
+
+} //end of service

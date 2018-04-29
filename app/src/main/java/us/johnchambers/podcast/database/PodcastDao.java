@@ -109,4 +109,41 @@ public interface PodcastDao {
     @Insert
     void insertNowPlayingTableRow(NowPlayingTable nowPlayingTable);
 
+    //*******************************************
+    //* Latest Playlist Table methods
+    //*******************************************
+
+    @Update
+    void updateLatestPlaylistRow(LatestPlaylistTable latestPlaylistTable);
+
+    @Insert
+    void insertLatestPlaylistTableRow(LatestPlaylistTable latestPlaylistTable);
+
+    @Query("SELECT * FROM LatestPlaylistTable")
+    List<LatestPlaylistTable> getLatestPlaylistTable();
+
+    @Delete
+    void deleteLatestPlaylistTableRow(LatestPlaylistTable latestPlaylistTable);
+
+    @Query("DELETE FROM LatestPlaylistTable")
+    void deleteAllFromLatestPlaylistTable();
+
+    @Query("DELETE FROM LatestPlaylistTable WHERE eid = :epidoseId")
+    void emptyEpisodesFromLatestPlaylistTable(String epidoseId);
+
+    //get latest episodes from database
+    /*
+    String fillLatestPlaylistQuery =
+            "insert into latestplaylisttable (eid)" +
+                " select eid from" +
+                    " (select e.pid, max(e.identity), e.eid, p.mode from episodetable e" +
+                    " inner join podcasttable p on p.pid = e.pid" +
+                    " where p.mode = 'podcast'" +
+                    " group by e.pid order by e.identity desc)";
+    @Query(fillLatestPlaylistQuery)
+    */
+    //@Query("select e.pid, max(e.identity), e.eid from episodetable e")
+    @Query("select episodetable.eid from episodetable inner join podcasttable on podcasttable.pid = episodetable.pid where podcasttable.mode = 'podcast' group by episodetable.pid order by episodetable.identity desc")
+    List<String> fillLatestPlaylistTable();
+
 }

@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="@color/colorPrimaryDark"
-                android:text="JC Podcast"
+                android:text="A Different Podcast App"
                 />
 
             <TextView

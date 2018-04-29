@@ -1,4 +1,21 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+        google()
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
 apply plugin: 'com.android.application'
+apply plugin: 'io.fabric'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+    google()
+}
+
 
 android {
     compileSdkVersion 25
@@ -7,8 +24,8 @@ android {
         applicationId "us.johnchambers.podcast"
         minSdkVersion 21
         targetSdkVersion 25
-        versionCode 10
-        versionName "1.10.0"
+        versionCode 14
+        versionName "1.14.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -42,6 +59,11 @@ dependencies {
     compile 'com.google.android.exoplayer:exoplayer:r2.5.4'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
     compile 'org.greenrobot:eventbus:3.1.1'
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
+        transitive = true;
+    }
+
+    implementation 'com.android.support:recyclerview-v7:25.0.0'
 }
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
