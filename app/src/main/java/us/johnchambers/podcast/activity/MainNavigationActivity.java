@@ -83,6 +83,8 @@ public class MainNavigationActivity extends AppCompatActivity
         setUpdateAlarm();
 
         EventBus.getDefault().register(this);
+
+        initDatabaseIfNeeded();
     }
 
 
@@ -159,6 +161,8 @@ public class MainNavigationActivity extends AppCompatActivity
             _myFragmentManager.activateAboutFragment();
         } else if (id == R.id.nav_latest_playlist) {
             _myFragmentManager.activateLatestPlaylistFragment();
+        }  else if (id == R.id.nav_global_options) {
+            _myFragmentManager.activateGlobalOptionsFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -193,6 +197,14 @@ public class MainNavigationActivity extends AppCompatActivity
     }
 
     private void setMediaReceiver() {
+
+    }
+
+    private void initDatabaseIfNeeded() {
+        Integer count = PodcastDatabaseHelper.getInstance().getOptionsTableGlobalCount();
+        if (count == 0) { //options needs to be initialized
+            //add first global options
+        }
 
     }
 

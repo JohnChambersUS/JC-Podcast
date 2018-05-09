@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import us.johnchambers.podcast.misc.C;
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.playlists.LatestPlaylist;
 import us.johnchambers.podcast.playlists.NowPlaying;
 
@@ -301,6 +303,26 @@ public class PodcastDatabaseHelper {
 
         deleteEpisodeRows(pid);
         deletePodcastRow(pid);
+    }
+
+    //*****************************************
+    //* options table methods
+    //*****************************************
+
+    public Integer getOptionsTableGlobalCount() {
+        return _database.dao().getOptionsTableRowsCountByPodcastId(C.options.INSTANCE.getGLOBAL());
+    }
+
+    public List<OptionsTable> getOptionsByPodcastId(String pid) {
+        return _database.dao().getOptionsTableRowsByPodcastId(pid);
+    }
+
+    public void upsertOption(OptionsTable row) {
+        _database.dao().upsertOptionsRow(row);
+    }
+
+    public String getOptionValue(String pid, String option) {
+        return _database.dao().getOptionsTableSetting(pid, option);
     }
 
 }
