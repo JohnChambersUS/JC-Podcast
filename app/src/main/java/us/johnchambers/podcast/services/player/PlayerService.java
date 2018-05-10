@@ -34,6 +34,7 @@ import com.android.volley.toolbox.ImageRequest;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -64,6 +65,7 @@ import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.VolleyQueue;
+import us.johnchambers.podcast.objects.GlobalOptions;
 
 import static android.media.AudioManager.STREAM_MUSIC;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
@@ -298,6 +300,12 @@ public class PlayerService extends Service {
                     false);
             _player.seekTo(episode.getPlayPointAsLong());
         }
+
+        //****** set playback speed ********
+        GlobalOptions globalOptions = new GlobalOptions();
+        Float playbackSpeed = globalOptions.getCurrentSpeedAsFloat();
+        PlaybackParameters pbParams = new PlaybackParameters(playbackSpeed, 1.0f);
+        _player.setPlaybackParameters(pbParams);
 
         setNoticationToPlaying();
         _player.setPlayWhenReady(true);
