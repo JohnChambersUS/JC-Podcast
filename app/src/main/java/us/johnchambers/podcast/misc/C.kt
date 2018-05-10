@@ -26,6 +26,7 @@ object C {
         var GLOBAL = "GLOBAL"
         var SPEEDS = arrayOf("0.50", "0.75", "0.90", "normal", "1.10",  "1.25", "1.40", "1.50", "1.75", "2.0")
         var KEY_SPEED = "speed"
+        var NORMAL_SPEED = "normal"
 
     }
 }
