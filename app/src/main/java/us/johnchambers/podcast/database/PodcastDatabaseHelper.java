@@ -276,14 +276,15 @@ public class PodcastDatabaseHelper {
             }
         }
         EpisodeTable et = getEpisodeTableRowByEpisodeId(getNowPlayingEpisodeId());
-        if (et.pid.equals(pid)) {
-            List<LatestPlaylistTable> lt = getCurrentLatestPlaylist();
-            if (lt.size() > 0) {
-                updateNowPlayingEpisode(lt.get(0).getEid());
-            }
-            else {
-                updateNowPlayingEpisode(NowPlaying.NO_EPISODE_FLAG);
-                updateNowPlayingPlaylist(NowPlaying.NO_PLAYLIST_FLAG);
+        if (et != null) {
+            if (et.pid.equals(pid)) {
+                List<LatestPlaylistTable> lt = getCurrentLatestPlaylist();
+                if (lt.size() > 0) {
+                    updateNowPlayingEpisode(lt.get(0).getEid());
+                } else {
+                    updateNowPlayingEpisode(NowPlaying.NO_EPISODE_FLAG);
+                    updateNowPlayingPlaylist(NowPlaying.NO_PLAYLIST_FLAG);
+                }
             }
         }
 
@@ -301,8 +302,12 @@ public class PodcastDatabaseHelper {
             updateNowPlayingPlaylist(NowPlaying.NO_PLAYLIST_FLAG);
         }
 
+        //********** remove options if needed
+        _database.dao().removePodcastFromOptionsTable(pid);
+
         deleteEpisodeRows(pid);
         deletePodcastRow(pid);
+
     }
 
     //*****************************************
