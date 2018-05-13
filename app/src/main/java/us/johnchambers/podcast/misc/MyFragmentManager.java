@@ -63,26 +63,25 @@ public class MyFragmentManager {
     public void popBackstackEntry() {
         if (_backstack.size() > 0) {
             MyBackstackEntry topEntry = (MyBackstackEntry) _backstack.peek();
-            if (topEntry.getFragmentBackstackType() == FragmentBackstackType.BRANCH) {
-                _backstack.pop();
-                _fragmentManager.beginTransaction().
-                        remove(_fragmentManager.findFragmentByTag(topEntry.getFragmentTag()))
-                        .commit();
-            }
+            _backstack.pop();
+            _fragmentManager.beginTransaction().
+                    remove(_fragmentManager.findFragmentByTag(topEntry.getFragmentTag()))
+                    .commit();
         }
     }
 
-    private void closeAbout() {
+    private void closeInfoFragments() {
         if (_backstack.size() > 0) {
             MyBackstackEntry topEntry = (MyBackstackEntry) _backstack.peek();
-            if (topEntry.getFragmentTag() == ABOUT_FRAGMENT) {
+            if ((topEntry.getFragmentTag() == ABOUT_FRAGMENT) ||
+                    (topEntry.getFragmentTag() == GLOBAL_OPTIONS_FRAGMENT)) {
                 popBackstackEntry();
             }
         }
     }
 
     private void activateFragment(int containerViewId, MyFragment frag, String fragmentName) {
-        closeAbout();
+        closeInfoFragments();
         _fragmentManager
                 .beginTransaction()
                 .add(containerViewId, frag, fragmentName)
@@ -142,7 +141,7 @@ public class MyFragmentManager {
     }
 
     public void activateLatestPlaylistFragment() {
-        if (!alreadyOnTop(ABOUT_FRAGMENT)) {
+        if (!alreadyOnTop(LATEST_PLAYLIST_FRAGMENT)) {
             LatestPlaylistFragment fragment = LatestPlaylistFragment.newInstance();
             activateFragment(R.id.latest_playlist_placeholder,
                     fragment,
@@ -151,16 +150,16 @@ public class MyFragmentManager {
     }
 
     public void activateGlobalOptionsFragment() {
-        if (!alreadyOnTop(ABOUT_FRAGMENT)) {
+        if (!alreadyOnTop(GLOBAL_OPTIONS_FRAGMENT)) {
             GlobalOptionsFragment fragment = GlobalOptionsFragment.newInstance();
             activateFragment(R.id.global_options_placeholder,
                     fragment,
-                    LATEST_PLAYLIST_FRAGMENT);
+                    GLOBAL_OPTIONS_FRAGMENT);
         }
     }
 
     public void activatePoldcastOptionsFragment(String podcastId) {
-        if (!alreadyOnTop(ABOUT_FRAGMENT)) {
+        if (!alreadyOnTop(PODCAST_OPTIONS_FRAGMENT)) {
             PodcastOptionsFragment fragment = PodcastOptionsFragment.newInstance(podcastId);
             activateFragment(R.id.podcast_options_placeholder,
                     fragment,
