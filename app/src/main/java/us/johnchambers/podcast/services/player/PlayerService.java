@@ -66,6 +66,7 @@ import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.objects.GlobalOptions;
+import us.johnchambers.podcast.objects.PodcastOptions;
 
 import static android.media.AudioManager.STREAM_MUSIC;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
@@ -302,8 +303,8 @@ public class PlayerService extends Service {
         }
 
         //****** set playback speed ********
-        GlobalOptions globalOptions = new GlobalOptions();
-        Float playbackSpeed = globalOptions.getCurrentSpeedAsFloat();
+        PodcastOptions options = new PodcastOptions(episode.getPid());
+        Float playbackSpeed = options.getCurrentSpeedAsFloat();
         PlaybackParameters pbParams = new PlaybackParameters(playbackSpeed, 1.0f);
         _player.setPlaybackParameters(pbParams);
 

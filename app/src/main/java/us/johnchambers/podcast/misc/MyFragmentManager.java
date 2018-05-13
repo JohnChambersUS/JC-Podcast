@@ -16,6 +16,7 @@ import us.johnchambers.podcast.objects.Docket;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.options.GlobalOptionsFragment;
+import us.johnchambers.podcast.screens.fragments.options.PodcastOptionsFragment;
 import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
 import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
@@ -38,6 +39,7 @@ public class MyFragmentManager {
     private final String ABOUT_FRAGMENT = "ABOUT_FRAGMENT";
     private final String LATEST_PLAYLIST_FRAGMENT = "LATEST_PLAYLIST_FRAGMENT";
     private final String GLOBAL_OPTIONS_FRAGMENT = "GLOBAL_OPTIONS_FRAGMENT";
+    private final String PODCAST_OPTIONS_FRAGMENT = "PODCAST_OPTIONS_FRAGMENT";
 
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
@@ -154,6 +156,15 @@ public class MyFragmentManager {
             activateFragment(R.id.global_options_placeholder,
                     fragment,
                     LATEST_PLAYLIST_FRAGMENT);
+        }
+    }
+
+    public void activatePoldcastOptionsFragment(String podcastId) {
+        if (!alreadyOnTop(ABOUT_FRAGMENT)) {
+            PodcastOptionsFragment fragment = PodcastOptionsFragment.newInstance(podcastId);
+            activateFragment(R.id.podcast_options_placeholder,
+                    fragment,
+                    PODCAST_OPTIONS_FRAGMENT);
         }
     }
 
