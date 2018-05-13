@@ -27,6 +27,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.Calendar;
 
 import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
+import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent;
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
@@ -49,7 +50,6 @@ import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
 
 public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        SearchFragment.OnFragmentInteractionListener,
         SubscribeFragment.OnFragmentInteractionListener,
         SubscribedFragment.OnFragmentInteractionListener,
         SubscribedDetailFragment.OnFragmentInteractionListener,
@@ -57,8 +57,6 @@ public class MainNavigationActivity extends AppCompatActivity
         AboutFragment.OnFragmentInteractionListener {
 
     MyFragmentManager _myFragmentManager = null;
-    AudioManager mAudioManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,10 +215,6 @@ public class MainNavigationActivity extends AppCompatActivity
     //* Interface implementations
     //***********************************************
 
-    public void onSearchRowItemClicked(SearchRow sr) {
-        activateSubscribeFragment(sr);
-    }
-
     public void onCloseSubscribeFragment() {
         _myFragmentManager.popBackstackEntry();
     }
@@ -259,6 +253,11 @@ public class MainNavigationActivity extends AppCompatActivity
     @Subscribe
     public void onEvent(OpenPodcastOptionsFragment event) {
         _myFragmentManager.activatePoldcastOptionsFragment(event.getPodcastId());
+    }
+
+    @Subscribe
+    public void onEvent(OpenSubscribeFragment event) {
+        activateSubscribeFragment(event.getPodcastInfo());
     }
 
 

@@ -252,8 +252,10 @@ public class SubscribeFragment extends MyFragment {
             ser.setDownloadLink(_feedResponseWrapper.getEpisodeDownloadLink());
             _adapter.add(ser);
         }
-        setDefaultImage();
-        getPodcastImage();
+        setDefaultImage(); //in case no image ever gets pulled
+        addImageToSubscribeScreen(_searchRow.getImage()); //use from podcast index image
+        getPodcastImage(); //pull image from feedurl if available
+
     }
 
     public void setDefaultImage() {
@@ -332,6 +334,7 @@ public class SubscribeFragment extends MyFragment {
 
             VolleyQueue.getInstance().getRequestQueue().add(ir);
         }
+
     }
 
     //**********************************
