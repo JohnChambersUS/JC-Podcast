@@ -25,6 +25,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 
+import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent;
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
@@ -251,6 +252,10 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager.activateSubscribedDetailFragment(event.getPodcast());
     }
 
+    @Subscribe
+    public void onEvent(OpenPodcastOptionsFragment event) {
+        _myFragmentManager.activatePoldcastOptionsFragment(event.getPodcastId());
+    }
 
 
 
