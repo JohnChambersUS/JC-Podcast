@@ -154,10 +154,11 @@ public interface PodcastDao {
     @Query("Select count(*) from optionstable where pid = :podcastId")
     Integer getOptionsTableRowsCountByPodcastId(String podcastId);
 
-
     @Query("Select setting from optionstable where pid = :podcastId and option = :option")
     String getOptionsTableSetting(String podcastId, String option);
 
+    @Query("DELETE FROM OptionsTable WHERE pid = :podcastId")
+    void removePodcastFromOptionsTable(String podcastId);
 
 
 }
