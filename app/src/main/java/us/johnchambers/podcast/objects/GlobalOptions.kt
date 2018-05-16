@@ -24,11 +24,19 @@ class GlobalOptions {
     }
 
     fun getCurrentSpeedAsString() : String {
-        return PodcastDatabaseHelper.getInstance().getOptionValue(C.options.GLOBAL, C.options.KEY_SPEED)
+        try {
+            return PodcastDatabaseHelper.getInstance().getOptionValue(C.options.GLOBAL, C.options.KEY_SPEED)
+        }
+        catch (e: Exception) { //return normal if speed if can't find
+            return "1.0"
+        }
     }
 
     fun getCurrentSpeedAsFloat() : Float {
         var speedString = PodcastDatabaseHelper.getInstance().getOptionValue(C.options.GLOBAL, C.options.KEY_SPEED)
+        if (speedString == null) {
+            speedString = C.options.NORMAL_SPEED
+        }
         var returnSpeed = 1.0f
         if (!speedString.equals(C.options.NORMAL_SPEED)) {
             returnSpeed = speedString.toFloat()
