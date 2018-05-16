@@ -50,7 +50,7 @@ public class FeedResponseWrapper {
     private static SyndFeed _feed;
     private String _response;
     private Integer _currEpisode = -1;
-    private String _podcastId;
+    private String _podcastId = null;
     private Bitmap _podcastImage = null;
     private String _feedUrl;
     private boolean _error = false;

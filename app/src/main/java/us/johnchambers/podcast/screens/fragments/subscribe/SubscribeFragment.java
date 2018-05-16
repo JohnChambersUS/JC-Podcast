@@ -186,11 +186,16 @@ public class SubscribeFragment extends MyFragment {
     }
     
     public void subscribePodcast(String mode) {
-
         //check to see if already subscribed
-        boolean subscribed = PodcastDatabaseHelper
-                .getInstance()
-                .alreadySubscribedToPodcast(_feedResponseWrapper.getPodcastId());
+        boolean subscribed = false;
+        try {
+            subscribed = PodcastDatabaseHelper
+                    .getInstance()
+                    .alreadySubscribedToPodcast(_feedResponseWrapper.getPodcastId());
+        }
+        catch (Exception e) {
+            subscribed = true;
+        }
         if (!subscribed) {
             addNewPodcastToDB(mode);
             addAllEpisodesToDatabase();
