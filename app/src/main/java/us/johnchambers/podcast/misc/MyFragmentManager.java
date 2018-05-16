@@ -5,18 +5,18 @@ package us.johnchambers.podcast.misc;
  */
 
 import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import java.util.Stack;
 
 import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.database.LatestPlaylistTable;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.objects.Docket;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
+import us.johnchambers.podcast.screens.fragments.options.GlobalOptionsFragment;
+import us.johnchambers.podcast.screens.fragments.options.PodcastOptionsFragment;
 import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
 import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
@@ -38,6 +38,8 @@ public class MyFragmentManager {
     private final String PLAYER_FRAGMENT = "PLAYER_FRAGMENT";
     private final String ABOUT_FRAGMENT = "ABOUT_FRAGMENT";
     private final String LATEST_PLAYLIST_FRAGMENT = "LATEST_PLAYLIST_FRAGMENT";
+    private final String GLOBAL_OPTIONS_FRAGMENT = "GLOBAL_OPTIONS_FRAGMENT";
+    private final String PODCAST_OPTIONS_FRAGMENT = "PODCAST_OPTIONS_FRAGMENT";
 
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
@@ -61,26 +63,25 @@ public class MyFragmentManager {
     public void popBackstackEntry() {
         if (_backstack.size() > 0) {
             MyBackstackEntry topEntry = (MyBackstackEntry) _backstack.peek();
-            if (topEntry.getFragmentBackstackType() == FragmentBackstackType.BRANCH) {
-                _backstack.pop();
-                _fragmentManager.beginTransaction().
-                        remove(_fragmentManager.findFragmentByTag(topEntry.getFragmentTag()))
-                        .commit();
-            }
+            _backstack.pop();
+            _fragmentManager.beginTransaction().
+                    remove(_fragmentManager.findFragmentByTag(topEntry.getFragmentTag()))
+                    .commit();
         }
     }
 
-    private void closeAbout() {
+    private void closeInfoFragments() {
         if (_backstack.size() > 0) {
             MyBackstackEntry topEntry = (MyBackstackEntry) _backstack.peek();
-            if (topEntry.getFragmentTag() == ABOUT_FRAGMENT) {
+            if ((topEntry.getFragmentTag() == ABOUT_FRAGMENT) ||
+                    (topEntry.getFragmentTag() == GLOBAL_OPTIONS_FRAGMENT)) {
                 popBackstackEntry();
             }
         }
     }
 
     private void activateFragment(int containerViewId, MyFragment frag, String fragmentName) {
-        closeAbout();
+        closeInfoFragments();
         _fragmentManager
                 .beginTransaction()
                 .add(containerViewId, frag, fragmentName)
@@ -140,11 +141,29 @@ public class MyFragmentManager {
     }
 
     public void activateLatestPlaylistFragment() {
-        if (!alreadyOnTop(ABOUT_FRAGMENT)) {
+        if (!alreadyOnTop(LATEST_PLAYLIST_FRAGMENT)) {
             LatestPlaylistFragment fragment = LatestPlaylistFragment.newInstance();
             activateFragment(R.id.latest_playlist_placeholder,
                     fragment,
                     LATEST_PLAYLIST_FRAGMENT);
+        }
+    }
+
+    public void activateGlobalOptionsFragment() {
+        if (!alreadyOnTop(GLOBAL_OPTIONS_FRAGMENT)) {
+            GlobalOptionsFragment fragment = GlobalOptionsFragment.newInstance();
+            activateFragment(R.id.global_options_placeholder,
+                    fragment,
+                    GLOBAL_OPTIONS_FRAGMENT);
+        }
+    }
+
+    public void activatePoldcastOptionsFragment(String podcastId) {
+        if (!alreadyOnTop(PODCAST_OPTIONS_FRAGMENT)) {
+            PodcastOptionsFragment fragment = PodcastOptionsFragment.newInstance(podcastId);
+            activateFragment(R.id.podcast_options_placeholder,
+                    fragment,
+                    PODCAST_OPTIONS_FRAGMENT);
         }
     }
 

@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import us.johnchambers.podcast.misc.C;
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.playlists.LatestPlaylist;
 import us.johnchambers.podcast.playlists.NowPlaying;
 
@@ -274,14 +276,15 @@ public class PodcastDatabaseHelper {
             }
         }
         EpisodeTable et = getEpisodeTableRowByEpisodeId(getNowPlayingEpisodeId());
-        if (et.pid.equals(pid)) {
-            List<LatestPlaylistTable> lt = getCurrentLatestPlaylist();
-            if (lt.size() > 0) {
-                updateNowPlayingEpisode(lt.get(0).getEid());
-            }
-            else {
-                updateNowPlayingEpisode(NowPlaying.NO_EPISODE_FLAG);
-                updateNowPlayingPlaylist(NowPlaying.NO_PLAYLIST_FLAG);
+        if (et != null) {
+            if (et.pid.equals(pid)) {
+                List<LatestPlaylistTable> lt = getCurrentLatestPlaylist();
+                if (lt.size() > 0) {
+                    updateNowPlayingEpisode(lt.get(0).getEid());
+                } else {
+                    updateNowPlayingEpisode(NowPlaying.NO_EPISODE_FLAG);
+                    updateNowPlayingPlaylist(NowPlaying.NO_PLAYLIST_FLAG);
+                }
             }
         }
 
@@ -299,8 +302,32 @@ public class PodcastDatabaseHelper {
             updateNowPlayingPlaylist(NowPlaying.NO_PLAYLIST_FLAG);
         }
 
+        //********** remove options if needed
+        _database.dao().removePodcastFromOptionsTable(pid);
+
         deleteEpisodeRows(pid);
         deletePodcastRow(pid);
+
+    }
+
+    //*****************************************
+    //* options table methods
+    //*****************************************
+
+    public Integer getOptionsTableGlobalCount() {
+        return _database.dao().getOptionsTableRowsCountByPodcastId(C.options.INSTANCE.getGLOBAL());
+    }
+
+    public List<OptionsTable> getOptionsByPodcastId(String pid) {
+        return _database.dao().getOptionsTableRowsByPodcastId(pid);
+    }
+
+    public void upsertOption(OptionsTable row) {
+        _database.dao().upsertOptionsRow(row);
+    }
+
+    public String getOptionValue(String pid, String option) {
+        return _database.dao().getOptionsTableSetting(pid, option);
     }
 
 }

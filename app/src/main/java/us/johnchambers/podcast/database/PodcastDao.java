@@ -3,6 +3,7 @@ package us.johnchambers.podcast.database;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
@@ -131,19 +132,33 @@ public interface PodcastDao {
     @Query("DELETE FROM LatestPlaylistTable WHERE eid = :epidoseId")
     void emptyEpisodesFromLatestPlaylistTable(String epidoseId);
 
-    //get latest episodes from database
-    /*
-    String fillLatestPlaylistQuery =
-            "insert into latestplaylisttable (eid)" +
-                " select eid from" +
-                    " (select e.pid, max(e.identity), e.eid, p.mode from episodetable e" +
-                    " inner join podcasttable p on p.pid = e.pid" +
-                    " where p.mode = 'podcast'" +
-                    " group by e.pid order by e.identity desc)";
-    @Query(fillLatestPlaylistQuery)
-    */
-    //@Query("select e.pid, max(e.identity), e.eid from episodetable e")
     @Query("select episodetable.eid from episodetable inner join podcasttable on podcasttable.pid = episodetable.pid where podcasttable.mode = 'podcast' group by episodetable.pid order by episodetable.identity desc")
     List<String> fillLatestPlaylistTable();
+
+    //*****************************************
+    //* options table
+    //*****************************************
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void upsertOptionsRow(OptionsTable row);
+
+    @Delete
+    void deleteOptionsRow(OptionsTable row);
+
+    @Query("Delete from optionstable where pid = :podcastId")
+    void deletePodcastFromOptionsTable(String podcastId);
+
+    @Query("Select * from optionstable where pid = :podcastId")
+    List<OptionsTable> getOptionsTableRowsByPodcastId(String podcastId);
+
+    @Query("Select count(*) from optionstable where pid = :podcastId")
+    Integer getOptionsTableRowsCountByPodcastId(String podcastId);
+
+    @Query("Select setting from optionstable where pid = :podcastId and option = :option")
+    String getOptionsTableSetting(String podcastId, String option);
+
+    @Query("DELETE FROM OptionsTable WHERE pid = :podcastId")
+    void removePodcastFromOptionsTable(String podcastId);
+
 
 }

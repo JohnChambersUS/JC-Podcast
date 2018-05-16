@@ -14,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +26,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 
+import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
+import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent;
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
@@ -47,7 +50,6 @@ import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
 
 public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        SearchFragment.OnFragmentInteractionListener,
         SubscribeFragment.OnFragmentInteractionListener,
         SubscribedFragment.OnFragmentInteractionListener,
         SubscribedDetailFragment.OnFragmentInteractionListener,
@@ -55,8 +57,6 @@ public class MainNavigationActivity extends AppCompatActivity
         AboutFragment.OnFragmentInteractionListener {
 
     MyFragmentManager _myFragmentManager = null;
-    AudioManager mAudioManager;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +83,11 @@ public class MainNavigationActivity extends AppCompatActivity
         setUpdateAlarm();
 
         EventBus.getDefault().register(this);
+
+        initDatabaseIfNeeded();
+
+        //leave as last item
+        drawer.openDrawer(Gravity.LEFT);
     }
 
 
@@ -159,6 +164,8 @@ public class MainNavigationActivity extends AppCompatActivity
             _myFragmentManager.activateAboutFragment();
         } else if (id == R.id.nav_latest_playlist) {
             _myFragmentManager.activateLatestPlaylistFragment();
+        }  else if (id == R.id.nav_global_options) {
+            _myFragmentManager.activateGlobalOptionsFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -196,13 +203,17 @@ public class MainNavigationActivity extends AppCompatActivity
 
     }
 
+    private void initDatabaseIfNeeded() {
+        Integer count = PodcastDatabaseHelper.getInstance().getOptionsTableGlobalCount();
+        if (count == 0) { //options needs to be initialized
+            //add first global options
+        }
+
+    }
+
     //************************************************
     //* Interface implementations
     //***********************************************
-
-    public void onSearchRowItemClicked(SearchRow sr) {
-        activateSubscribeFragment(sr);
-    }
 
     public void onCloseSubscribeFragment() {
         _myFragmentManager.popBackstackEntry();
@@ -239,6 +250,15 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager.activateSubscribedDetailFragment(event.getPodcast());
     }
 
+    @Subscribe
+    public void onEvent(OpenPodcastOptionsFragment event) {
+        _myFragmentManager.activatePoldcastOptionsFragment(event.getPodcastId());
+    }
+
+    @Subscribe
+    public void onEvent(OpenSubscribeFragment event) {
+        activateSubscribeFragment(event.getPodcastInfo());
+    }
 
 
 

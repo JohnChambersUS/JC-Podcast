@@ -10,6 +10,13 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
+    <item
+        android:id="@+id/bm_settings"
+        android:icon="@drawable/ic_settings_light"
+        android:title="OPTIONS"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        />
 
     <item
         android:id="@+id/bm_play"

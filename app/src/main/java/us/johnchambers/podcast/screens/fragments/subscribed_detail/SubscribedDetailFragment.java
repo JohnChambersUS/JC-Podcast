@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
 import us.johnchambers.podcast.Events.latest.SubscribedDetailClosedEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent;
@@ -251,9 +252,10 @@ public class SubscribedDetailFragment extends MyFragment {
         if (item.getItemId() == R.id.bm_unsubscribe) {
             unsubscribeDialog();
         }
+        if (item.getItemId() == R.id.bm_settings) {
+            EventBus.getDefault().post(new OpenPodcastOptionsFragment(_podcastTable.getPid()));
+        }
         if (item.getItemId() == R.id.bm_play) {
-
-            //picked up by main activity to flow
             EventBus.getDefault()
                     .post(new ResumePlaylistEvent(new DocketPodcast(_podcastTable.getPid())));
         }

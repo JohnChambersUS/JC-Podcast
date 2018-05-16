@@ -23,6 +23,11 @@
             android:id="@+id/nav_update_podcasts"
             android:icon="@drawable/ic_update_combo"
             android:title="Update Subscriptions" />
+        <item
+            android:id="@+id/nav_global_options"
+            android:icon="@drawable/ic_settings_regular"
+            android:title="Options" />
+
     </group>
 
     <item

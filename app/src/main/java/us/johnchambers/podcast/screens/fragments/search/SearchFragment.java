@@ -26,9 +26,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.net.URL;
 import java.net.URLEncoder;
 
+import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
@@ -40,8 +43,6 @@ public class SearchFragment extends MyFragment {
     private static View _view;
 
     private SearchDisplayAdapter _adapter;
-
-    private OnFragmentInteractionListener mListener;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -86,19 +87,12 @@ public class SearchFragment extends MyFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
         _context = context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     //*******************************************
@@ -197,7 +191,7 @@ public class SearchFragment extends MyFragment {
                                     long arg3)
             {
                 SearchRow sr = _adapter.getItem(position);
-                 mListener.onSearchRowItemClicked(sr);
+                EventBus.getDefault().post(new OpenSubscribeFragment(sr));
             }
         });
     }
@@ -252,13 +246,6 @@ public class SearchFragment extends MyFragment {
         );
 
         VolleyQueue.getInstance().getRequestQueue().add(ir);
-    }
-
-    //***********************************************
-    //* Interfaces
-    //***********************************************
-    public interface OnFragmentInteractionListener {
-        void onSearchRowItemClicked(SearchRow sr);
     }
 
 }
