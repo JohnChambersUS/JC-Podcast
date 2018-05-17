@@ -5,7 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.Context
-import android.support.v7.app.NotificationCompat
+//import android.support.v7.app.NotificationCompat
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -113,6 +113,7 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
 
     fun displayNotification() {
 
+        /*
         var notification = NotificationCompat.Builder(applicationContext)
                 .setContentTitle("Service is running")
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -126,12 +127,16 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
 
         var notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(_notificationId, notification.build())
+    */
     }
 
     fun clearNotification() {
         var notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(_notificationId)
         notificationManager.cancelAll()
+
+
     }
+
 
 }

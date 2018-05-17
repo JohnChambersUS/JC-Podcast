@@ -29,6 +29,7 @@ import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.objects.*
 import android.support.v7.widget.DefaultItemAnimator
+import android.widget.TextView
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent
 import us.johnchambers.podcast.Events.latest.SubscribedDetailClosedEvent
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent
@@ -69,8 +70,8 @@ class LatestPlaylistFragment : MyFragment() {
         var view = inflater.inflate(R.layout.fragment_latest_playlist, container, false)
 
         if (_playlist.getEpisodes().size == 0) {
-            var noEpisodesMessage = view.findViewById(R.id.no_episodes_message)
-            var recyclerView = view.findViewById(R.id.latest_recycler_view)
+            var noEpisodesMessage = view.findViewById(R.id.no_episodes_message) as TextView
+            var recyclerView = view.findViewById(R.id.latest_recycler_view) as RecyclerView
             noEpisodesMessage.visibility = View.VISIBLE
             recyclerView.visibility = View.GONE
         }
@@ -150,7 +151,7 @@ class LatestPlaylistFragment : MyFragment() {
         // add popup menu
         val colors = arrayOf<CharSequence>("Play this episode", "Reset to beginning", "Mark as played", "Go to podcast")
 
-        val builder = AlertDialog.Builder(context)
+        val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Pick an option:")
         builder.setItems(colors) { dialog, which ->
             when (which) {
