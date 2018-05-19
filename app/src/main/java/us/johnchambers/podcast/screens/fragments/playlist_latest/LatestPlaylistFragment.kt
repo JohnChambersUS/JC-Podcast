@@ -135,11 +135,13 @@ class LatestPlaylistFragment : MyFragment() {
     //* event listener
     //**************************
     @Subscribe
+    @Suppress("UNUSED_PARAMETER")
     fun onEvent(event: SubscribedDetailClosedEvent) {
         refreshEpisodeView()
     }
 
     @Subscribe
+    @Suppress("UNUSED_PARAMETER")
     fun onEvent(event: PlayerClosedEvent) {
         refreshEpisodeView()
     }
@@ -153,19 +155,19 @@ class LatestPlaylistFragment : MyFragment() {
 
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Pick an option:")
-        builder.setItems(colors) { dialog, which ->
+        builder.setItems(colors) { _, which ->
             when (which) {
                 0 -> {
                     _playlist.setCurrentEpisodeIndex(row)
                     var docket = DocketEmbededPlaylist(_playlist)
-                    var event = ResumePlaylistEvent(docket)
-                    EventBus.getDefault().post(event)
+                    var theEvent = ResumePlaylistEvent(docket)
+                    EventBus.getDefault().post(theEvent)
                 }
                 1 -> {
                     var eid = _playlist.getEpisodes().get(row).eid
                     PodcastDatabaseHelper.getInstance().updateEpisodeDuration(eid, 1)
                     PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(eid, 0)
-                    var updatedEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(eid)
+                    //todo delete var updatedEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(eid)
                     _playlist.getEpisodes() //will refresh episode list
                     _recyclerView.adapter.notifyItemChanged(row)
                 }
@@ -184,7 +186,7 @@ class LatestPlaylistFragment : MyFragment() {
             }
         }
 
-        builder.setNegativeButton("Cancel") { dialog, id -> dialog.cancel() }
+        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
 
         builder.show()
     }

@@ -69,7 +69,7 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
                 Response.Listener { response -> updateTheDB(response, podcast) },
 
                 Response.ErrorListener { e ->
-                    //todo
+                    L.i(this as Object, e.message  + podcast.name);
                 })
         val vq = VolleyQueue.getInstance(applicationContext)
         val rq = vq.requestQueue
@@ -126,6 +126,7 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
         }
 
         val notif: Notification.Builder
+        @Suppress("DEPRECATION")
         notif = Notification.Builder(applicationContext)
         notif.setSmallIcon(R.mipmap.ic_launcher)
         notif.setContentTitle("Updating Podcasts")
