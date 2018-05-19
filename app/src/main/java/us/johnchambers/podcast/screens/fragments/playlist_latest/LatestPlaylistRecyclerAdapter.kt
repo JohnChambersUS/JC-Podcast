@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.EpisodeTable
 import 	android.support.percent.PercentRelativeLayout
+import android.support.v4.content.ContextCompat
 import android.util.DisplayMetrics
 import android.view.View
 import android.widget.Button
@@ -35,7 +36,7 @@ class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>)
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.layout.context
-        var text = episodeList[position].title
+        //todo delete var text = episodeList[position].title
         holder.layout.row_latest_episode_name.text =  (episodeList[position].title).trim()
         var bitmap = MyFileManager.getInstance().getPodcastImage(episodeList[position].pid)
         holder.layout.row_latest_image.setImageBitmap(bitmap)
@@ -59,11 +60,14 @@ class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>)
         var context = holder.layout.context
         val left = GradientDrawable()
         left.shape = GradientDrawable.RECTANGLE
-        left.setColor(context.getResources().getColor(R.color.semiLightBackground))
+        //left.setColor(context.getResources().getColor(R.color.semiLightBackground))
+        left.setColor(ContextCompat.getColor(context, R.color.semiLightBackground))
 
         val right = GradientDrawable()
         right.shape = GradientDrawable.RECTANGLE
-        right.setColor(context.getResources().getColor(R.color.lightBackground))
+        //right.setColor(context.getResources().getColor(R.color.lightBackground))
+        right.setColor(ContextCompat.getColor(context, R.color.lightBackground))
+
 
         val ar = arrayOf(left, right)
         val layer = LayerDrawable(ar)
