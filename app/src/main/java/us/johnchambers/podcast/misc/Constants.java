@@ -15,7 +15,7 @@ public final class Constants {
 
     public static Boolean DEBUG = false;
 
-    public static int UPDATE_HOUR = 04;
+    public static int UPDATE_HOUR = 5;
     public static int UPDATE_MINUTE = 11;
     public static long UPDATE_INTERVAL = 24*60*60*1000; //milliseconds
 
