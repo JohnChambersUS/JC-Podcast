@@ -114,6 +114,15 @@ public class MyFragmentManager {
         }
     }
 
+    public void refreshSubscribedFragment() {
+        if (alreadyOnTop(SUBSCRIBED_FRAGMENT)) {
+            popBackstackEntry();
+            activateFragment(R.id.subscribed_placeholder,
+                    SubscribedFragment.newInstance(),
+                    SUBSCRIBED_FRAGMENT);
+        }
+    }
+
     public void activateSubscribedDetailFragment(PodcastTable pt) {
         if (!alreadyOnTop(SUBSCRIBED_DETAIL_FRAGMENT)) {
             activateFragment(R.id.subscribed_detail_placeholder,
