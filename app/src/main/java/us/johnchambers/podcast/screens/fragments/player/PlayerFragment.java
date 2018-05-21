@@ -30,8 +30,6 @@ public class PlayerFragment extends MyFragment {
     private static Context _context = null;
     private View _view;
 
-    private OnFragmentInteractionListener mListener;
-
     private SimpleExoPlayerView _playerView;
 
     private static Docket _currDocket;
@@ -63,22 +61,9 @@ public class PlayerFragment extends MyFragment {
         return _view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onPlayerFragmentDoesSomething();
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
         _context = context;
     }
 
@@ -86,7 +71,6 @@ public class PlayerFragment extends MyFragment {
     public void onDetach() {
         PlayerServiceController.getInstance().pausePlayer();
         super.onDetach();
-        mListener = null;
         PlayerServiceController.getInstance().stopPlayer();
         EventBus.getDefault().post(new PlayerClosedEvent());
     }
@@ -108,14 +92,8 @@ public class PlayerFragment extends MyFragment {
         pc.attachPlayerToView(_playerView);
     }
 
-    public interface OnFragmentInteractionListener {
-        void onPlayerFragmentDoesSomething();
-    }
-
     private void playEpisode() {
         PlayerServiceController.getInstance().playPlaylist(_currDocket);
     }
-
-
 
 }

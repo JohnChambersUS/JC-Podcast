@@ -1,7 +1,5 @@
 package us.johnchambers.podcast.activity;
 
-//import android.app.FragmentManager;
-//import android.app.FragmentTransaction;
 import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -26,9 +24,12 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 
+import us.johnchambers.podcast.Events.fragment.CloseSubscribeFragmentEvent;
+import us.johnchambers.podcast.Events.fragment.CloseSubscribedDetailFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent;
+import us.johnchambers.podcast.Events.fragment.SubscribedFragmentRowItemClickedEvent;
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
@@ -49,12 +50,7 @@ import us.johnchambers.podcast.screens.fragments.subscribed_detail.SubscribedDet
 import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
 
 public class MainNavigationActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
-        SubscribeFragment.OnFragmentInteractionListener,
-        SubscribedFragment.OnFragmentInteractionListener,
-        SubscribedDetailFragment.OnFragmentInteractionListener,
-        PlayerFragment.OnFragmentInteractionListener,
-        AboutFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     MyFragmentManager _myFragmentManager = null;
 
@@ -90,7 +86,6 @@ public class MainNavigationActivity extends AppCompatActivity
         drawer.openDrawer(Gravity.LEFT);
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
@@ -114,7 +109,6 @@ public class MainNavigationActivity extends AppCompatActivity
         }
         _myFragmentManager.popBackstackEntry();
     }
-
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
@@ -199,38 +193,12 @@ public class MainNavigationActivity extends AppCompatActivity
                 pendingIntent);
     }
 
-    private void setMediaReceiver() {
-
-    }
-
     private void initDatabaseIfNeeded() {
         Integer count = PodcastDatabaseHelper.getInstance().getOptionsTableGlobalCount();
         if (count == 0) { //options needs to be initialized
             //add first global options
         }
-
     }
-
-    //************************************************
-    //* Interface implementations
-    //***********************************************
-
-    public void onCloseSubscribeFragment() {
-        _myFragmentManager.popBackstackEntry();
-    }
-
-    public void onSubscribedFragmentRowItemClicked(PodcastTable pt) {
-        _myFragmentManager.activateSubscribedDetailFragment(pt);
-    }
-
-    public void onSubscribedDetailFragmentUnsubscribe() {
-        _myFragmentManager.activateSubscribedFragment();
-    }
-
-    public void onPlayerFragmentDoesSomething() {}
-
-    public void onAboutFragmentInteraction() {}
-
 
     //****************************
     //* Events
@@ -260,7 +228,21 @@ public class MainNavigationActivity extends AppCompatActivity
         activateSubscribeFragment(event.getPodcastInfo());
     }
 
+    @Subscribe
+    public void onEvent(CloseSubscribeFragmentEvent event) {
+        _myFragmentManager.popBackstackEntry();
+    }
 
+    @Subscribe
+    public void onEvent(CloseSubscribedDetailFragmentEvent event) {
+        _myFragmentManager.popBackstackEntry();
+        _myFragmentManager.refreshSubscribedFragment();
+    }
+
+    @Subscribe
+    public void onEvent(SubscribedFragmentRowItemClickedEvent event) {
+        _myFragmentManager.activateSubscribedDetailFragment(event.getPodcastTable());
+    }
 
 
 }

@@ -16,6 +16,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import us.johnchambers.podcast.Events.fragment.SubscribedFragmentRowItemClickedEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
@@ -25,8 +26,6 @@ import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 public class SubscribedFragment extends MyFragment {
 
-    private OnFragmentInteractionListener mListener;
-
     SubscribedAdapter _adapter;
     private View _view;
 
@@ -34,7 +33,6 @@ public class SubscribedFragment extends MyFragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static SubscribedFragment newInstance() {
         SubscribedFragment fragment = new SubscribedFragment();
         Bundle args = new Bundle();
@@ -59,18 +57,11 @@ public class SubscribedFragment extends MyFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     @Override
@@ -116,18 +107,11 @@ public class SubscribedFragment extends MyFragment {
                                     long arg3)
             {
                 PodcastTable pt = _adapter.getItem(position);
-                mListener.onSubscribedFragmentRowItemClicked(pt);
+                EventBus.getDefault().post(new SubscribedFragmentRowItemClickedEvent(pt));
             }
         });
     }
 
-    //****************************
-    //* listeners
-    //****************************
 
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onSubscribedFragmentRowItemClicked(PodcastTable pt);
-    }
 
 }

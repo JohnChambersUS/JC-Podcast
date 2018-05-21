@@ -23,6 +23,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import us.johnchambers.podcast.Events.fragment.CloseSubscribedDetailFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
 import us.johnchambers.podcast.Events.latest.SubscribedDetailClosedEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
@@ -41,8 +42,6 @@ import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 public class SubscribedDetailFragment extends MyFragment {
 
-    private OnFragmentInteractionListener mListener;
-
     private static PodcastTable _podcastTable = null;
     private static View _view;
     private static View _header;
@@ -55,7 +54,6 @@ public class SubscribedDetailFragment extends MyFragment {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static SubscribedDetailFragment newInstance(PodcastTable pt) {
         SubscribedDetailFragment fragment = new SubscribedDetailFragment();
         Bundle args = new Bundle();
@@ -78,10 +76,8 @@ public class SubscribedDetailFragment extends MyFragment {
         _header = inflater.inflate(R.layout.fragment_subscribed_detail_header,
                 null, false);
 
-        //todo populate image
         displayPodcastImage();
 
-        //todo populate table
         populateEpisodeListView();
         addSubscribedDetailPlayListener();
 
@@ -96,19 +92,12 @@ public class SubscribedDetailFragment extends MyFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
         _context = context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
         EventBus.getDefault().post(new SubscribedDetailClosedEvent());
     }
 
@@ -293,7 +282,7 @@ public class SubscribedDetailFragment extends MyFragment {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
                 PodcastDatabaseHelper.getInstance().removeEntirePodcast( _podcastTable.getPid());
-                mListener.onSubscribedDetailFragmentUnsubscribe();
+                EventBus.getDefault().post(new CloseSubscribedDetailFragmentEvent());
             }
         });
 

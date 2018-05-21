@@ -14,8 +14,6 @@ import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 public class AboutFragment extends MyFragment {
 
-    private OnFragmentInteractionListener mListener;
-
     public AboutFragment() {
         // Required empty public constructor
     }
@@ -38,28 +36,14 @@ public class AboutFragment extends MyFragment {
         return inflater.inflate(R.layout.fragment_about, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onAboutFragmentInteraction();
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     //************************************
@@ -69,7 +53,4 @@ public class AboutFragment extends MyFragment {
         return FragmentBackstackType.BRANCH;
     }
 
-    public interface OnFragmentInteractionListener {
-        void onAboutFragmentInteraction();
-    }
 }
