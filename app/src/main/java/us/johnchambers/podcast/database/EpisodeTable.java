@@ -20,7 +20,8 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
  * Created by johnchambers on 8/5/17.
  */
 
-@Entity(indices = {@Index(value = {"eid"}, unique = true)},
+@Entity(indices = {@Index(value = {"eid"}, unique = true),
+        @Index(value = {"pid"}, unique = false)},
     foreignKeys = @ForeignKey(entity = PodcastTable.class,
         parentColumns = "pid",
         childColumns = "pid", onDelete = CASCADE))
@@ -28,6 +29,7 @@ import static android.arch.persistence.room.ForeignKey.CASCADE;
 public class EpisodeTable {
 
     @PrimaryKey(autoGenerate = true)
+
     public int identity; //identity column
 
     String pid;

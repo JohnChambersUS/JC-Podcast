@@ -1,6 +1,7 @@
 package us.johnchambers.podcast.services.player;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -14,12 +15,14 @@ import android.media.session.MediaSession;
 import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -75,6 +78,7 @@ import static us.johnchambers.podcast.misc.Constants.*;
 
 public class PlayerService extends Service {
 
+    private String _notificationChannelId = "us.johnchambers.player.notification";
     private int _id = 59247;
     private final IBinder _binder = new MyBinder();
     private SimpleExoPlayer _player = null;
@@ -167,19 +171,22 @@ public class PlayerService extends Service {
         nm.notify(_id, theNo);
     }
 
-
-    private Notification getBlankNotification() {
-        Notification notification = new Notification.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("")
-                .setContentText("")
-                .build();
-
-        return notification;
-    }
-
     private Notification getPlayerNotification(String button1, String button2, String button3,
                                                String title, String contextText) {
+
+
+
+        // create channel
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(_notificationChannelId,
+                    "Different",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription("A Different Podcast App");
+            channel.enableLights(false);
+            channel.enableVibration(false);
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
 
         Notification.Builder notif;
         notif = new Notification.Builder(getApplicationContext());
@@ -187,13 +194,18 @@ public class PlayerService extends Service {
         notif.setContentTitle(title);
         notif.setContentText(contextText);
         notif.setAutoCancel(true);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notif.setChannelId(_notificationChannelId);
+        }
 
         if (!button1.equals("")) {
             Intent yesReceive = new Intent(this,
                     PlayerNotificationBroadcastReceiver.class);
             yesReceive.setAction(button1);
-            PendingIntent pendingIntentYes = PendingIntent.getBroadcast(this, 12345, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
-            notif.addAction(R.drawable.ic_notication_back, button1, pendingIntentYes);
+            PendingIntent pendingIntentYes = PendingIntent.getBroadcast(this,
+                    12345,
+                    yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
+            notif.addAction(0, button1, pendingIntentYes);
         }
 
         if (!button2.equals("")) {
@@ -201,7 +213,7 @@ public class PlayerService extends Service {
                     PlayerNotificationBroadcastReceiver.class);
             yesReceive2.setAction(button2);
             PendingIntent pendingIntentYes2 = PendingIntent.getBroadcast(this, 12345, yesReceive2, PendingIntent.FLAG_UPDATE_CURRENT);
-            action2 = new Notification.Action(R.drawable.ic_notication_pause, button2, pendingIntentYes2);
+            action2 = new Notification.Action(0, button2, pendingIntentYes2);
             notif.addAction(action2);
         }
 
@@ -210,10 +222,11 @@ public class PlayerService extends Service {
                     PlayerNotificationBroadcastReceiver.class);
             yesReceive3.setAction(button3);
             PendingIntent pendingIntentYes3 = PendingIntent.getBroadcast(this, 12345, yesReceive3, PendingIntent.FLAG_UPDATE_CURRENT);
-            notif.addAction(R.mipmap.ic_launcher, button3, pendingIntentYes3);
+            notif.addAction(0, button3, pendingIntentYes3);
         }
 
         return notif.build();
+
     }
 
     // Only run once for setup

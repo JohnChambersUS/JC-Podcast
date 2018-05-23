@@ -36,6 +36,7 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+import us.johnchambers.podcast.Events.fragment.CloseSubscribeFragmentEvent;
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
@@ -57,7 +58,7 @@ public class SubscribeFragment extends MyFragment {
     FeedResponseWrapper _feedResponseWrapper;
     SubscribeEpisodeListAdapter _adapter;
 
-    private OnFragmentInteractionListener mListener;
+    //private OnFragmentInteractionListener mListener;
     private View _view;
     private View _header;
     private Context _context;
@@ -100,19 +101,12 @@ public class SubscribeFragment extends MyFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
         _context = context;
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     //****************************
@@ -186,15 +180,19 @@ public class SubscribeFragment extends MyFragment {
     }
     
     public void subscribePodcast(String mode) {
-
         //check to see if already subscribed
-        boolean subscribed = PodcastDatabaseHelper
-                .getInstance()
-                .alreadySubscribedToPodcast(_feedResponseWrapper.getPodcastId());
+        boolean subscribed = false;
+        try {
+            subscribed = PodcastDatabaseHelper
+                    .getInstance()
+                    .alreadySubscribedToPodcast(_feedResponseWrapper.getPodcastId());
+        }
+        catch (Exception e) {
+            subscribed = true;
+        }
         if (!subscribed) {
             addNewPodcastToDB(mode);
             addAllEpisodesToDatabase();
-            mListener.onCloseSubscribeFragment();
             Toast.makeText(getContext(),
                     "You are now subscribed to: " + _feedResponseWrapper.getPodcastTitle(),
                     Toast.LENGTH_LONG).show();
@@ -204,6 +202,7 @@ public class SubscribeFragment extends MyFragment {
                     "You are already subscribed to this podcast.",
                     Toast.LENGTH_SHORT).show();
         }
+        EventBus.getDefault().post(new CloseSubscribeFragmentEvent());
     }
 
     private void addNewPodcastToDB(String mode) {
@@ -241,7 +240,6 @@ public class SubscribeFragment extends MyFragment {
         if (!_feedResponseWrapper.dataIsValid()) {
             Toast.makeText(getContext(), "BAD DATA! UNABLE TO LOAD PODCAST INFO. " + _feedResponseWrapper.getErrorMessage(),
                     Toast.LENGTH_LONG).show();
-            mListener.onCloseSubscribeFragment();
             return;
         }
 
@@ -335,13 +333,5 @@ public class SubscribeFragment extends MyFragment {
             VolleyQueue.getInstance().getRequestQueue().add(ir);
         }
 
-    }
-
-    //**********************************
-    //* listeners
-    //***********************************
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onCloseSubscribeFragment();
     }
 }

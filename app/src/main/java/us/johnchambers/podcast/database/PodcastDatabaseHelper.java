@@ -31,6 +31,7 @@ public class PodcastDatabaseHelper {
             _database = Room.databaseBuilder(context,
                     PodcastDatabase.class, "podcast-db")
                     .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
                     .build();
             initTables();
         }

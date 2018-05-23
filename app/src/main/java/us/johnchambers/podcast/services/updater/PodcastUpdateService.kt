@@ -1,11 +1,10 @@
 package us.johnchambers.podcast.services.updater
 
-import android.app.IntentService
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Intent
 import android.content.Context
-import android.support.v7.app.NotificationCompat
+import android.os.Build
+//import android.support.v7.app.NotificationCompat
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -31,6 +30,7 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
     var podcastStack = Stack<PodcastTable>()
     var _intent : Intent? = null
     var _notificationId = 23457
+    var _notificationChannelId = "us.johnchambers.player.updater"
 
     override fun onHandleIntent(intent: Intent?) {
         _intent = intent
@@ -69,7 +69,7 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
                 Response.Listener { response -> updateTheDB(response, podcast) },
 
                 Response.ErrorListener { e ->
-                    //todo
+                    L.i(this as Object, e.message  + podcast.name);
                 })
         val vq = VolleyQueue.getInstance(applicationContext)
         val rq = vq.requestQueue
@@ -113,25 +113,46 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
 
     fun displayNotification() {
 
-        var notification = NotificationCompat.Builder(applicationContext)
-                .setContentTitle("Service is running")
-                .setSmallIcon(R.mipmap.ic_launcher)
+        // create channel
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(_notificationChannelId,
+                    "Different",
+                    NotificationManager.IMPORTANCE_DEFAULT)
+            channel.description = "A Different Podcast App"
+            channel.enableLights(false)
+            channel.enableVibration(false)
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager!!.createNotificationChannel(channel)
+        }
+
+        val notif: Notification.Builder
+        @Suppress("DEPRECATION")
+        notif = Notification.Builder(applicationContext)
+        notif.setSmallIcon(R.mipmap.ic_launcher)
+        notif.setContentTitle("Updating Podcasts")
+        notif.setContentText("")
+        notif.setAutoCancel(true)
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notif.setChannelId(_notificationChannelId)
+        }
 
         var pendingIntent : PendingIntent = PendingIntent.getActivity(applicationContext,
                 0,
                 Intent("new intent"),
                 0)
 
-        notification.setContentIntent(pendingIntent)
+        notif.setContentIntent(pendingIntent)
 
-        var notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(_notificationId, notification.build())
+        notif.build()
     }
 
     fun clearNotification() {
         var notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(_notificationId)
         notificationManager.cancelAll()
+
+
     }
+
 
 }

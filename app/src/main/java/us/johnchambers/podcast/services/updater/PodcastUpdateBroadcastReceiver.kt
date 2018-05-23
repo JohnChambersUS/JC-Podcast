@@ -8,12 +8,11 @@ import us.johnchambers.podcast.misc.L
 class PodcastUpdateBroadcastReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent != null) {
-            val intent = Intent(context.applicationContext,
+
+            val theIntent = Intent(context.applicationContext,
                     us.johnchambers.podcast.services.updater.PodcastUpdateService::class.java)
-            context.startService(intent)
+            context.startService(theIntent)
 
             L.i(this as Object, "Broadcast Reciever ran, started updater")
-        }
     }
 }
