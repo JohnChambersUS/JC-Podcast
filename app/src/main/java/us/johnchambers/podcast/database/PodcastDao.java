@@ -160,5 +160,11 @@ public interface PodcastDao {
     @Query("DELETE FROM OptionsTable WHERE pid = :podcastId")
     void removePodcastFromOptionsTable(String podcastId);
 
+    //****************************************
+    //* playlist table routines
+    //****************************************
+
+    @Query("Select * from playlist")
+
 
 }
