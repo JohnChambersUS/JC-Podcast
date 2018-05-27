@@ -45,6 +45,11 @@ object PlaylistFactory {
             return LatestPlaylist(useExisting = false)
         }
 
+        if (docket._docketType.equals(C.dockett.TYPE_IS_MANUAL)) {
+            return ManualPlaylist()
+        }
+
+
         if (docket._docketType.equals(C.dockett.TYPE_IS_EMBEDED_PLAYLIST)) {
             return (docket as DocketEmbededPlaylist).getPlaylist()
         }
