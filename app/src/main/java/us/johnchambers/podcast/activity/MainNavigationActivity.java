@@ -158,6 +158,8 @@ public class MainNavigationActivity extends AppCompatActivity
             _myFragmentManager.activateAboutFragment();
         } else if (id == R.id.nav_latest_playlist) {
             _myFragmentManager.activateLatestPlaylistFragment();
+        } else if (id == R.id.nav_manual_playlist) {
+            _myFragmentManager.activateManualPlaylistFragment();
         }  else if (id == R.id.nav_global_options) {
             _myFragmentManager.activateGlobalOptionsFragment();
         }

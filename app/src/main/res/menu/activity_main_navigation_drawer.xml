@@ -20,6 +20,10 @@
             android:icon="@drawable/ic_new_regular"
             android:title="What's New in Podcasts?" />
         <item
+            android:id="@+id/nav_manual_playlist"
+            android:icon="@drawable/ic_manual_playlist_dark"
+            android:title="Manual Playlist" />
+        <item
             android:id="@+id/nav_update_podcasts"
             android:icon="@drawable/ic_update_combo"
             android:title="Update Subscriptions" />
