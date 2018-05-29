@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/mp_clear"
+        android:icon="@drawable/ic_remove_light"
+        android:title="CLEAR"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+    <item
+        android:id="@+id/mp_add"
+        android:icon="@drawable/ic_add_light"
+        android:title="ADD"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+    <item
+        android:id="@+id/mp_play"
+        android:icon="@drawable/ic_play_light"
+        android:title="PLAY"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+</menu>

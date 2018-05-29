@@ -45,6 +45,11 @@ object PlaylistFactory {
             return LatestPlaylist(useExisting = false)
         }
 
+        if (docket._docketType.equals(C.dockett.TYPE_IS_MANUAL)) {
+            return ManualPlaylist()
+        }
+
+
         if (docket._docketType.equals(C.dockett.TYPE_IS_EMBEDED_PLAYLIST)) {
             return (docket as DocketEmbededPlaylist).getPlaylist()
         }
@@ -73,6 +78,15 @@ object PlaylistFactory {
             return pl
         }
 
+        //if manual-playlist-flag
+        //  make new manual-playlist
+        //  set current episode to one in playlist
+        //  return latest-playlist
+        if (npPlaylistId.equals(C.playlist.MANUAL_PLAYLIST)) {
+            var pl = ManualPlaylist();
+            pl.setCurrentEpisode(npEpisode)
+            return pl
+        }
 
         //if playlist id starts with pid
         //  build podcast-playlist

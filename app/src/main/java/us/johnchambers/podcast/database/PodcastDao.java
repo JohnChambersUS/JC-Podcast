@@ -160,5 +160,18 @@ public interface PodcastDao {
     @Query("DELETE FROM OptionsTable WHERE pid = :podcastId")
     void removePodcastFromOptionsTable(String podcastId);
 
+    //****************************************
+    //* playlist table routines
+    //****************************************
+
+    @Query("Select * from playlisttable where playlistName = :playlist")
+    List<PlaylistTable> getPlaylistTableRows(String playlist);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void upsertPlaylistTableRow(PlaylistTable row);
+
+    @Query("DELETE FROM playlisttable WHERE playlistName = :playlistName")
+    void removePlaylistFromPlaylistTable(String playlistName);
+
 
 }

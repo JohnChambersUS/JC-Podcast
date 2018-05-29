@@ -14,11 +14,13 @@ object C {
         var TYPE_IS_NOTHING = "nothing"
         var TYPE_IS_EMPTY = "empty"
         var TYPE_IS_LATEST = "latest"
+        var TYPE_IS_MANUAL = "manual_playlist"
         var TYPE_IS_EMBEDED_PLAYLIST = "embeded_playlist"
     }
 
     object playlist {
         var LATEST_PLAYLIST = "latest_playlist"
+        var MANUAL_PLAYLIST = "manual_playlist"
         var DUMMY = "dummy"
     }
 

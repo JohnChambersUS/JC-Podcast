@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -29,6 +30,9 @@ import us.johnchambers.podcast.Events.fragment.CloseSubscribedDetailFragmentEven
 import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent;
+import us.johnchambers.podcast.Events.fragment.OpenSubscribedFragmentEvent;
+import us.johnchambers.podcast.Events.fragment.RefreshManualPlaylistFragment;
+import us.johnchambers.podcast.Events.fragment.RefreshSubscribedFragment;
 import us.johnchambers.podcast.Events.fragment.SubscribedFragmentRowItemClickedEvent;
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
@@ -146,7 +150,7 @@ public class MainNavigationActivity extends AppCompatActivity
         if (id == R.id.nav_search) {
             activateSearchFragment();
         } else if (id == R.id.nav_show_subscribed) {
-            _myFragmentManager.activateSubscribedFragment();
+            _myFragmentManager.activateSubscribedFragment("root");
         } else if (id == R.id.nav_player) {
             _myFragmentManager.activatePlayerFragment(new DocketEmpty());
         } else if (id == R.id.nav_update_podcasts) {
@@ -158,11 +162,14 @@ public class MainNavigationActivity extends AppCompatActivity
             _myFragmentManager.activateAboutFragment();
         } else if (id == R.id.nav_latest_playlist) {
             _myFragmentManager.activateLatestPlaylistFragment();
+        } else if (id == R.id.nav_manual_playlist) {
+            _myFragmentManager.activateManualPlaylistFragment();
         }  else if (id == R.id.nav_global_options) {
             _myFragmentManager.activateGlobalOptionsFragment();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.setScrimColor(Color.TRANSPARENT);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -240,10 +247,19 @@ public class MainNavigationActivity extends AppCompatActivity
     }
 
     @Subscribe
+    public void onEvent(RefreshManualPlaylistFragment event) {
+        _myFragmentManager.refreshManualPlaylistFragment();
+    }
+
+    @Subscribe
     public void onEvent(SubscribedFragmentRowItemClickedEvent event) {
         _myFragmentManager.activateSubscribedDetailFragment(event.getPodcastTable());
     }
 
+    @Subscribe
+    public void onEvent(OpenSubscribedFragmentEvent event) {
+        _myFragmentManager.activateSubscribedFragment();
+    }
 
 }
 
