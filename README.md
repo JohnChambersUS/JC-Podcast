@@ -2,7 +2,7 @@ A Different Podcast App (or Different for short)
 
 Android podcast player 
 
-Codename: Kiddo
+Codename: Lobo
 
 Copyright © 2018 John Chambers All Rights Reserved
 
