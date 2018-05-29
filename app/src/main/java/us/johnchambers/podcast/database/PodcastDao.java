@@ -164,7 +164,14 @@ public interface PodcastDao {
     //* playlist table routines
     //****************************************
 
-    @Query("Select * from playlist")
+    @Query("Select * from playlisttable where playlistName = :playlist")
+    List<PlaylistTable> getPlaylistTableRows(String playlist);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void upsertPlaylistTableRow(PlaylistTable row);
+
+    @Query("DELETE FROM playlisttable WHERE playlistName = :playlistName")
+    void removePlaylistFromPlaylistTable(String playlistName);
 
 
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.EventLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import us.johnchambers.podcast.Events.fragment.RefreshManualPlaylistFragment;
 import us.johnchambers.podcast.Events.fragment.SubscribedFragmentRowItemClickedEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.R;
@@ -28,6 +30,7 @@ public class SubscribedFragment extends MyFragment {
 
     SubscribedAdapter _adapter;
     private View _view;
+    private FragmentBackstackType _fragmentBackstackType = FragmentBackstackType.BRANCH;
 
     public SubscribedFragment() {
         // Required empty public constructor
@@ -62,6 +65,7 @@ public class SubscribedFragment extends MyFragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        EventBus.getDefault().post(new RefreshManualPlaylistFragment());
     }
 
     @Override
@@ -78,8 +82,12 @@ public class SubscribedFragment extends MyFragment {
     //* Common methods
     //*******************************************
 
+    public void setBackstackType(FragmentBackstackType type) {
+        _fragmentBackstackType = type;
+    }
+
     public FragmentBackstackType getBackstackType() {
-        return FragmentBackstackType.ROOT;
+        return _fragmentBackstackType;
     }
 
     private void loadSubscribedListView() {

@@ -235,6 +235,14 @@ public class PodcastDatabaseHelper {
         return np.getValue();
     }
 
+    public void conditionalyClearNowPlaying(String playlistId) {
+        String npPL = getNowPlayingPlaylist();
+        if ((npPL == null) || (npPL.equals(playlistId))) {
+            updateNowPlayingPlaylist(NowPlaying.NO_PLAYLIST_FLAG);
+            updateNowPlayingEpisode(NowPlaying.NO_EPISODE_FLAG);
+        }
+    }
+
     //************************************
     //* Latest Playlist methods
     //************************************
@@ -329,6 +337,25 @@ public class PodcastDatabaseHelper {
 
     public String getOptionValue(String pid, String option) {
         return _database.dao().getOptionsTableSetting(pid, option);
+    }
+
+    //***********************************
+    //* playlist table methods
+    //***********************************
+
+    public List<PlaylistTable> getManualPlaylistEntries() {
+        return _database.dao().getPlaylistTableRows(C.playlist.INSTANCE.getMANUAL_PLAYLIST());
+    }
+
+    public void upsertPlaylistRow(String playlistId, String episodeId) {
+        PlaylistTable pt = new PlaylistTable();
+        pt.setPlaylistName(playlistId);
+        pt.setEid(episodeId);
+        _database.dao().upsertPlaylistTableRow(pt);
+    }
+
+    public void removePlaylistFromPlaylistTable(String playlistName) {
+        _database.dao().removePlaylistFromPlaylistTable(playlistName);
     }
 
 }

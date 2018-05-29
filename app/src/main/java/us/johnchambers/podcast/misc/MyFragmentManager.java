@@ -116,6 +116,16 @@ public class MyFragmentManager {
         }
     }
 
+    public void activateSubscribedFragment(String root) {
+        if (!alreadyOnTop(SUBSCRIBED_FRAGMENT)) {
+            MyFragment fragment = SubscribedFragment.newInstance();
+            fragment.setBackstackType(FragmentBackstackType.ROOT);
+            activateFragment(R.id.subscribed_placeholder,
+                    fragment,
+                    SUBSCRIBED_FRAGMENT);
+        }
+    }
+
     public void refreshSubscribedFragment() {
         if (alreadyOnTop(SUBSCRIBED_FRAGMENT)) {
             popBackstackEntry();
@@ -124,6 +134,16 @@ public class MyFragmentManager {
                     SUBSCRIBED_FRAGMENT);
         }
     }
+
+    public void refreshManualPlaylistFragment() {
+        if (alreadyOnTop(MANUAL_PLAYLIST_FRAGMENT)) {
+            popBackstackEntry();
+            activateFragment(R.id.manual_playlist_placeholder,
+                    ManualPlaylistFragment.newInstance(),
+                    MANUAL_PLAYLIST_FRAGMENT);
+        }
+    }
+
 
     public void activateSubscribedDetailFragment(PodcastTable pt) {
         if (!alreadyOnTop(SUBSCRIBED_DETAIL_FRAGMENT)) {

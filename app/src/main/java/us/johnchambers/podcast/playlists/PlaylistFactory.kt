@@ -78,6 +78,15 @@ object PlaylistFactory {
             return pl
         }
 
+        //if manual-playlist-flag
+        //  make new manual-playlist
+        //  set current episode to one in playlist
+        //  return latest-playlist
+        if (npPlaylistId.equals(C.playlist.MANUAL_PLAYLIST)) {
+            var pl = ManualPlaylist();
+            pl.setCurrentEpisode(npEpisode)
+            return pl
+        }
 
         //if playlist id starts with pid
         //  build podcast-playlist
