@@ -34,6 +34,7 @@ import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.misc.C;
 import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.objects.DocketEpisode;
@@ -176,7 +177,8 @@ public class SubscribedDetailFragment extends MyFragment {
 
         CharSequence colors[] = new CharSequence[] {"Play",
                 "Reset to beginning",
-                "Mark as played"};
+                "Mark as played",
+                "Add to manual queue"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(_context);
         builder.setTitle("Pick an option:");
@@ -194,6 +196,9 @@ public class SubscribedDetailFragment extends MyFragment {
                         PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(row.getEid(),
                                 row.getLengthAsLong());
                         updateEpisodeListView(position);
+                        break;
+                    case 3: PodcastDatabaseHelper.getInstance()
+                            .upsertPlaylistRow(C.playlist.INSTANCE.getMANUAL_PLAYLIST(), row.getEid());
                         break;
                 }
              }

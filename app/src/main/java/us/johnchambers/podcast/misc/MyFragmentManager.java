@@ -19,6 +19,7 @@ import us.johnchambers.podcast.screens.fragments.options.GlobalOptionsFragment;
 import us.johnchambers.podcast.screens.fragments.options.PodcastOptionsFragment;
 import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
 import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistFragment;
+import us.johnchambers.podcast.screens.fragments.playlist_manual.ManualPlaylistFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
 import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
 import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
@@ -38,6 +39,7 @@ public class MyFragmentManager {
     private final String PLAYER_FRAGMENT = "PLAYER_FRAGMENT";
     private final String ABOUT_FRAGMENT = "ABOUT_FRAGMENT";
     private final String LATEST_PLAYLIST_FRAGMENT = "LATEST_PLAYLIST_FRAGMENT";
+    private final String MANUAL_PLAYLIST_FRAGMENT = "MANUAL_PLAYLIST_FRAGMENT";
     private final String GLOBAL_OPTIONS_FRAGMENT = "GLOBAL_OPTIONS_FRAGMENT";
     private final String PODCAST_OPTIONS_FRAGMENT = "PODCAST_OPTIONS_FRAGMENT";
 
@@ -114,6 +116,16 @@ public class MyFragmentManager {
         }
     }
 
+    public void activateSubscribedFragment(String root) {
+        if (!alreadyOnTop(SUBSCRIBED_FRAGMENT)) {
+            MyFragment fragment = SubscribedFragment.newInstance();
+            fragment.setBackstackType(FragmentBackstackType.ROOT);
+            activateFragment(R.id.subscribed_placeholder,
+                    fragment,
+                    SUBSCRIBED_FRAGMENT);
+        }
+    }
+
     public void refreshSubscribedFragment() {
         if (alreadyOnTop(SUBSCRIBED_FRAGMENT)) {
             popBackstackEntry();
@@ -122,6 +134,16 @@ public class MyFragmentManager {
                     SUBSCRIBED_FRAGMENT);
         }
     }
+
+    public void refreshManualPlaylistFragment() {
+        if (alreadyOnTop(MANUAL_PLAYLIST_FRAGMENT)) {
+            popBackstackEntry();
+            activateFragment(R.id.manual_playlist_placeholder,
+                    ManualPlaylistFragment.newInstance(),
+                    MANUAL_PLAYLIST_FRAGMENT);
+        }
+    }
+
 
     public void activateSubscribedDetailFragment(PodcastTable pt) {
         if (!alreadyOnTop(SUBSCRIBED_DETAIL_FRAGMENT)) {
@@ -155,6 +177,15 @@ public class MyFragmentManager {
             activateFragment(R.id.latest_playlist_placeholder,
                     fragment,
                     LATEST_PLAYLIST_FRAGMENT);
+        }
+    }
+
+    public void activateManualPlaylistFragment() {
+        if (!alreadyOnTop(MANUAL_PLAYLIST_FRAGMENT)) {
+            ManualPlaylistFragment fragment = ManualPlaylistFragment.newInstance();
+            activateFragment(R.id.manual_playlist_placeholder,
+                    fragment,
+                    MANUAL_PLAYLIST_FRAGMENT);
         }
     }
 
