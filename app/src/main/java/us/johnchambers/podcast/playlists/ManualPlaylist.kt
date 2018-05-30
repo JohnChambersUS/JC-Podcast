@@ -59,7 +59,12 @@ class ManualPlaylist() : Playlist(C.playlist.MANUAL_PLAYLIST){
         _episodes.clear()
         var playlist = PodcastDatabaseHelper.getInstance().manualPlaylistEntries
         for (item in playlist) {
-             _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(item.eid))
+            try {
+                _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(item.eid))
+            }
+            catch (e: Exception) {
+                //todo gargage in playlist table, needs to be removed
+            }
         }
     }
 
