@@ -276,6 +276,9 @@ public class PodcastDatabaseHelper {
         }
         catch (Exception e) {}
 
+        //remove from playlist table if required
+        _database.dao().removeAnEntirePodcastFromPlaylistTable(pid);
+
         //********* remove latest if needed
         List<LatestPlaylistTable> latestEpisodes = getCurrentLatestPlaylist();
         for (LatestPlaylistTable latest :latestEpisodes) {
