@@ -72,6 +72,11 @@ class ManualPlaylist() : Playlist(C.playlist.MANUAL_PLAYLIST){
         return C.playlist.MANUAL_PLAYLIST
     }
 
+    override fun removeItem(index: Int) {
+        PodcastDatabaseHelper.getInstance().removeItemFromPlaylistTable(C.playlist.MANUAL_PLAYLIST, _episodes.get(index).eid)
+        refreshEpisodeList()
+    }
+
 
 
 
