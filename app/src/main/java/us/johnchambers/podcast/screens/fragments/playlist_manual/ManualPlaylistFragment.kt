@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -56,10 +57,11 @@ class ManualPlaylistFragment : MyFragment() {
         _view =  inflater.inflate(R.layout.fragment_manual_playlist, container, false)
 
         if (_playlist.getEpisodes().size == 0) {
-            var noEpisodesMessage = _view.findViewById(R.id.manual_no_episodes_message) as TextView
-            var recyclerView = _view.findViewById(R.id.manual_recycler_view) as RecyclerView
-            noEpisodesMessage.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
+            //var noEpisodesMessage = _view.findViewById(R.id.manual_no_episodes_message) as TextView
+            //var recyclerView = _view.findViewById(R.id.manual_recycler_view) as RecyclerView
+            //noEpisodesMessage.visibility = View.VISIBLE
+            //recyclerView.visibility = View.GONE
+            flipNoDataMessage()
         }
         else {
             _viewManager = LinearLayoutManager(context)
@@ -73,7 +75,8 @@ class ManualPlaylistFragment : MyFragment() {
                 adapter = _viewAdapter
             }
 
-            _recyclerView.setItemAnimator(null)
+            //_recyclerView.setItemAnimator(null)
+            setItemTouchHelper()
         }
         addNavigationListener()
         val navigation = _view.findViewById(R.id.manual_navigation) as BottomNavigationView
@@ -96,6 +99,21 @@ class ManualPlaylistFragment : MyFragment() {
 
     override fun getBackstackType() : FragmentBackstackType {
         return FragmentBackstackType.ROOT
+    }
+
+    private fun flipNoDataMessage() {
+        var noEpisodesMessage = _view.findViewById(R.id.manual_no_episodes_message) as TextView
+        var recyclerView = _view.findViewById(R.id.manual_recycler_view) as RecyclerView
+        if (_playlist.getEpisodes().size == 0) {
+            noEpisodesMessage.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        }
+        else {
+            noEpisodesMessage.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
+
+
     }
 
 
@@ -137,6 +155,30 @@ class ManualPlaylistFragment : MyFragment() {
     @Subscribe
     fun onEvent(event: PlayerClosedEvent) {
         EventBus.getDefault().post(RefreshManualPlaylistFragment())
+    }
+
+    //**********************************************
+    //* setup item touch helper for recyclerview
+    //**********************************************
+
+    fun setItemTouchHelper() {
+
+        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                var position = viewHolder.getAdapterPosition();
+                _playlist.removeItem(position)
+                _viewAdapter.notifyDataSetChanged()
+                flipNoDataMessage()
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(simpleCallback)
+        itemTouchHelper.attachToRecyclerView(_recyclerView)
     }
 
 

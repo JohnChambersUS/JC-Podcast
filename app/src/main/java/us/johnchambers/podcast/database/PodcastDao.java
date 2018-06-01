@@ -176,5 +176,6 @@ public interface PodcastDao {
     @Query("delete from playlisttable where playlisttable.eid in (select playlisttable.eid from playlisttable inner join episodetable where pid = :podcastId and playlisttable.eid = episodetable.eid)")
     void removeAnEntirePodcastFromPlaylistTable(String podcastId);
 
-
+    @Query("delete from playlistTable where playlistName = :playlistName and eid = :eid ")
+    void removeItemFromPlaylistTable(String playlistName, String eid);
 }

@@ -361,4 +361,8 @@ public class PodcastDatabaseHelper {
         _database.dao().removePlaylistFromPlaylistTable(playlistName);
     }
 
+    public void removeItemFromPlaylistTable(String playlistName, String episodeId) {
+        _database.dao().removeItemFromPlaylistTable(playlistName, episodeId);
+    }
+
 }
