@@ -65,5 +65,9 @@ abstract class Playlist(playlistId : String) {
 
     }
 
+    open fun moveItem(source: Int, target: Int) {
+
+    }
+
 
 }

@@ -77,6 +77,23 @@ class ManualPlaylist() : Playlist(C.playlist.MANUAL_PLAYLIST){
         refreshEpisodeList()
     }
 
+    override fun moveItem(source: Int, target: Int) {
+        var element = _episodes.get(source)
+        _episodes.removeAt(source)
+        _episodes.add(target, element)
+        updateDatabase()
+    }
+
+    private fun updateDatabase() {
+        //remove all items for manual playlist
+        PodcastDatabaseHelper.getInstance().removePlaylistFromPlaylistTable(C.playlist.MANUAL_PLAYLIST)
+        //run loop to add items in _episode list to db
+        for (episode in _episodes) {
+            PodcastDatabaseHelper.getInstance().upsertPlaylistRow(C.playlist.MANUAL_PLAYLIST, episode.eid)
+        }
+
+    }
+
 
 
 
