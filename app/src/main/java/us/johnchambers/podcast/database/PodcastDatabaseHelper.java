@@ -262,6 +262,10 @@ public class PodcastDatabaseHelper {
         return _database.dao().getLatestPlaylistTable();
     }
 
+    public void removeEpisodeFromLatestTable(String episodeId) {
+        _database.dao().removeEpisodeFromLatestPlaylistTable(episodeId);
+    }
+
 
     //*************************************************
     //* Common public utility methods

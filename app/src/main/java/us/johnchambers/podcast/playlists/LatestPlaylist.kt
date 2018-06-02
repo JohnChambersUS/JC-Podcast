@@ -68,12 +68,21 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
 
     override fun getEpisodes() : MutableList<EpisodeTable> {
         refreshEpisodeList()
+        _episodeIndex = -1
         return _episodes
     }
-
+    //*** wipes table and reloads ***
     private fun refreshEpisodeList() {
         _episodes.clear()
         var episodeIds = PodcastDatabaseHelper.getInstance().updatedLatestPlaylist
+        for (episode in episodeIds) {
+            _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
+        }
+    }
+    //*** does not wipe tables ***
+    private fun loadCurrentEpisodeList() {
+        _episodes.clear()
+        var episodeIds = PodcastDatabaseHelper.getInstance().currentLatestPlaylist
         for (episode in episodeIds) {
             _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
         }
@@ -83,6 +92,15 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
         return C.playlist.LATEST_PLAYLIST
     }
 
+    override fun removeItem(index: Int) {
+        if ((index > -1) && (index < _episodes.size)) {
+            PodcastDatabaseHelper.getInstance().removeEpisodeFromLatestTable(_episodes.get(index).eid)
+        }
+        loadCurrentEpisodeList()
+        if (index == _episodeIndex) {
+            _episodeIndex = -1
+        }
+    }
 
 
 }

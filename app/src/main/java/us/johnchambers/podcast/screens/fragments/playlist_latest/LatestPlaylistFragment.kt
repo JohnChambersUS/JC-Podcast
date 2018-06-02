@@ -29,6 +29,7 @@ import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.objects.*
 import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.widget.TextView
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent
 import us.johnchambers.podcast.Events.latest.SubscribedDetailClosedEvent
@@ -44,6 +45,7 @@ import us.johnchambers.podcast.Events.player.PlayerClosedEvent
 class LatestPlaylistFragment : MyFragment() {
 
     lateinit var _playlist : Playlist
+    lateinit var _view : View
 
     private lateinit var _recyclerView : RecyclerView
     private lateinit var _viewAdapter: RecyclerView.Adapter<*>
@@ -67,19 +69,20 @@ class LatestPlaylistFragment : MyFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        var view = inflater.inflate(R.layout.fragment_latest_playlist, container, false)
+        _view = inflater.inflate(R.layout.fragment_latest_playlist, container, false)
 
         if (_playlist.getEpisodes().size == 0) {
-            var noEpisodesMessage = view.findViewById(R.id.no_episodes_message) as TextView
-            var recyclerView = view.findViewById(R.id.latest_recycler_view) as RecyclerView
-            noEpisodesMessage.visibility = View.VISIBLE
-            recyclerView.visibility = View.GONE
+            //var noEpisodesMessage = _view.findViewById(R.id.no_episodes_message) as TextView
+            //var recyclerView = _view.findViewById(R.id.latest_recycler_view) as RecyclerView
+            //noEpisodesMessage.visibility = View.VISIBLE
+            //recyclerView.visibility = View.GONE
+            flipNoDataMessage()
         }
         else {
             _viewManager = LinearLayoutManager(context)
             _viewAdapter = LatestPlaylistRecyclerAdapter(_playlist.getEpisodes())
 
-            _recyclerView = view.findViewById(R.id.latest_recycler_view) as RecyclerView
+            _recyclerView = _view.findViewById(R.id.latest_recycler_view) as RecyclerView
 
             _recyclerView.apply {
                 setHasFixedSize(false)
@@ -87,16 +90,30 @@ class LatestPlaylistFragment : MyFragment() {
                 adapter = _viewAdapter
             }
 
-            _recyclerView.setItemAnimator(null)
-
-            addNavigationListener()
-            val navigation = view.findViewById(R.id.navigation) as BottomNavigationView
-            navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener)
-            navigation.itemIconTintList = null
+            //_recyclerView.setItemAnimator(null)
+            setItemTouchHelper()
         }
+        addNavigationListener()
+        val navigation = _view.findViewById(R.id.navigation) as BottomNavigationView
+        navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener)
+        navigation.itemIconTintList = null
 
-        return view;
+        return _view;
     }
+
+    private fun flipNoDataMessage() {
+        var noEpisodesMessage = _view.findViewById(R.id.no_episodes_message) as TextView
+        var recyclerView = _view.findViewById(R.id.latest_recycler_view) as RecyclerView
+        if (_playlist.isEmpty()) {
+            noEpisodesMessage.visibility = View.VISIBLE
+            recyclerView.visibility = View.GONE
+        }
+        else {
+            noEpisodesMessage.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+        }
+    }
+
 
     override fun getBackstackType() : FragmentBackstackType {
         return FragmentBackstackType.ROOT
@@ -106,7 +123,7 @@ class LatestPlaylistFragment : MyFragment() {
     //* local methods
     //*********************************
     private fun refreshEpisodeView() {
-        _playlist.getEpisodes() //will refresh list
+        _playlist.removeItem(-2) //will refresh list without wiping db
         _recyclerView.adapter.notifyDataSetChanged()
     }
 
@@ -119,6 +136,12 @@ class LatestPlaylistFragment : MyFragment() {
             var docket = DocketEmbededPlaylist(_playlist)
             var event = ResumePlaylistEvent(docket)
             EventBus.getDefault().post(event)
+        }
+
+        if (item.itemId == R.id.bm_refresh) {
+            _playlist.getEpisodes() //will cause an episode refresh in playlist
+            flipNoDataMessage()
+            _viewAdapter.notifyDataSetChanged()
         }
     }
 
@@ -191,6 +214,29 @@ class LatestPlaylistFragment : MyFragment() {
         builder.show()
     }
 
+    //**********************************************
+    //* setup item touch helper for recyclerview
+    //**********************************************
+
+    fun setItemTouchHelper() {
+
+        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                var position = viewHolder.getAdapterPosition();
+                _playlist.removeItem(position)
+                _viewAdapter.notifyDataSetChanged()
+                flipNoDataMessage()
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(simpleCallback)
+        itemTouchHelper.attachToRecyclerView(_recyclerView)
+    }
 
 
 }
