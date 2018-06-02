@@ -164,7 +164,7 @@ public interface PodcastDao {
     //* playlist table routines
     //****************************************
 
-    @Query("Select * from playlisttable where playlistName = :playlist")
+    @Query("Select * from playlisttable where playlistName = :playlist order by identity")
     List<PlaylistTable> getPlaylistTableRows(String playlist);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

@@ -146,7 +146,6 @@ class ManualPlaylistFragment : MyFragment() {
             processNavigation(item)
             true
         }
-
     }
 
     //*********************************
@@ -163,10 +162,33 @@ class ManualPlaylistFragment : MyFragment() {
 
     fun setItemTouchHelper() {
 
-        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        val simpleCallback = object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            var dragFrom = -1
+            var dragTo = -1
+
+            override fun onMove(recyclerView: RecyclerView, source: RecyclerView.ViewHolder,
+                                target: RecyclerView.ViewHolder): Boolean {
+
+                if(dragFrom == -1) {
+                    dragFrom =  source.adapterPosition;
+                }
+                dragTo = target.adapterPosition;
+
                 return false
+            }
+
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                super.clearView(recyclerView, viewHolder)
+
+                if (dragFrom !== -1 && dragTo !== -1 && dragFrom !== dragTo) {
+                    _playlist.moveItem(dragFrom, dragTo)
+                    _viewAdapter.notifyDataSetChanged()
+                }
+                dragTo = -1
+                dragFrom = dragTo
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
