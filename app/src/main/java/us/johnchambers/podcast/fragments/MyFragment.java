@@ -3,6 +3,7 @@ package us.johnchambers.podcast.fragments;
 
 import android.support.v4.app.Fragment;
 
+import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 /**
