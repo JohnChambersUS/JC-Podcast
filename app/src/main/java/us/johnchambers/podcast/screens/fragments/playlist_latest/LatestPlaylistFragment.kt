@@ -187,18 +187,17 @@ class LatestPlaylistFragment : MyFragment() {
                     EventBus.getDefault().post(theEvent)
                 }
                 1 -> {
-                    var eid = _playlist.getEpisodes().get(row).eid
+                    var eid = _playlist.getEpisode(row).eid
                     PodcastDatabaseHelper.getInstance().updateEpisodeDuration(eid, 1)
                     PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(eid, 0)
-                    //todo delete var updatedEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(eid)
-                    _playlist.getEpisodes() //will refresh episode list
+                    _playlist.removeItem(-1) //will refresh episode list
                     _recyclerView.adapter.notifyItemChanged(row)
                 }
                 2 -> {
-                    var updateRow = _playlist.getEpisodes().get(row)
+                    var updateRow = _playlist.getEpisode(row)
                     PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(updateRow.eid,
                             updateRow.lengthAsLong)
-                    _playlist.getEpisodes() //will refresh episode list
+                    _playlist.removeItem(-1) //will refresh episode list
                     _recyclerView.adapter.notifyItemChanged(row)
                 }
                 3 -> {
@@ -220,10 +219,31 @@ class LatestPlaylistFragment : MyFragment() {
 
     fun setItemTouchHelper() {
 
-        val simpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+        val simpleCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN,
+                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            var dragFrom = -1
+            var dragTo = -1
+
+            override fun onMove(recyclerView: RecyclerView, source: RecyclerView.ViewHolder,
+                                target: RecyclerView.ViewHolder): Boolean {
+                if(dragFrom == -1) {
+                    dragFrom =  source.adapterPosition;
+                }
+                dragTo = target.adapterPosition;
+
                 return false
+            }
+
+            override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                super.clearView(recyclerView, viewHolder)
+
+                if (dragFrom !== -1 && dragTo !== -1 && dragFrom !== dragTo) {
+                    _playlist.moveItem(dragFrom, dragTo)
+                    _viewAdapter.notifyDataSetChanged()
+                }
+                dragTo = -1
+                dragFrom = dragTo
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -232,6 +252,9 @@ class LatestPlaylistFragment : MyFragment() {
                 _viewAdapter.notifyDataSetChanged()
                 flipNoDataMessage()
             }
+
+
+
         }
 
         val itemTouchHelper = ItemTouchHelper(simpleCallback)

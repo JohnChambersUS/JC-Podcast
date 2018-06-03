@@ -61,6 +61,15 @@ abstract class Playlist(playlistId : String) {
         return _episodes
     }
 
+    open fun getEpisode(position: Int) : EpisodeTable {
+        try {
+            return _episodes.get(position)
+        }
+        catch(e: Exception) {
+            return EpisodeTable()
+        }
+    }
+
     open fun removeItem(index: Int) {
 
     }
