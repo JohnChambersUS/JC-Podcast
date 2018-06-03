@@ -3,6 +3,7 @@ package us.johnchambers.podcast.screens.fragments.playlist_manual
 
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
@@ -13,10 +14,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment
-import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent
-import us.johnchambers.podcast.Events.fragment.OpenSubscribedFragmentEvent
-import us.johnchambers.podcast.Events.fragment.RefreshManualPlaylistFragment
+import us.johnchambers.podcast.Events.fragment.*
+import us.johnchambers.podcast.Events.fragment.SubscribedDetailClosedEvent
+import us.johnchambers.podcast.Events.manual.ManualRowActionButtonPressedEvent
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent
 
@@ -152,9 +152,60 @@ class ManualPlaylistFragment : MyFragment() {
     //* event listeners
     //*********************************
     @Subscribe
+    fun onEvent(event: SubscribedDetailClosedEvent) {
+        EventBus.getDefault().post(RefreshManualPlaylistFragment())
+    }
+
+    @Subscribe
     fun onEvent(event: PlayerClosedEvent) {
         EventBus.getDefault().post(RefreshManualPlaylistFragment())
     }
+
+    @Subscribe
+    fun onEvent(event : ManualRowActionButtonPressedEvent) {
+        var row = event.row
+
+        // add popup menu
+        val colors = arrayOf<CharSequence>("Play this episode", "Reset to beginning", "Mark as played", "Go to podcast")
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Pick an option:")
+        builder.setItems(colors) { _, which ->
+            when (which) {
+                0 -> {
+                    _playlist.setCurrentEpisodeIndex(row)
+                    var docket = DocketEmbededPlaylist(_playlist)
+                    var theEvent = ResumePlaylistEvent(docket)
+                    EventBus.getDefault().post(theEvent)
+                }
+                1 -> {
+                    var eid = _playlist.getEpisode(row).eid
+                    PodcastDatabaseHelper.getInstance().updateEpisodeDuration(eid, 1)
+                    PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(eid, 0)
+                    _playlist.removeItem(-1) //will refresh episode list
+                    _recyclerView.adapter.notifyItemChanged(row)
+                }
+                2 -> {
+                    var updateRow = _playlist.getEpisode(row)
+                    PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(updateRow.eid,
+                            updateRow.lengthAsLong)
+                    _playlist.removeItem(-1) //will refresh episode list
+                    _recyclerView.adapter.notifyItemChanged(row)
+                }
+                3 -> {
+                    var pid = _playlist.getEpisodes().get(row).pid
+                    var pt = PodcastDatabaseHelper.getInstance().getPodcastRow(pid)
+                    EventBus.getDefault().post(OpenSubscribedDetailEvent(pt))
+                }
+            }
+        }
+
+        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+
+        builder.show()
+    }
+
+
 
     //**********************************************
     //* setup item touch helper for recyclerview

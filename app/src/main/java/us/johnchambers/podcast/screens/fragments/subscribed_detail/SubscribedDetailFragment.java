@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -25,8 +24,7 @@ import java.util.List;
 
 import us.johnchambers.podcast.Events.fragment.CloseSubscribedDetailFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
-import us.johnchambers.podcast.Events.latest.SubscribedDetailClosedEvent;
-import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
+import us.johnchambers.podcast.Events.fragment.SubscribedDetailClosedEvent;
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent;
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
 import us.johnchambers.podcast.R;
@@ -35,7 +33,6 @@ import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.C;
-import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.objects.DocketEpisode;
 import us.johnchambers.podcast.objects.DocketPodcast;
