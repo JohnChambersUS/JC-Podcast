@@ -102,5 +102,22 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
         }
     }
 
+    override fun moveItem(source: Int, target: Int) {
+        var element = _episodes.get(source)
+        _episodes.removeAt(source)
+        _episodes.add(target, element)
+        updateDatabase()
+    }
+
+    private fun updateDatabase() {
+        //remove all items for latest playlist
+        PodcastDatabaseHelper.getInstance()
+                .deleteAllFromLatestTable()
+        //run loop to add items in _episode list to db
+        for (episode in _episodes) {
+            PodcastDatabaseHelper.getInstance().addToLatestTable(episode)
+        }
+    }
+
 
 }
