@@ -1,13 +1,10 @@
 package us.johnchambers.podcast.screens.fragments.playlist_latest
 
 
-import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v4.app.Fragment
 import android.support.v7.app.AlertDialog
-import android.support.v7.recyclerview.R.attr.layoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -17,7 +14,6 @@ import android.view.ViewGroup
 import us.johnchambers.podcast.fragments.MyFragment
 
 import us.johnchambers.podcast.R
-import us.johnchambers.podcast.playlists.EmptyPlaylist
 import us.johnchambers.podcast.playlists.Playlist
 import us.johnchambers.podcast.playlists.PlaylistFactory
 
@@ -25,14 +21,12 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import us.johnchambers.podcast.Events.latest.LatestRowActionButtonPressedEvent
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent
-import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.objects.*
-import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.widget.TextView
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent
-import us.johnchambers.podcast.Events.latest.SubscribedDetailClosedEvent
+import us.johnchambers.podcast.Events.fragment.SubscribedDetailClosedEvent
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent
 
 
