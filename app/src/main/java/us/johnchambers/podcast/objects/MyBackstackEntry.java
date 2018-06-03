@@ -8,10 +8,12 @@ public class MyBackstackEntry {
 
     private FragmentBackstackType _fragmentBackstackType;
     private String _fragmentTag;
+    private String _title;
 
-    public MyBackstackEntry(FragmentBackstackType fragmentBackstackType, String fragmentTag) {
+    public MyBackstackEntry(FragmentBackstackType fragmentBackstackType, String fragmentTag, String title) {
         _fragmentBackstackType = fragmentBackstackType;
         _fragmentTag = fragmentTag;
+        _title = title;
     }
 
     public FragmentBackstackType getFragmentBackstackType() {
@@ -21,4 +23,6 @@ public class MyBackstackEntry {
     public String getFragmentTag() {
         return _fragmentTag;
     }
+
+    public String getTitle() { return _title;}
 }
