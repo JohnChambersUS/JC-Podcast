@@ -75,7 +75,7 @@ public class MainNavigationActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         VolleyQueue.getInstance(this); //inits volley queue
-        _myFragmentManager = new MyFragmentManager(getSupportFragmentManager());
+        _myFragmentManager = new MyFragmentManager(getSupportFragmentManager(), toolbar);
         PodcastDatabaseHelper.getInstance(getApplicationContext()); //init database helper
 
         PlayerServiceController.getInstance(getApplicationContext()); //init player controller

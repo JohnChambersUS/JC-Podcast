@@ -2,6 +2,7 @@ package us.johnchambers.podcast.playlists
 
 import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
+import us.johnchambers.podcast.misc.C
 import us.johnchambers.podcast.objects.Docket
 
 /**
@@ -59,5 +60,23 @@ abstract class Playlist(playlistId : String) {
     open fun getEpisodes() : MutableList<EpisodeTable> {
         return _episodes
     }
+
+    open fun getEpisode(position: Int) : EpisodeTable {
+        try {
+            return _episodes.get(position)
+        }
+        catch(e: Exception) {
+            return EpisodeTable()
+        }
+    }
+
+    open fun removeItem(index: Int) {
+
+    }
+
+    open fun moveItem(source: Int, target: Int) {
+
+    }
+
 
 }

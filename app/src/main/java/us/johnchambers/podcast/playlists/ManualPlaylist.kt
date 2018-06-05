@@ -72,6 +72,30 @@ class ManualPlaylist() : Playlist(C.playlist.MANUAL_PLAYLIST){
         return C.playlist.MANUAL_PLAYLIST
     }
 
+    override fun removeItem(index: Int) {
+        if ((index > -1) && (index < _episodes.size)) {
+            PodcastDatabaseHelper.getInstance().removeItemFromPlaylistTable(C.playlist.MANUAL_PLAYLIST, _episodes.get(index).eid)
+        }
+        refreshEpisodeList()
+    }
+
+    override fun moveItem(source: Int, target: Int) {
+        var element = _episodes.get(source)
+        _episodes.removeAt(source)
+        _episodes.add(target, element)
+        updateDatabase()
+    }
+
+    private fun updateDatabase() {
+        //remove all items for manual playlist
+        PodcastDatabaseHelper.getInstance().removePlaylistFromPlaylistTable(C.playlist.MANUAL_PLAYLIST)
+        //run loop to add items in _episode list to db
+        for (episode in _episodes) {
+            PodcastDatabaseHelper.getInstance().upsertPlaylistRow(C.playlist.MANUAL_PLAYLIST, episode.eid)
+        }
+
+    }
+
 
 
 

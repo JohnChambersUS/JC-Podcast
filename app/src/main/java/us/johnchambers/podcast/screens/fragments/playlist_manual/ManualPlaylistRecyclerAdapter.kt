@@ -13,11 +13,13 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.row_manual_playlist.view.*
 import org.greenrobot.eventbus.EventBus
 import us.johnchambers.podcast.Events.latest.LatestRowActionButtonPressedEvent
+import us.johnchambers.podcast.Events.manual.ManualRowActionButtonPressedEvent
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PlaylistTable
 import us.johnchambers.podcast.misc.MyFileManager
 import us.johnchambers.podcast.screens.fragments.playlist_manual.ManualPlaylistRecyclerAdapter
+import kotlin.math.roundToInt
 
 class ManualPlaylistRecyclerAdapter (private val episodeList: List<EpisodeTable>) :
         RecyclerView.Adapter<ManualPlaylistRecyclerAdapter.ViewHolder>() {
@@ -44,15 +46,15 @@ class ManualPlaylistRecyclerAdapter (private val episodeList: List<EpisodeTable>
         holder.layout.row_manual_image.setImageBitmap(bitmap)
 
         setProgress(episodeList[position], holder)
-        /*
+
         var buttonListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
                 var pos = holder.getLayoutPosition(); //getting position
-                EventBus.getDefault().post(LatestRowActionButtonPressedEvent(pos))
+                EventBus.getDefault().post(ManualRowActionButtonPressedEvent(pos))
             }
         }
-        */
-        //holder.layout.row_latest_button.setOnClickListener(buttonListener)
+
+        holder.layout.row_manual_button.setOnClickListener(buttonListener)
 
     }
 
@@ -75,7 +77,7 @@ class ManualPlaylistRecyclerAdapter (private val episodeList: List<EpisodeTable>
         val displayMetrics = DisplayMetrics()
         (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
         val fullWidth = displayMetrics.widthPixels
-        var imageWidth = holder.layout.row_manual_image.width
+        var imageWidth = (fullWidth * 0.20).roundToInt() //holder.layout.row_manual_image.width
         var workingWidth = fullWidth - imageWidth
 
         val playPoint = episodeInfo.playPointAsLong

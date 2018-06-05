@@ -129,11 +129,11 @@ public interface PodcastDao {
     @Query("DELETE FROM LatestPlaylistTable")
     void deleteAllFromLatestPlaylistTable();
 
-    @Query("DELETE FROM LatestPlaylistTable WHERE eid = :epidoseId")
-    void emptyEpisodesFromLatestPlaylistTable(String epidoseId);
-
     @Query("select episodetable.eid from episodetable inner join podcasttable on podcasttable.pid = episodetable.pid where podcasttable.mode = 'podcast' group by episodetable.pid order by episodetable.identity desc")
     List<String> fillLatestPlaylistTable();
+
+    @Query("DELETE FROM LatestPlaylistTable WHERE eid = :epidoseId")
+    void removeEpisodeFromLatestPlaylistTable(String epidoseId);
 
     //*****************************************
     //* options table
@@ -164,7 +164,7 @@ public interface PodcastDao {
     //* playlist table routines
     //****************************************
 
-    @Query("Select * from playlisttable where playlistName = :playlist")
+    @Query("Select * from playlisttable where playlistName = :playlist order by identity")
     List<PlaylistTable> getPlaylistTableRows(String playlist);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -176,5 +176,6 @@ public interface PodcastDao {
     @Query("delete from playlisttable where playlisttable.eid in (select playlisttable.eid from playlisttable inner join episodetable where pid = :podcastId and playlisttable.eid = episodetable.eid)")
     void removeAnEntirePodcastFromPlaylistTable(String podcastId);
 
-
+    @Query("delete from playlistTable where playlistName = :playlistName and eid = :eid ")
+    void removeItemFromPlaylistTable(String playlistName, String eid);
 }

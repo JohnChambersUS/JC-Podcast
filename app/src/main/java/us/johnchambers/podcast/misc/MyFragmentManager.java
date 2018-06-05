@@ -5,7 +5,10 @@ package us.johnchambers.podcast.misc;
  */
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
 import java.util.Stack;
 
@@ -30,7 +33,7 @@ import us.johnchambers.podcast.screens.fragments.subscribed_detail.SubscribedDet
 public class MyFragmentManager {
 
     FragmentManager _fragmentManager;
-    Context _context;
+    Toolbar _toolbar;
 
     private final String SEARCH_FRAGMENT = "SEARCH_FRAGMENT";
     private final String SUBSCRIBE_FRAGMENT = "SUBSCRIBE_FRAGMENT";
@@ -46,11 +49,13 @@ public class MyFragmentManager {
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
 
-    public MyFragmentManager(FragmentManager fragmentManager) {
+    public MyFragmentManager(FragmentManager fragmentManager, Toolbar toolbar) {
         _fragmentManager = fragmentManager;
+        _toolbar = toolbar;
     }
 
-    private void addToBackstack(FragmentBackstackType fragmentBackstackType, String fragmentName) {
+    private void addToBackstack(FragmentBackstackType fragmentBackstackType,
+                                String fragmentName, String fragmentTitle) {
         if (fragmentBackstackType == FragmentBackstackType.ROOT) {
             while (_backstack.size() > 0) {
                 MyBackstackEntry currEntry = (MyBackstackEntry) _backstack.pop();
@@ -59,7 +64,8 @@ public class MyFragmentManager {
                     .commit();
             }
         }
-        _backstack.push(new MyBackstackEntry(fragmentBackstackType, fragmentName));
+        _backstack.push(new MyBackstackEntry(fragmentBackstackType, fragmentName, fragmentTitle));
+        updateAppBarTitle();
     }
 
     public void popBackstackEntry() {
@@ -70,6 +76,7 @@ public class MyFragmentManager {
                     remove(_fragmentManager.findFragmentByTag(topEntry.getFragmentTag()))
                     .commit();
         }
+        updateAppBarTitle();
     }
 
     private void closeInfoFragments() {
@@ -82,21 +89,22 @@ public class MyFragmentManager {
         }
     }
 
-    private void activateFragment(int containerViewId, MyFragment frag, String fragmentName) {
+    private void activateFragment(int containerViewId, MyFragment frag, String fragmentName, String fragmentTitle) {
         closeInfoFragments();
         _fragmentManager
                 .beginTransaction()
                 .add(containerViewId, frag, fragmentName)
                 .commit();
         _fragmentManager.beginTransaction().show(frag).commit();
-        addToBackstack(frag.getBackstackType(), fragmentName);
+        addToBackstack(frag.getBackstackType(), fragmentName, fragmentTitle);
     }
 
     public void activateSearchFragment() {
         if (!alreadyOnTop(SEARCH_FRAGMENT)) {
             activateFragment(R.id.search_placeholder,
                     SearchFragment.newInstance(),
-                    SEARCH_FRAGMENT);
+                    SEARCH_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.search_fragment_title));
         }
     }
 
@@ -104,7 +112,8 @@ public class MyFragmentManager {
         if (!alreadyOnTop(SUBSCRIBE_FRAGMENT)) {
             activateFragment(R.id.subscribe_placeholder,
                     SubscribeFragment.newInstance(sr),
-                    SUBSCRIBE_FRAGMENT);
+                    SUBSCRIBE_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.subscribe_fragment_title));
         }
     }
 
@@ -112,7 +121,8 @@ public class MyFragmentManager {
         if (!alreadyOnTop(SUBSCRIBED_FRAGMENT)) {
             activateFragment(R.id.subscribed_placeholder,
                     SubscribedFragment.newInstance(),
-                    SUBSCRIBED_FRAGMENT);
+                    SUBSCRIBED_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.subscribed_fragment_title));
         }
     }
 
@@ -122,7 +132,8 @@ public class MyFragmentManager {
             fragment.setBackstackType(FragmentBackstackType.ROOT);
             activateFragment(R.id.subscribed_placeholder,
                     fragment,
-                    SUBSCRIBED_FRAGMENT);
+                    SUBSCRIBED_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.subscribed_fragment_title));
         }
     }
 
@@ -131,7 +142,8 @@ public class MyFragmentManager {
             popBackstackEntry();
             activateFragment(R.id.subscribed_placeholder,
                     SubscribedFragment.newInstance(),
-                    SUBSCRIBED_FRAGMENT);
+                    SUBSCRIBED_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.subscribed_fragment_title));
         }
     }
 
@@ -140,7 +152,8 @@ public class MyFragmentManager {
             popBackstackEntry();
             activateFragment(R.id.manual_playlist_placeholder,
                     ManualPlaylistFragment.newInstance(),
-                    MANUAL_PLAYLIST_FRAGMENT);
+                    MANUAL_PLAYLIST_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.manual_playlist_fragment_title));
         }
     }
 
@@ -149,7 +162,8 @@ public class MyFragmentManager {
         if (!alreadyOnTop(SUBSCRIBED_DETAIL_FRAGMENT)) {
             activateFragment(R.id.subscribed_detail_placeholder,
                     SubscribedDetailFragment.newInstance(pt),
-                    SUBSCRIBED_DETAIL_FRAGMENT);
+                    SUBSCRIBED_DETAIL_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.subscribed_detail_fragment_title));
         }
     }
 
@@ -158,7 +172,8 @@ public class MyFragmentManager {
             PlayerFragment p = PlayerFragment.newInstance(docket);
             activateFragment(R.id.player_placeholder,
                     p,
-                    PLAYER_FRAGMENT);
+                    PLAYER_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.player_fragment_title));
         }
     }
 
@@ -167,7 +182,8 @@ public class MyFragmentManager {
             AboutFragment fragment = AboutFragment.newInstance();
             activateFragment(R.id.about_placeholder,
                     fragment,
-                    ABOUT_FRAGMENT);
+                    ABOUT_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.about_fragment_title));
         }
     }
 
@@ -176,7 +192,8 @@ public class MyFragmentManager {
             LatestPlaylistFragment fragment = LatestPlaylistFragment.newInstance();
             activateFragment(R.id.latest_playlist_placeholder,
                     fragment,
-                    LATEST_PLAYLIST_FRAGMENT);
+                    LATEST_PLAYLIST_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.latest_playlist_fragment_title));
         }
     }
 
@@ -185,7 +202,8 @@ public class MyFragmentManager {
             ManualPlaylistFragment fragment = ManualPlaylistFragment.newInstance();
             activateFragment(R.id.manual_playlist_placeholder,
                     fragment,
-                    MANUAL_PLAYLIST_FRAGMENT);
+                    MANUAL_PLAYLIST_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.manual_playlist_fragment_title));
         }
     }
 
@@ -194,7 +212,8 @@ public class MyFragmentManager {
             GlobalOptionsFragment fragment = GlobalOptionsFragment.newInstance();
             activateFragment(R.id.global_options_placeholder,
                     fragment,
-                    GLOBAL_OPTIONS_FRAGMENT);
+                    GLOBAL_OPTIONS_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.global__options_fragment_title));
         }
     }
 
@@ -203,7 +222,8 @@ public class MyFragmentManager {
             PodcastOptionsFragment fragment = PodcastOptionsFragment.newInstance(podcastId);
             activateFragment(R.id.podcast_options_placeholder,
                     fragment,
-                    PODCAST_OPTIONS_FRAGMENT);
+                    PODCAST_OPTIONS_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.podcast_options_fragment_title));
         }
     }
 
@@ -220,4 +240,14 @@ public class MyFragmentManager {
         return false;
     }
 
+    private void updateAppBarTitle() {
+
+        if (_backstack.empty()) {
+            _toolbar.setTitle(_toolbar.getContext().getResources().getString(R.string.default_fragment_title));
+        }
+        else {
+            MyBackstackEntry topEntry = (MyBackstackEntry) _backstack.peek();
+            _toolbar.setTitle(topEntry.getTitle());
+        }
+    }
 }

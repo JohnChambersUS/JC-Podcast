@@ -262,6 +262,20 @@ public class PodcastDatabaseHelper {
         return _database.dao().getLatestPlaylistTable();
     }
 
+    public void removeEpisodeFromLatestTable(String episodeId) {
+        _database.dao().removeEpisodeFromLatestPlaylistTable(episodeId);
+    }
+
+    public void deleteAllFromLatestTable() {
+        _database.dao().deleteAllFromLatestPlaylistTable();
+    }
+
+    public void addToLatestTable(EpisodeTable episode) {
+        LatestPlaylistTable lt = new LatestPlaylistTable();
+        lt.setEid(episode.eid);
+        _database.dao().insertLatestPlaylistTableRow(lt);
+    }
+
 
     //*************************************************
     //* Common public utility methods
@@ -359,6 +373,10 @@ public class PodcastDatabaseHelper {
 
     public void removePlaylistFromPlaylistTable(String playlistName) {
         _database.dao().removePlaylistFromPlaylistTable(playlistName);
+    }
+
+    public void removeItemFromPlaylistTable(String playlistName, String episodeId) {
+        _database.dao().removeItemFromPlaylistTable(playlistName, episodeId);
     }
 
 }

@@ -21,6 +21,7 @@ import kotlinx.android.synthetic.main.row_latest_playlist.view.*
 import org.greenrobot.eventbus.EventBus
 import us.johnchambers.podcast.Events.latest.LatestRowActionButtonPressedEvent
 import us.johnchambers.podcast.misc.MyFileManager
+import kotlin.math.roundToInt
 
 class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>) :
         RecyclerView.Adapter<LatestPlaylistRecyclerAdapter.ViewHolder>() {
@@ -41,8 +42,6 @@ class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>)
         var bitmap = MyFileManager.getInstance().getPodcastImage(episodeList[position].pid)
         holder.layout.row_latest_image.setImageBitmap(bitmap)
 
-        setProgress(episodeList[position], holder)
-
         var buttonListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
                 var pos = holder.getLayoutPosition(); //getting position
@@ -50,6 +49,8 @@ class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>)
             }
         }
         holder.layout.row_latest_button.setOnClickListener(buttonListener)
+
+        setProgress(episodeList[position], holder)
     }
 
     override fun getItemCount(): Int {
@@ -75,7 +76,7 @@ class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>)
         val displayMetrics = DisplayMetrics()
         (context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
         val fullWidth = displayMetrics.widthPixels
-        var imageWidth = holder.layout.row_latest_image.width
+        var imageWidth = (fullWidth * 0.20).roundToInt() //holder.layout.row_latest_image.width
         var workingWidth = fullWidth - imageWidth
 
         val playPoint = episodeInfo.playPointAsLong
