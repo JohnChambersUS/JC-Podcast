@@ -24,8 +24,8 @@ android {
         applicationId "us.johnchambers.podcast"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 20
-        versionName "1.20.0"
+        versionCode 21
+        versionName "1.21.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
