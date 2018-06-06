@@ -11,7 +11,10 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
 
     init {
         _episodes = mutableListOf()
-        loadCurrentEpisodeList()
+        loadCurrentEpisodeList() //non destructive load
+        if (_episodes.isEmpty()) {
+            refreshEpisodeList() //reindex if there was nothing in index
+        }
     }
 
     override fun updatePlaylistInfo() {
