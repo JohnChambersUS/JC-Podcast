@@ -11,7 +11,7 @@
         android:id="@+id/manual_no_episodes_message"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="No Episodes In Playlist"
+        android:text="No Episodes In Queue, Tap Add"
         android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textColor="@color/white"
         android:gravity="center"
