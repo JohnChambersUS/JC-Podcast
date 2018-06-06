@@ -65,16 +65,12 @@ class LatestPlaylistFragment : MyFragment() {
 
         _view = inflater.inflate(R.layout.fragment_latest_playlist, container, false)
 
-        if (_playlist.getEpisodes().size == 0) {
-            //var noEpisodesMessage = _view.findViewById(R.id.no_episodes_message) as TextView
-            //var recyclerView = _view.findViewById(R.id.latest_recycler_view) as RecyclerView
-            //noEpisodesMessage.visibility = View.VISIBLE
-            //recyclerView.visibility = View.GONE
+        if (_playlist.getCurrentEpisodes().size == 0) {
             flipNoDataMessage()
         }
         else {
             _viewManager = LinearLayoutManager(context)
-            _viewAdapter = LatestPlaylistRecyclerAdapter(_playlist.getEpisodes())
+            _viewAdapter = LatestPlaylistRecyclerAdapter(_playlist.getCurrentEpisodes())
 
             _recyclerView = _view.findViewById(R.id.latest_recycler_view) as RecyclerView
 
@@ -84,7 +80,6 @@ class LatestPlaylistFragment : MyFragment() {
                 adapter = _viewAdapter
             }
 
-            //_recyclerView.setItemAnimator(null)
             setItemTouchHelper()
         }
         addNavigationListener()
@@ -117,7 +112,7 @@ class LatestPlaylistFragment : MyFragment() {
     //* local methods
     //*********************************
     private fun refreshEpisodeView() {
-        _playlist.removeItem(-2) //will refresh list without wiping db
+        _playlist.getCurrentEpisodes() //will refresh list without wiping db
         _recyclerView.adapter.notifyDataSetChanged()
     }
 
@@ -195,7 +190,7 @@ class LatestPlaylistFragment : MyFragment() {
                     _recyclerView.adapter.notifyItemChanged(row)
                 }
                 3 -> {
-                    var pid = _playlist.getEpisodes().get(row).pid
+                    var pid = _playlist.getCurrentEpisodes().get(row).pid
                     var pt = PodcastDatabaseHelper.getInstance().getPodcastRow(pid)
                     EventBus.getDefault().post(OpenSubscribedDetailEvent(pt))
                 }

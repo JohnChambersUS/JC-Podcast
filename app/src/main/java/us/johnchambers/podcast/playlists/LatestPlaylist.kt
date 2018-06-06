@@ -11,7 +11,7 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
 
     init {
         _episodes = mutableListOf()
-        refreshEpisodeList()
+        loadCurrentEpisodeList()
     }
 
     override fun updatePlaylistInfo() {
@@ -71,6 +71,13 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
         _episodeIndex = -1
         return _episodes
     }
+
+    override fun getCurrentEpisodes() : MutableList<EpisodeTable>  {
+        loadCurrentEpisodeList()
+        _episodeIndex = -1
+        return _episodes
+    }
+
     //*** wipes table and reloads ***
     private fun refreshEpisodeList() {
         _episodes.clear()
