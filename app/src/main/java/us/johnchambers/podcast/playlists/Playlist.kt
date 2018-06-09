@@ -61,6 +61,10 @@ abstract class Playlist(playlistId : String) {
         return _episodes
     }
 
+    open fun getCurrentEpisodes() : MutableList<EpisodeTable>  {
+        return _episodes
+    }
+
     open fun getEpisode(position: Int) : EpisodeTable {
         try {
             return _episodes.get(position)

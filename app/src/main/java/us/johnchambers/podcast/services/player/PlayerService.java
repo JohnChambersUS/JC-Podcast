@@ -67,6 +67,7 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
+import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.objects.GlobalOptions;
 import us.johnchambers.podcast.objects.PodcastOptions;
@@ -444,27 +445,26 @@ public class PlayerService extends Service {
     //******************************
     public void setDefaultImage(EpisodeTable episode) {
 
+        //if empty episode table
         if (episode.isEmpty()) {
-            Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
+            Bitmap defaultPodcastPicture = BitmapFactory.decodeResource(_context.getResources(),
                     R.raw.nopodcast);
-            _playerView.setDefaultArtwork(podcastPicture);
+            _playerView.setDefaultArtwork(defaultPodcastPicture);
             return;
         }
-
+        //if we have data in the episode table
         PodcastTable pt = PodcastDatabaseHelper.getInstance().getPodcastRow(episode.getPid());
+        final Bitmap podcastPicture = MyFileManager.getInstance().getPodcastImage(episode.getPid());
+
         String url = pt.getLogoUrl();
-        if (url.equals("")) {
-            Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
-                    R.raw.missing_podcast_image);
+        if (url.equals("")) { //then use stored image
             _playerView.setDefaultArtwork(podcastPicture);
             return;
         }
 
         try {
             url = new URL(url).toString();
-        } catch (Exception e) {
-            Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
-                    R.raw.missing_podcast_image);
+        } catch (Exception e) { //if bad url use stored image
             _playerView.setDefaultArtwork(podcastPicture);
             return;
         }
@@ -481,9 +481,7 @@ public class PlayerService extends Service {
                 Bitmap.Config.ARGB_8888,
                 new Response.ErrorListener() {
                     @Override
-                    public void onErrorResponse(VolleyError e) {
-                        Bitmap podcastPicture = BitmapFactory.decodeResource(_context.getResources(),
-                                R.raw.missing_podcast_image);
+                    public void onErrorResponse(VolleyError e) { //if error retreiving, use stored image
                         _playerView.setDefaultArtwork(podcastPicture);
                     }
                 }
