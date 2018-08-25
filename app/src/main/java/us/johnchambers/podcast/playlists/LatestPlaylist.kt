@@ -1,5 +1,6 @@
 package us.johnchambers.podcast.playlists
 
+import com.crashlytics.android.Crashlytics
 import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.misc.C
@@ -94,7 +95,14 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
         _episodes.clear()
         var episodeIds = PodcastDatabaseHelper.getInstance().currentLatestPlaylist
         for (episode in episodeIds) {
-            _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
+            try {
+                _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
+            }
+            catch (e: Exception) {
+                Crashlytics.log(1,
+                        "LatestPlaylist",
+                        "loadCurrenEpisodeList, " + e.message)
+            }
         }
     }
 
