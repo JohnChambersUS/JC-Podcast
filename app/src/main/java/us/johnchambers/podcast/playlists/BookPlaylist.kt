@@ -13,6 +13,7 @@ class BookPlaylist(playlist: String) : PodcastPlaylist(playlist) {
             _episodeIndex = _episodes.size - 1
         do {
             var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
+            if (currEpisode == null) continue
             _episodes.set(_episodeIndex, currEpisode)
             if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
                 return currEpisode

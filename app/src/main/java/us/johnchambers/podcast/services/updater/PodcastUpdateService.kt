@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.database.PodcastTable
+import us.johnchambers.podcast.misc.C
 import us.johnchambers.podcast.misc.L
 import us.johnchambers.podcast.misc.VolleyQueue
 import us.johnchambers.podcast.objects.FeedResponseWrapper
@@ -47,13 +48,20 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
     }
 
     fun updatePodcasts() {
-        var podcastList = PodcastDatabaseHelper.getInstance(applicationContext).allPodcastRows
-        podcastStack.addAll(podcastList)
+        try {
+            podcastStack.add(C.podcasts.UPDATE_STACK.pop())
+        } catch (e: Exception) {}
+
+        if (podcastStack.isEmpty()) {
+            var podcastList = PodcastDatabaseHelper.getInstance(applicationContext).allPodcastRows
+            podcastStack.addAll(podcastList)
+        }
+
         updateNextPodcast()
     }
 
     fun updateNextPodcast() {
-        if (podcastStack.empty()) {
+        if (podcastStack.isEmpty()) {
             clearNotification()
             stopSelf()
         }

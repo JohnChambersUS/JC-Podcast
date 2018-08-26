@@ -35,6 +35,7 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
         var foundIt = false
         do {
             var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
+            if (currEpisode == null) continue
             _episodes.set(_episodeIndex, currEpisode)
             if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
                 foundIt = true
@@ -89,7 +90,12 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
         _episodes.clear()
         var episodeIds = PodcastDatabaseHelper.getInstance().updatedLatestPlaylist
         for (episode in episodeIds) {
-            _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
+            try {
+                _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
+            } catch (e: Exception) {
+                Crashlytics.log(1,"LatestPlaylist",
+                        "refreshEpisodeList, unable to find episode, " + e.message)
+            }
         }
     }
     //*** does not wipe tables ***

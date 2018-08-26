@@ -32,6 +32,7 @@ open class PodcastPlaylist(playlist : String) : Playlist(playlist) {
         if (_episodeIndex > -1) {
             do {
                 var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
+                if (currEpisode == null) continue
                 _episodes.set(_episodeIndex, currEpisode)
                 if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
                     return currEpisode
@@ -43,6 +44,7 @@ open class PodcastPlaylist(playlist : String) : Playlist(playlist) {
         _episodeIndex = 0
         do {
             var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
+            if (currEpisode == null) continue
             _episodes.set(_episodeIndex, currEpisode)
             if (currEpisode.playPointAsLong > 0) { //found a played one
                 if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
@@ -63,7 +65,7 @@ open class PodcastPlaylist(playlist : String) : Playlist(playlist) {
         //if there are no unplayed episodes, then play 0 episode.
         _episodeIndex = 0
         var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
-        if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
+        if ((currEpisode != null) && (currEpisode.playPointAsLong < currEpisode.lengthAsLong)) {
             return currEpisode
         }
 

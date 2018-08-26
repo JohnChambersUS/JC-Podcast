@@ -37,6 +37,7 @@ import us.johnchambers.podcast.Events.fragment.SubscribedFragmentRowItemClickedE
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
+import us.johnchambers.podcast.Events.service.UpdatePodcastsEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
@@ -259,6 +260,14 @@ public class MainNavigationActivity extends AppCompatActivity
     @Subscribe
     public void onEvent(OpenSubscribedFragmentEvent event) {
         _myFragmentManager.activateSubscribedFragment();
+    }
+
+    @Subscribe
+    public void onEvent(UpdatePodcastsEvent event) {
+        Intent intent = new Intent() ;
+        intent.setClassName("us.johnchambers.podcast" ,
+                "us.johnchambers.podcast.services.updater.PodcastUpdateService") ;
+        this.startService(intent);
     }
 
 }

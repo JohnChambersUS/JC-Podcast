@@ -2,6 +2,7 @@ package us.johnchambers.podcast.screens.fragments.subscribe;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.session.MediaSession;
@@ -38,12 +39,14 @@ import java.util.List;
 
 import us.johnchambers.podcast.Events.fragment.CloseSubscribeFragmentEvent;
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
+import us.johnchambers.podcast.Events.service.UpdatePodcastsEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastMode;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.misc.C;
 import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.objects.DocketPodcast;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
@@ -192,9 +195,15 @@ public class SubscribeFragment extends MyFragment {
         }
         if (!subscribed) {
             addNewPodcastToDB(mode);
-            addAllEpisodesToDatabase();
+            //start subscription in background instead of doing it here
+            //addAllEpisodesToDatabase();
+            //put event bus to start service
+            EventBus.getDefault().post(new UpdatePodcastsEvent());
+
             Toast.makeText(getContext(),
-                    "You are now subscribed to: " + _feedResponseWrapper.getPodcastTitle(),
+                    "Adding episodes now for "
+                            + _feedResponseWrapper.getPodcastTitle()
+                            + ", it may take a few moments",
                     Toast.LENGTH_LONG).show();
         }
         else {
@@ -211,8 +220,9 @@ public class SubscribeFragment extends MyFragment {
 
         PodcastTable newRow = _feedResponseWrapper.getFilledPodcastTable(mode);
         PodcastDatabaseHelper.getInstance().insertPodcastTableRow(newRow);
+        C.podcasts.INSTANCE.getUPDATE_STACK().push(newRow);
     }
-
+    /*
     private void addAllEpisodesToDatabase() {
         _feedResponseWrapper.processEpisodesFromBottom();
         while (_feedResponseWrapper.prevEpisode()) {
@@ -220,7 +230,7 @@ public class SubscribeFragment extends MyFragment {
             PodcastDatabaseHelper.getInstance().insertEpisodeTableRow(currEpisode);
         }
     }
-
+    */
     private void init(SearchRow sr) {
         _searchRow = sr;
     }
