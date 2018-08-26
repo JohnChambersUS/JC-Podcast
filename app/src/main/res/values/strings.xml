@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">A Different Podcast App</string>
-    <string name="app_version">Codename: Oslo</string>
+    <string name="app_version">Codename: Polo</string>
     <string name="title_activity_main_navigation">MainNavigationActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
