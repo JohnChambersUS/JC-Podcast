@@ -1,5 +1,6 @@
 package us.johnchambers.podcast.playlists
 
+import com.crashlytics.android.Crashlytics
 import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PlaylistTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
@@ -29,6 +30,7 @@ class ManualPlaylist() : Playlist(C.playlist.MANUAL_PLAYLIST){
         var foundIt = false
         do {
             var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
+            if (currEpisode == null) continue
             _episodes.set(_episodeIndex, currEpisode)
             if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
                 foundIt = true
@@ -63,7 +65,9 @@ class ManualPlaylist() : Playlist(C.playlist.MANUAL_PLAYLIST){
                 _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(item.eid))
             }
             catch (e: Exception) {
-                //todo gargage in playlist table, needs to be removed
+                Crashlytics.log(1,
+                        "ManualPlaylist",
+                        "refreshEpisodeList, " + e.message)
             }
         }
     }

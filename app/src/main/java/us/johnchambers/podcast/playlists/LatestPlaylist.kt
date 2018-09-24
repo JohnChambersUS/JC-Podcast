@@ -1,8 +1,11 @@
 package us.johnchambers.podcast.playlists
 
+import android.widget.Toast
+import com.crashlytics.android.Crashlytics
 import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.misc.C
+import us.johnchambers.podcast.misc.L
 import us.johnchambers.podcast.objects.Docket
 
 @Suppress("UNUSED_PARAMETER")
@@ -32,6 +35,7 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
         var foundIt = false
         do {
             var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
+            if (currEpisode == null) continue
             _episodes.set(_episodeIndex, currEpisode)
             if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
                 foundIt = true
@@ -86,7 +90,12 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
         _episodes.clear()
         var episodeIds = PodcastDatabaseHelper.getInstance().updatedLatestPlaylist
         for (episode in episodeIds) {
-            _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
+            try {
+                _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
+            } catch (e: Exception) {
+                Crashlytics.log(1,"LatestPlaylist",
+                        "refreshEpisodeList, unable to find episode, " + e.message)
+            }
         }
     }
     //*** does not wipe tables ***
@@ -94,7 +103,13 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
         _episodes.clear()
         var episodeIds = PodcastDatabaseHelper.getInstance().currentLatestPlaylist
         for (episode in episodeIds) {
-            _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
+            try {
+                _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
+            }
+            catch (e: Exception) {
+                Crashlytics.log(1,"LatestPlaylist",
+                        "loadCurrentEpisodeList, unable to find episode, " + e.message)
+            }
         }
     }
 

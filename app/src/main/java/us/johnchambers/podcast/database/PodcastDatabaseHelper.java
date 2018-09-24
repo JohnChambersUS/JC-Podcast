@@ -226,13 +226,21 @@ public class PodcastDatabaseHelper {
     }
 
     public String getNowPlayingEpisodeId() {
-        NowPlayingTable np = _database.dao().getNowPlayingTableByKey(NowPlaying.EID);
-        return np.getValue();
+        try {
+            NowPlayingTable np = _database.dao().getNowPlayingTableByKey(NowPlaying.EID);
+            return np.getValue();
+        } catch (Exception e) {
+            return NowPlaying.NO_EPISODE_FLAG;
+        }
     }
 
     public String getNowPlayingPlaylist() {
-        NowPlayingTable np = _database.dao().getNowPlayingTableByKey(NowPlaying.PLAYLIST);
-        return np.getValue();
+        try {
+            NowPlayingTable np = _database.dao().getNowPlayingTableByKey(NowPlaying.PLAYLIST);
+            return np.getValue();
+        } catch (Exception e) {
+            return NowPlaying.NO_PLAYLIST_FLAG;
+        }
     }
 
     public void conditionalyClearNowPlaying(String playlistId) {
