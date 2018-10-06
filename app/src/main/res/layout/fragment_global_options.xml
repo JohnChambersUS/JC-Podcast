@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -51,5 +56,87 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="top"
+        >
+
+        <TextView
+            android:id="@+id/rewindText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rewind Minutes"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorPrimaryDark"
+            android:padding="@dimen/big_margin"
+            android:layout_gravity="center_vertical"
+            android:layout_weight=".50"
+            />
+
+        <EditText
+            android:id="@+id/rewindInputBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:text="000"
+            android:padding="@dimen/fab_margin"
+            android:layout_gravity="center_vertical"
+            />
+
+
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/big_margin"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="top"
+        android:background="@color/lightBackground"
+        >
+
+        <TextView
+            android:id="@+id/forwardText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forward Minutes"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorPrimaryDark"
+            android:padding="@dimen/big_margin"
+            android:layout_gravity="center_vertical"
+            android:layout_weight=".50"
+            />
+
+        <EditText
+            android:id="@+id/forwardInputBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:text="000"
+            android:padding="@dimen/fab_margin"
+            android:layout_gravity="center_vertical"
+            />
+
+
+        <android.support.v4.widget.Space
+            android:layout_width="@dimen/big_margin"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        />
 
 </LinearLayout>
+
+</ScrollView>

@@ -79,4 +79,85 @@ class GlobalOptions {
     //* end of speed section
     //**********************************
 
+    //**********************************
+    //* rewind section
+    //**********************************
+
+    fun getRewindMinutesAsString() : String {
+        try {
+            return PodcastDatabaseHelper.getInstance().getOptionValue(C.options.GLOBAL, C.options.REWIND_MINUTES)
+        }
+        catch (e: Exception) { //return default value if can't find
+            return "1"
+        }
+    }
+
+    fun getRewindMinutesAsMilliseconds() : Int {
+        var returnValue = 60000;
+        try {
+            var storedValue = PodcastDatabaseHelper.getInstance().getOptionValue(C.options.GLOBAL, C.options.REWIND_MINUTES)
+            var value = storedValue.toInt()
+            returnValue = value * 60000
+        }
+        catch (e: Exception) { //return default value if can't find
+
+        }
+        return returnValue
+    }
+
+
+    fun setRewindMinutes(mins:String) {
+        if (mins.equals("")) return
+        var row = OptionsTable()
+        row.pid = C.options.GLOBAL
+        row.option = C.options.REWIND_MINUTES
+        row.setting = mins
+        PodcastDatabaseHelper.getInstance().upsertOption(row)
+    }
+
+    //**********************************
+    //* end of rewind section
+    //**********************************
+
+    //**********************************
+    //* forward section
+    //**********************************
+
+    fun getForwardMinutesAsString() : String {
+        try {
+            return PodcastDatabaseHelper.getInstance().getOptionValue(C.options.GLOBAL, C.options.FORWARD_MINUTES)
+        }
+        catch (e: Exception) { //return default value if can't find
+            return "10"
+        }
+    }
+
+    fun getForwardMinutesAsMilliseconds() : Int {
+        var returnValue = 60000;
+        try {
+            var storedValue = PodcastDatabaseHelper.getInstance().getOptionValue(C.options.GLOBAL, C.options.FORWARD_MINUTES)
+            var value = storedValue.toInt()
+            returnValue = value * 60000
+        }
+        catch (e: Exception) { //return default value if can't find
+
+        }
+        return returnValue
+    }
+
+
+    fun setForwardMinutes(mins:String) {
+        if (mins.equals("")) return
+        var row = OptionsTable()
+        row.pid = C.options.GLOBAL
+        row.option = C.options.FORWARD_MINUTES
+        row.setting = mins
+        PodcastDatabaseHelper.getInstance().upsertOption(row)
+    }
+
+    //**********************************
+    //* end of forward section
+    //**********************************
+
+
 }

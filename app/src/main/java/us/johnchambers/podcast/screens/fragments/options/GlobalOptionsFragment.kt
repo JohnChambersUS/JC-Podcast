@@ -3,9 +3,12 @@ package us.johnchambers.podcast.screens.fragments.options
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.NumberPicker
 
 import us.johnchambers.podcast.R
@@ -28,6 +31,9 @@ class GlobalOptionsFragment : MyFragment() {
 
     lateinit var _view : View
     lateinit var _speedPicker : NumberPicker
+    lateinit var _rewindBox : EditText
+    lateinit var _forwardBox : EditText
+
     val _globalOptions : GlobalOptions by lazy { GlobalOptions() }
 
 
@@ -42,6 +48,8 @@ class GlobalOptionsFragment : MyFragment() {
                               savedInstanceState: Bundle?): View? {
         _view = inflater.inflate(R.layout.fragment_global_options, container, false)
         initSpeedPicker()
+        initRewind()
+        initForward()
         return _view
     }
 
@@ -71,6 +79,43 @@ class GlobalOptionsFragment : MyFragment() {
                 _globalOptions.setCurrentSpeed(new)
             }
         })
+    }
+
+    private fun initRewind() {
+        _rewindBox = _view.findViewById(R.id.rewindInputBox) as EditText
+        var currMins = _globalOptions.getRewindMinutesAsString()
+        var e = Editable.Factory.getInstance().newEditable(currMins)
+        _rewindBox.text = e
+        _rewindBox.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                _globalOptions.setRewindMinutes(p0.toString())
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        });
+    }
+
+    private fun initForward() {
+        _forwardBox = _view.findViewById(R.id.forwardInputBox) as EditText
+        var currMins = _globalOptions.getForwardMinutesAsString()
+        var e = Editable.Factory.getInstance().newEditable(currMins)
+        _forwardBox.text = e
+        _forwardBox.addTextChangedListener(object: TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                _globalOptions.setForwardMinutes(p0.toString())
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        });
+
 
 
     }
