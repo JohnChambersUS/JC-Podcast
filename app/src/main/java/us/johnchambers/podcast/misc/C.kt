@@ -28,6 +28,8 @@ object C {
     }
 
     object options {
+        var REWIND_MINUTES = "rewind_minutes"
+        var FORWARD_MINUTES = "forward_minutes"
         var GLOBAL = "GLOBAL"
         var KEY_SPEED = "speed"
         var NORMAL_SPEED = "normal"

@@ -19,6 +19,7 @@ import us.johnchambers.podcast.Events.player.MediaEndedEvent;
 import us.johnchambers.podcast.Events.player.TimeUpdateEvent;
 import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.objects.Docket;
+import us.johnchambers.podcast.objects.GlobalOptions;
 import us.johnchambers.podcast.playlists.NowPlaying;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.misc.Constants;
@@ -43,6 +44,7 @@ public class PlayerServiceController {
     private Playlist _playlist;
 
     private Boolean showDoneDialog = false;
+    GlobalOptions _globalOptions = new GlobalOptions();
 
     public PlayerServiceController() {}
 
@@ -79,6 +81,9 @@ public class PlayerServiceController {
             } catch(Exception e) {}
 
         }
+        playerView.setRewindIncrementMs(_globalOptions.getRewindMinutesAsMilliseconds());
+        playerView.setFastForwardIncrementMs(_globalOptions.getForwardMinutesAsMilliseconds());
+
         _service.attachPlayerToView(playerView);
     }
 

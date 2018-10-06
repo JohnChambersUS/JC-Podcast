@@ -73,6 +73,7 @@ import us.johnchambers.podcast.objects.GlobalOptions;
 import us.johnchambers.podcast.objects.PodcastOptions;
 
 import static android.media.AudioManager.STREAM_MUSIC;
+import static android.media.session.PlaybackState.STATE_SKIPPING_TO_NEXT;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 import static com.google.android.exoplayer2.Player.STATE_READY;
 import static us.johnchambers.podcast.misc.Constants.*;
@@ -101,6 +102,8 @@ public class PlayerService extends Service {
     TelephonyManager _telephoneManager;
 
     boolean _playerPhoneState = false;
+
+    GlobalOptions _globalOptions = new GlobalOptions();
 
 
     public PlayerService() {
@@ -290,11 +293,11 @@ public class PlayerService extends Service {
     }
 
     public void forwardPlayer() {
-        _player.seekTo(_player.getContentPosition() + 30000);
+        _player.seekTo(_player.getContentPosition() + _globalOptions.getForwardMinutesAsMilliseconds());
     }
 
     public void rewindPlayer() {
-        _player.seekTo(_player.getContentPosition() - 30000);
+        _player.seekTo(_player.getContentPosition() - _globalOptions.getRewindMinutesAsMilliseconds());
     }
 
     public void playEpisode(EpisodeTable episode) {
@@ -417,6 +420,11 @@ public class PlayerService extends Service {
                 _eventBus.post(new AnyKeyEvent());
             }
 
+            if (playbackState == STATE_SKIPPING_TO_NEXT) {
+                int x = 1;
+
+            }
+
         }
 
         @Override
@@ -431,7 +439,6 @@ public class PlayerService extends Service {
 
         @Override
         public void onPositionDiscontinuity() {
-
         }
 
         @Override
