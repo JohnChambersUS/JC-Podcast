@@ -60,7 +60,8 @@ dependencies {
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.0'
 
     //*** exoplayer - tooklit for playing audio & video
-    implementation 'com.google.android.exoplayer:exoplayer:r2.5.4'
+    //implementation 'com.google.android.exoplayer:exoplayer:r2.5.4'
+    implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
 
     //*** kotlin - sdk to include kotlin language
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"

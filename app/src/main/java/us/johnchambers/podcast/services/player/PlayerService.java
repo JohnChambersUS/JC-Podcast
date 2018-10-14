@@ -52,9 +52,12 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
+import com.google.android.exoplayer2.upstream.Allocator;
+import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.PriorityTaskManager;
 import com.google.android.exoplayer2.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
@@ -76,6 +79,7 @@ import us.johnchambers.podcast.objects.PodcastOptions;
 
 import static android.media.AudioManager.STREAM_MUSIC;
 import static android.media.session.PlaybackState.STATE_SKIPPING_TO_NEXT;
+import static com.google.android.exoplayer2.C.DEFAULT_BUFFER_SEGMENT_SIZE;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 import static com.google.android.exoplayer2.Player.STATE_READY;
 import static us.johnchambers.podcast.misc.Constants.*;
@@ -285,8 +289,10 @@ public class PlayerService extends Service {
 
     // Only run once for setup
     private void createEmptyPlayer() {
+
         _player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(_context),
                 new DefaultTrackSelector(), new DefaultLoadControl());
+
         _player.addListener(eventListener);
     }
 
@@ -430,8 +436,14 @@ public class PlayerService extends Service {
 
     Player.EventListener eventListener = new Player.EventListener() {
 
+       @Override
+       public void onShuffleModeEnabledChanged(boolean b) {}
+
         @Override
-        public void onTimelineChanged(Timeline timeline, Object manifest) {
+        public void onSeekProcessed() {}
+
+        @Override
+        public void onTimelineChanged(Timeline timeline, Object manifest, int num) {
 
         }
 
@@ -490,7 +502,7 @@ public class PlayerService extends Service {
         }
 
         @Override
-        public void onPositionDiscontinuity() {
+        public void onPositionDiscontinuity(int pos) {
         }
 
         @Override
