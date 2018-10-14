@@ -12,6 +12,7 @@ public final class Constants {
     public static String PLAYER_PAUSE = "Pause";
     public static String PLAYER_END = "End";
     public static String PLAYER_FORWARD = "Forward";
+    public static String PLAYER_PLAY_PAUSE = "Play Pause";
 
     public static Boolean DEBUG = false;
 
