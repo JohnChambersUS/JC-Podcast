@@ -5,10 +5,12 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
-@Entity(indices = {@Index(value = {"pid"}, unique = false)})
+//@Entity(indices = {@Index(value = {"pid"}, unique = false)})
+@Entity(indices = {@Index(value = {"pid", "option"}, unique = true)})
 public class OptionsTable {
 
-    @PrimaryKey @NonNull
+    @PrimaryKey(autoGenerate = true)
+    public int identity; //identity column
     private String pid; //podast id or special id like global
     private String option;
     private String setting;

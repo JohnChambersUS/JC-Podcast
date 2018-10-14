@@ -28,6 +28,8 @@ import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 
@@ -78,6 +80,7 @@ import static com.google.android.exoplayer2.Player.STATE_ENDED;
 import static com.google.android.exoplayer2.Player.STATE_READY;
 import static us.johnchambers.podcast.misc.Constants.*;
 
+
 public class PlayerService extends Service {
 
     private String _notificationChannelId = "us.johnchambers.player.notification";
@@ -104,6 +107,7 @@ public class PlayerService extends Service {
     boolean _playerPhoneState = false;
 
     GlobalOptions _globalOptions = new GlobalOptions();
+    Bitmap _podcastPicture = null;
 
 
     public PlayerService() {
@@ -202,6 +206,7 @@ public class PlayerService extends Service {
             notif.setChannelId(_notificationChannelId);
         }
 
+        /*
         if (!button1.equals("")) {
             Intent yesReceive = new Intent(this,
                     PlayerNotificationBroadcastReceiver.class);
@@ -211,7 +216,8 @@ public class PlayerService extends Service {
                     yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
             notif.addAction(0, button1, pendingIntentYes);
         }
-
+        */
+        /*
         if (!button2.equals("")) {
             Intent yesReceive2 = new Intent(this,
                     PlayerNotificationBroadcastReceiver.class);
@@ -220,7 +226,8 @@ public class PlayerService extends Service {
             action2 = new Notification.Action(0, button2, pendingIntentYes2);
             notif.addAction(action2);
         }
-
+        */
+        /*
         if (!button3.equals("")) {
             Intent yesReceive3 = new Intent(this,
                     PlayerNotificationBroadcastReceiver.class);
@@ -228,6 +235,49 @@ public class PlayerService extends Service {
             PendingIntent pendingIntentYes3 = PendingIntent.getBroadcast(this, 12345, yesReceive3, PendingIntent.FLAG_UPDATE_CURRENT);
             notif.addAction(0, button3, pendingIntentYes3);
         }
+        */
+
+
+        RemoteViews customView = new RemoteViews(getPackageName(), R.layout.controls_notification);
+
+        notif.setContent(customView);
+
+        //rewind button
+        customView.setImageViewResource(R.id.notification_rewind_button, R.drawable.ic_rewind_dark);
+        Intent yesReceiveRewind = new Intent(this,
+                PlayerNotificationBroadcastReceiver.class);
+        yesReceiveRewind.setAction(PLAYER_REWIND);
+        PendingIntent pendingIntentYesRewind = PendingIntent.getBroadcast(this, 12345,
+                yesReceiveRewind, PendingIntent.FLAG_UPDATE_CURRENT);
+        customView.setOnClickPendingIntent(R.id.notification_rewind_button, pendingIntentYesRewind);
+
+        //play pause button
+        if (button2.equals(PLAYER_PLAY)) { //play button showing
+            customView.setImageViewResource(R.id.notification_play_pause_button, R.drawable.ic_play_dark);
+            Intent yesReceivePlayPause = new Intent(this,
+                    PlayerNotificationBroadcastReceiver.class);
+            yesReceivePlayPause.setAction(PLAYER_PLAY);
+            PendingIntent pendingIntentYesPlayPause = PendingIntent.getBroadcast(this, 12345,
+                    yesReceivePlayPause, PendingIntent.FLAG_UPDATE_CURRENT);
+            customView.setOnClickPendingIntent(R.id.notification_play_pause_button, pendingIntentYesPlayPause);
+        } else { //pause button showing
+            customView.setImageViewResource(R.id.notification_play_pause_button, R.drawable.ic_pause_dark);
+            Intent yesReceivePlayPause = new Intent(this,
+                    PlayerNotificationBroadcastReceiver.class);
+            yesReceivePlayPause.setAction(PLAYER_PAUSE);
+            PendingIntent pendingIntentYesPlayPause = PendingIntent.getBroadcast(this, 12345,
+                    yesReceivePlayPause, PendingIntent.FLAG_UPDATE_CURRENT);
+            customView.setOnClickPendingIntent(R.id.notification_play_pause_button, pendingIntentYesPlayPause);
+        }
+
+        //forward button
+        customView.setImageViewResource(R.id.notification_forward_button, R.drawable.ic_forward_dark);
+        Intent yesReceiveForward = new Intent(this,
+                PlayerNotificationBroadcastReceiver.class);
+        yesReceiveForward.setAction(PLAYER_FORWARD);
+        PendingIntent pendingIntentYesForward = PendingIntent.getBroadcast(this, 12345,
+                yesReceiveForward, PendingIntent.FLAG_UPDATE_CURRENT);
+        customView.setOnClickPendingIntent(R.id.notification_forward_button, pendingIntentYesForward);
 
         return notif.build();
 
@@ -278,10 +328,12 @@ public class PlayerService extends Service {
 
     public void pausePlayer() {
         _player.setPlayWhenReady(false);
+        setNoticationToPaused();
     }
 
     public void resumePlayer() {
         _player.setPlayWhenReady(true);
+        setNoticationToPlaying();
     }
 
     public void flipPlayerState() {
