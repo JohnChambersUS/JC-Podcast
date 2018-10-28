@@ -178,4 +178,24 @@ public interface PodcastDao {
 
     @Query("delete from playlistTable where playlistName = :playlistName and eid = :eid ")
     void removeItemFromPlaylistTable(String playlistName, String eid);
+
+    //******************************************
+    //* TagTable table routines
+    //******************************************
+
+    @Delete
+    void deleteTagTableRow(TagTable tagTable);
+
+    @Insert
+    void insertTagTableRow(TagTable tagTable);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void upsertTagRow(TagTable row);
+
+    @Query("Select * from tagtable order by tag")
+    List<TagTable> getTagTableRows();
+
+    @Query("Select * from tagtable where tag = :tag order by tag")
+    List<TagTable> getTagTableRows(String tag);
+
 }
