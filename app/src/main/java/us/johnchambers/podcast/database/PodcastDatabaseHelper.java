@@ -387,4 +387,20 @@ public class PodcastDatabaseHelper {
         _database.dao().removeItemFromPlaylistTable(playlistName, episodeId);
     }
 
+    //************************************
+    //* Tag table methods
+    //************************************
+
+    public List<TagTable> getTagTableEntries() {
+        return _database.dao().getTagTableRows();
+    }
+
+    public void upsertTag(TagTable row) {
+        _database.dao().upsertTagRow(row);
+    }
+
+    public void deleteTag(TagTable row) {
+        _database.dao().deleteTagTableRow(row);
+    }
+
 }
