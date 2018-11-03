@@ -403,4 +403,10 @@ public class PodcastDatabaseHelper {
         _database.dao().deleteTagTableRow(row);
     }
 
+    //***************************************
+    //* Podcast Tag Table methods
+    //***************************************
+
+
+
 }

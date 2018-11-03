@@ -198,4 +198,10 @@ public interface PodcastDao {
     @Query("Select * from tagtable where tag = :tag order by tag")
     List<TagTable> getTagTableRows(String tag);
 
+    //*********************************************
+    //* PodcastTagTable table routines
+    //*********************************************
+
+
+
 }
