@@ -31,6 +31,10 @@
             android:id="@+id/nav_global_options"
             android:icon="@drawable/ic_settings_regular"
             android:title="Options" />
+        <item
+            android:id="@+id/nav_tags"
+            android:icon="@drawable/ic_tag_dark"
+            android:title="Tags" />
 
     </group>
 

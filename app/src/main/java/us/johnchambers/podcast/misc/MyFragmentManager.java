@@ -29,6 +29,7 @@ import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
 import us.johnchambers.podcast.objects.MyBackstackEntry;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 import us.johnchambers.podcast.screens.fragments.subscribed_detail.SubscribedDetailFragment;
+import us.johnchambers.podcast.screens.fragments.tag.TagFragment;
 
 public class MyFragmentManager {
 
@@ -45,6 +46,7 @@ public class MyFragmentManager {
     private final String MANUAL_PLAYLIST_FRAGMENT = "MANUAL_PLAYLIST_FRAGMENT";
     private final String GLOBAL_OPTIONS_FRAGMENT = "GLOBAL_OPTIONS_FRAGMENT";
     private final String PODCAST_OPTIONS_FRAGMENT = "PODCAST_OPTIONS_FRAGMENT";
+    private final String TAG_FRAGMENT = "TAG_FRAGMENT";
 
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
@@ -226,6 +228,20 @@ public class MyFragmentManager {
                     _toolbar.getContext().getResources().getString(R.string.podcast_options_fragment_title));
         }
     }
+
+
+    public void activateTagFragment() {
+        if (!alreadyOnTop(TAG_FRAGMENT)) {
+            TagFragment fragment = TagFragment.newInstance();
+            activateFragment(R.id.podcast_options_placeholder,
+                    fragment,
+                    PODCAST_OPTIONS_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.tag_title));
+        }
+    }
+
+
+
 
     private boolean alreadyOnTop(String fragmentName) {
         if (_backstack.size() == 0) {
