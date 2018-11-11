@@ -27,6 +27,7 @@
     <string name="latest_playlist_fragment_title">What\'s New?</string>
     <string name="global__options_fragment_title">Different</string>
     <string name="podcast_options_fragment_title">Different</string>
+    <string name="tag_title">Tags</string>
 
 
 </resources>

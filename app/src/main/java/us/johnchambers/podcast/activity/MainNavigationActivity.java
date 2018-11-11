@@ -167,8 +167,9 @@ public class MainNavigationActivity extends AppCompatActivity
             _myFragmentManager.activateManualPlaylistFragment();
         }  else if (id == R.id.nav_global_options) {
             _myFragmentManager.activateGlobalOptionsFragment();
+         } else if (id == R.id.nav_tags) {
+            _myFragmentManager.activateTagFragment();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setScrimColor(Color.TRANSPARENT);
         drawer.closeDrawer(GravityCompat.START);
