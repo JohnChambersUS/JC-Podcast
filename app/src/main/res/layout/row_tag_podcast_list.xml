@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/subscribedRow"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:background="@color/lightBackground"
+    android:layout_marginBottom="@dimen/row_margin"
+    >
+
+    <ImageView
+        android:id="@+id/row_podcast_image"
+        app:layout_widthPercent="30%"
+        app:layout_aspectRatio="100%"
+        android:scaleType="fitXY">
+    </ImageView>
+
+
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/row_podcast_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textSize="18sp"
+        app:layout_widthPercent="55%"
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/row_podcast_image"
+        >
+    </TextView>
+
+    <ImageButton
+        android:id="@+id/row_tag_star_outline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_tag_star_outline_light_background"
+        android:layout_toRightOf="@id/row_podcast_name"
+        app:layout_widthPercent="15%"
+        app:layout_aspectRatio="100%"
+        android:scaleType="fitCenter"
+        android:paddingRight="8dp"
+        android:tint="@color/colorPrimaryDark"
+        android:foregroundTintMode="add"
+        android:foregroundTint="@color/colorPrimaryDark"
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:visibility="visible"
+        />
+
+    <ImageButton
+        android:id="@+id/row_tag_star_filled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_tag_star_filled_light_background"
+        android:layout_toRightOf="@id/row_podcast_name"
+        app:layout_widthPercent="15%"
+        app:layout_aspectRatio="100%"
+        android:scaleType="fitCenter"
+        android:paddingRight="8dp"
+        android:tint="@color/colorPrimaryDark"
+        android:foregroundTintMode="add"
+        android:foregroundTint="@color/colorPrimaryDark"
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        />
+
+
+</android.support.percent.PercentRelativeLayout>

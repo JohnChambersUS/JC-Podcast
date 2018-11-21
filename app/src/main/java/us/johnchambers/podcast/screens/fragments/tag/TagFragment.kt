@@ -12,11 +12,11 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import org.greenrobot.eventbus.EventBus
-import us.johnchambers.podcast.Events.fragment.OpenSubscribedFragmentEvent
-import us.johnchambers.podcast.Events.fragment.RefreshManualPlaylistFragment
+import org.greenrobot.eventbus.Subscribe
+import us.johnchambers.podcast.Events.fragment.*
+import us.johnchambers.podcast.Events.latest.LatestRowActionButtonPressedEvent
 import us.johnchambers.podcast.Events.player.ResumePlaylistEvent
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.EpisodeTable
@@ -27,7 +27,6 @@ import us.johnchambers.podcast.misc.C
 import us.johnchambers.podcast.objects.DocketEmbededPlaylist
 import us.johnchambers.podcast.objects.DocketEpisode
 import us.johnchambers.podcast.objects.FragmentBackstackType
-import android.widget.EditText
 
 
 
@@ -37,7 +36,7 @@ class TagFragment : MyFragment() {
     lateinit var _tagList : MutableList<TagTable>
 
     private lateinit var _recyclerView : RecyclerView
-    private lateinit var _viewAdapter: RecyclerView.Adapter<*>
+    private lateinit var _viewAdapter: TagRecyclerAdapter //RecyclerView.Adapter<*>
     private lateinit var _viewManager: RecyclerView.LayoutManager
 
     private var _bottomNavigationListener: BottomNavigationView.OnNavigationItemSelectedListener? = null
@@ -53,14 +52,14 @@ class TagFragment : MyFragment() {
     }
 
     override fun getBackstackType(): FragmentBackstackType {
-        return FragmentBackstackType.BRANCH
+        return FragmentBackstackType.ROOT
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
-
+        EventBus.getDefault().register(this)
         //fill tag list
         //_tagList = PodcastDatabaseHelper.getInstance().tagTableEntries
 
@@ -72,24 +71,8 @@ class TagFragment : MyFragment() {
 
         fillTagListRecyclerView()
 
-        /*
-        if (_tagList.isEmpty()) {
-            flipNoDataMessage()
-        }
-        else {
-            _viewManager = LinearLayoutManager(context)
-            _viewAdapter = TagRecyclerAdapter(_tagList)
+        //addSubscribedDetailPlayListener() //listenter for row tap
 
-            _recyclerView = _view.findViewById(R.id.manual_recycler_view) as RecyclerView
-
-            _recyclerView.apply {
-                setHasFixedSize(false)
-                layoutManager = _viewManager
-                adapter = _viewAdapter
-            }
-            setItemTouchHelper()
-        }
-        */
         addNavigationListener()
         val navigation = _view.findViewById(R.id.manual_navigation) as BottomNavigationView
         navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener)
@@ -162,8 +145,6 @@ class TagFragment : MyFragment() {
     }
 
 
-
-
     //**********************************************
     //* setup item touch helper for recyclerview
     //**********************************************
@@ -201,6 +182,23 @@ class TagFragment : MyFragment() {
     //************************
     //* add tag functionality
     //************************
+    private fun displaySingleTagMenuDialog() {
+
+        val layoutInflaterAndroid = LayoutInflater.from(requireContext())
+        val addView = layoutInflaterAndroid.inflate(R.layout.fragment_tag_add_dialog, null)
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setView(addView)
+        val userInputDialogEditText = addView.findViewById<View>(R.id.userInputDialog) as EditText
+        builder.setNegativeButton("Cancel") { dialog, id -> dialog.cancel() }
+        builder.setPositiveButton("Add") { dialog, id -> kotlin.run {
+            updateTagTableList(userInputDialogEditText.text.toString())
+            dialog.cancel()
+            }
+        }
+
+        builder.show()
+    }
+
     private fun displayAddDialog() {
 
         val layoutInflaterAndroid = LayoutInflater.from(requireContext())
@@ -227,6 +225,57 @@ class TagFragment : MyFragment() {
         fillTagListRecyclerView()
 
     }
+
+    //***************************
+    //* event listener
+    //***************************
+    @Subscribe
+    fun onEvent(event : TagRowTappedEvent) {
+        var row = event.postion
+        var tag = event.workingTag
+
+        // add popup menu
+        val colors = arrayOf<CharSequence>("Episodes", "What's New?", "Podcasts", "Add to podcast")
+
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle("Pick an option:")
+        builder.setItems(colors) { _, which ->
+            when (which) {
+                0 -> {
+                    //_playlist.setCurrentEpisodeIndex(row)
+                    //var docket = DocketEmbededPlaylist(_playlist)
+                    //var theEvent = ResumePlaylistEvent(docket)
+                    //EventBus.getDefault().post(theEvent)
+                }
+                1 -> {
+                    //var eid = _playlist.getEpisode(row).eid
+                    //PodcastDatabaseHelper.getInstance().updateEpisodeDuration(eid, 1)
+                    //PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(eid, 0)
+                    //_playlist.removeItem(-1) //will refresh episode list
+                    //_recyclerView.adapter.notifyItemChanged(row)
+                }
+                2 -> {
+                    EventBus.getDefault().post(OpenPodcatTagListFragmentEvent(tag))
+                    //var updateRow = _playlist.getEpisode(row)
+                    //PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(updateRow.eid,
+                    //        updateRow.lengthAsLong)
+                    //_playlist.removeItem(-1) //will refresh episode list
+                    //_recyclerView.adapter.notifyItemChanged(row)
+                }
+                3 -> {
+                    //var pid = _playlist.getCurrentEpisodes().get(row).pid
+                    //var pt = PodcastDatabaseHelper.getInstance().getPodcastRow(pid)
+                    //EventBus.getDefault().post(OpenSubscribedDetailEvent(pt))
+                }
+            }
+        }
+
+        builder.setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+
+        builder.show()
+    }
+
+
 
 
 }

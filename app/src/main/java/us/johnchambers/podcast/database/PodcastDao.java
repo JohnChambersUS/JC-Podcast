@@ -201,7 +201,32 @@ public interface PodcastDao {
     //*********************************************
     //* PodcastTagTable table routines
     //*********************************************
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void upsertPodcastTagRow(PodcastTagTable row);
+
+    @Delete
+    void deletePodcastTagTableRow(PodcastTagTable row);
+
+    @Query("DELETE FROM podcasttagtable WHERE pid = :pid and tag = :tag")
+    void deletePodcastTagTable2(String pid, String tag);
+
+    @Query("DELETE FROM podcasttagtable WHERE pid = :pid")
+    void deletePodcastTagTableByPodcastId(String pid);
+
+    @Query("DELETE FROM podcasttagtable WHERE tag = :tag")
+    void deletePodcastTagTableByTag(String tag);
 
 
+    //*******************************************
+    //* mixed and joined returns
+    //*******************************************
+
+    //* join podcast & podcastTagTable
+
+    @Query("SELECT p.pid, t.tag FROM podcasttable p LEFT JOIN podcasttagtable t ON p.pid = t.pid")
+    List<PodcastTagJoinedObject> getPodcastsAndTags();
+
+    @Query("SELECT p.pid, t.tag FROM podcasttable p LEFT JOIN (select * from podcasttagtable where tag = :tag) t ON p.pid = t.pid;")
+    List<PodcastTagJoinedObject> getPodcastsAndTags(String tag);
 
 }

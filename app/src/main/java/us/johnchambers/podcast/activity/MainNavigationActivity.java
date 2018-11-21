@@ -28,6 +28,7 @@ import java.util.Calendar;
 import us.johnchambers.podcast.Events.fragment.CloseSubscribeFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.CloseSubscribedDetailFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
+import us.johnchambers.podcast.Events.fragment.OpenPodcatTagListFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedFragmentEvent;
@@ -262,6 +263,12 @@ public class MainNavigationActivity extends AppCompatActivity
     public void onEvent(OpenSubscribedFragmentEvent event) {
         _myFragmentManager.activateSubscribedFragment();
     }
+
+    @Subscribe
+    public void onEvent(OpenPodcatTagListFragmentEvent event) {
+        _myFragmentManager.activatePodcatsTagListFragment(event.get_tag());
+    }
+
 
     @Subscribe
     public void onEvent(UpdatePodcastsEvent event) {
