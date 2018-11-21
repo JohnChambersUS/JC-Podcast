@@ -28,6 +28,7 @@
     <string name="global__options_fragment_title">Different</string>
     <string name="podcast_options_fragment_title">Different</string>
     <string name="tag_title">Tags</string>
+    <string name="tag_podcast_list_title">Tagged Podcasts</string>
 
 
 </resources>

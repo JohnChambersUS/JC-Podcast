@@ -9,6 +9,13 @@
     tools:showIn="@layout/app_bar_main_navigation">
 
     <FrameLayout
+        android:id="@+id/root_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+
+    <FrameLayout
         android:id="@+id/manual_playlist_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -64,6 +71,12 @@
 
     <FrameLayout
         android:id="@+id/global_options_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/podcast_tag_list_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>

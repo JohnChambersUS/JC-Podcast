@@ -30,6 +30,7 @@ import us.johnchambers.podcast.objects.MyBackstackEntry;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 import us.johnchambers.podcast.screens.fragments.subscribed_detail.SubscribedDetailFragment;
 import us.johnchambers.podcast.screens.fragments.tag.TagFragment;
+import us.johnchambers.podcast.screens.fragments.tag.tag_podcast_list.TagPodcastListFragment;
 
 public class MyFragmentManager {
 
@@ -47,6 +48,7 @@ public class MyFragmentManager {
     private final String GLOBAL_OPTIONS_FRAGMENT = "GLOBAL_OPTIONS_FRAGMENT";
     private final String PODCAST_OPTIONS_FRAGMENT = "PODCAST_OPTIONS_FRAGMENT";
     private final String TAG_FRAGMENT = "TAG_FRAGMENT";
+    private final String PODCAST_TAG_LIST_FRAGMENT = "PODCAST_TAG_LIST_FRAGMENT";
 
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
@@ -233,15 +235,24 @@ public class MyFragmentManager {
     public void activateTagFragment() {
         if (!alreadyOnTop(TAG_FRAGMENT)) {
             TagFragment fragment = TagFragment.newInstance();
-            activateFragment(R.id.podcast_options_placeholder,
+            activateFragment(R.id.root_placeholder,
                     fragment,
-                    PODCAST_OPTIONS_FRAGMENT,
+                    TAG_FRAGMENT,
                     _toolbar.getContext().getResources().getString(R.string.tag_title));
         }
     }
 
 
-
+    public void activatePodcatsTagListFragment(String tag) {
+        if (!alreadyOnTop(PODCAST_TAG_LIST_FRAGMENT)) {
+            TagPodcastListFragment fragment = TagPodcastListFragment.newInstance();
+            fragment.setTag(tag);
+            activateFragment(R.id.podcast_tag_list_placeholder,
+                    fragment,
+                    PODCAST_TAG_LIST_FRAGMENT,
+                    tag);
+        }
+    }
 
     private boolean alreadyOnTop(String fragmentName) {
         if (_backstack.size() == 0) {
