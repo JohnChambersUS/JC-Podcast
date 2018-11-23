@@ -4,11 +4,8 @@ package us.johnchambers.podcast.misc;
  * Created by johnchambers on 7/20/17.
  */
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import java.util.Stack;
 
@@ -29,7 +26,8 @@ import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
 import us.johnchambers.podcast.objects.MyBackstackEntry;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 import us.johnchambers.podcast.screens.fragments.subscribed_detail.SubscribedDetailFragment;
-import us.johnchambers.podcast.screens.fragments.tag.TagFragment;
+import us.johnchambers.podcast.screens.fragments.tag.tag_add_to_podcast_fragment.TagAddToPodcastFragment;
+import us.johnchambers.podcast.screens.fragments.tag.tag_fragment.TagFragment;
 import us.johnchambers.podcast.screens.fragments.tag.tag_podcast_list.TagPodcastListFragment;
 
 public class MyFragmentManager {
@@ -49,6 +47,7 @@ public class MyFragmentManager {
     private final String PODCAST_OPTIONS_FRAGMENT = "PODCAST_OPTIONS_FRAGMENT";
     private final String TAG_FRAGMENT = "TAG_FRAGMENT";
     private final String PODCAST_TAG_LIST_FRAGMENT = "PODCAST_TAG_LIST_FRAGMENT";
+    private final String TAG_ADD_TO_PODCAST_FRAGMENT = "TAG_ADD_TO_PODCAST_FRAGMENT";
 
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
@@ -253,6 +252,18 @@ public class MyFragmentManager {
                     tag);
         }
     }
+
+    public void activateTagAddToPodcastFragment(String pid) {
+        if (!alreadyOnTop(TAG_ADD_TO_PODCAST_FRAGMENT)) {
+            TagAddToPodcastFragment fragment = TagAddToPodcastFragment.newInstance();
+            fragment.setPid(pid);
+            activateFragment(R.id.tag_add_to_podcastplaceholder,
+                    fragment,
+                    TAG_ADD_TO_PODCAST_FRAGMENT,
+                    "Tag The Podcast");
+        }
+    }
+
 
     private boolean alreadyOnTop(String fragmentName) {
         if (_backstack.size() == 0) {

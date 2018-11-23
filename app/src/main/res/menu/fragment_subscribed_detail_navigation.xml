@@ -7,7 +7,15 @@
         android:icon="@drawable/ic_remove_light"
         android:title="REMOVE"
         android:visible="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        />
+
+    <item
+        android:id="@+id/bm_tag"
+        android:icon="@drawable/ic_tag_light"
+        android:title="TAG"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         />
 
     <item
@@ -15,7 +23,7 @@
         android:icon="@drawable/ic_settings_light"
         android:title="OPTIONS"
         android:visible="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         />
 
     <item
@@ -23,9 +31,7 @@
         android:icon="@drawable/ic_play_light"
         android:title="PLAY"
         android:visible="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         />
-
-
 
 </menu>

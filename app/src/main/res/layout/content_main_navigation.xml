@@ -81,5 +81,11 @@
         android:layout_height="match_parent">
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/tag_add_to_podcastplaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
 
 </android.support.constraint.ConstraintLayout>

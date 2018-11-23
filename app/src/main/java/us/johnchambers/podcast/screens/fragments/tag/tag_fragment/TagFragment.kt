@@ -1,7 +1,5 @@
-package us.johnchambers.podcast.screens.fragments.tag
+package us.johnchambers.podcast.screens.fragments.tag.tag_fragment
 
-import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AlertDialog
@@ -16,18 +14,11 @@ import android.widget.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import us.johnchambers.podcast.Events.fragment.*
-import us.johnchambers.podcast.Events.latest.LatestRowActionButtonPressedEvent
-import us.johnchambers.podcast.Events.player.ResumePlaylistEvent
 import us.johnchambers.podcast.R
-import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.database.TagTable
 import us.johnchambers.podcast.fragments.MyFragment
-import us.johnchambers.podcast.misc.C
-import us.johnchambers.podcast.objects.DocketEmbededPlaylist
-import us.johnchambers.podcast.objects.DocketEpisode
 import us.johnchambers.podcast.objects.FragmentBackstackType
-
 
 
 class TagFragment : MyFragment() {

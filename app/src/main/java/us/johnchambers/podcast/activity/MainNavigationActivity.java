@@ -32,6 +32,7 @@ import us.johnchambers.podcast.Events.fragment.OpenPodcatTagListFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedFragmentEvent;
+import us.johnchambers.podcast.Events.fragment.OpenTagAddToPodcastFragment;
 import us.johnchambers.podcast.Events.fragment.RefreshManualPlaylistFragment;
 import us.johnchambers.podcast.Events.fragment.RefreshSubscribedFragment;
 import us.johnchambers.podcast.Events.fragment.SubscribedFragmentRowItemClickedEvent;
@@ -269,6 +270,11 @@ public class MainNavigationActivity extends AppCompatActivity
         _myFragmentManager.activatePodcatsTagListFragment(event.get_tag());
     }
 
+
+    @Subscribe
+    public void onEvent(OpenTagAddToPodcastFragment event) {
+        _myFragmentManager.activateTagAddToPodcastFragment(event.getPid());
+    }
 
     @Subscribe
     public void onEvent(UpdatePodcastsEvent event) {
