@@ -434,4 +434,8 @@ public class PodcastDatabaseHelper {
         return _database.dao().getPodcastsAndTags(tag);
     }
 
+    public List<PodcastTagJoinedObject> getPodcastAndTagInfoByPid(String pid) {
+        return _database.dao().getPodcastsAndTagsByPid(pid);
+    }
+
 }

@@ -229,4 +229,7 @@ public interface PodcastDao {
     @Query("SELECT p.pid, t.tag FROM podcasttable p LEFT JOIN (select * from podcasttagtable where tag = :tag) t ON p.pid = t.pid;")
     List<PodcastTagJoinedObject> getPodcastsAndTags(String tag);
 
+    @Query("SELECT p.pid, t.tag FROM tagtable t LEFT JOIN (select * from podcasttagtable where pid = :pid) p ON p.tag = t.tag order by t.tag;")
+    List<PodcastTagJoinedObject> getPodcastsAndTagsByPid(String pid);
+
 }
