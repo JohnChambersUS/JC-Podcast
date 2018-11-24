@@ -14,9 +14,14 @@ abstract class Playlist(playlistId : String) {
     lateinit var _episodes : MutableList<EpisodeTable>
     var _episodeIndex = -1
     var _playistId = playlistId
+    var _newOnly = false;
 
     init {
 
+    }
+
+    open fun setNewOnly(newValue: Boolean) {
+        _newOnly = newValue
     }
 
     open fun isEmpty() : Boolean {

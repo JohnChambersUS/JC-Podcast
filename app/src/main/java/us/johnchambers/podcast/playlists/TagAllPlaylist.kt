@@ -89,8 +89,12 @@ class TagAllPlaylist(useExisting : Boolean, tag: String) : Playlist(C.playlist.G
     //*** wipes table and reloads ***
     private fun refreshEpisodeList() {
         _episodes.clear()
-        _episodes = (PodcastDatabaseHelper.getInstance().getRefreshedListOfTagPlaylistEpisodes(_tag))
-                //.sortedWith(compareBy({it.pubDateAsDate})) as MutableList<EpisodeTable>
+        if (_newOnly) {
+            _episodes = (PodcastDatabaseHelper.getInstance().getRefreshedListOfTagPlaylistEpisodesTop(_tag))
+        }
+        else {
+            _episodes = (PodcastDatabaseHelper.getInstance().getRefreshedListOfTagPlaylistEpisodes(_tag))
+        }
         //delete all tag related from playlist-tag
         PodcastDatabaseHelper.getInstance().removePlaylistFromPlaylistTable(getPlaylistId())
         //insert all episodes into playlist-tag

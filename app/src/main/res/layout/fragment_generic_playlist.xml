@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/secondaryAccent"
+    >
+
+    <TextView
+        android:id="@+id/no_episodes_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No New Podcast Episodes"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:visibility="gone"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/latest_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:background="@color/secondaryAccent"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:visibility="visible"
+        />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginStart="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/fragment_generic_playlist_navigation"
+        style="@style/jcTheme"
+        android:background="@color/colorPrimary"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/white"
+        />
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <item
+        android:id="@+id/bm_refresh"
+        android:icon="@drawable/ic_refresh_light"
+        android:title="REFRESH"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+    <item
+        android:id="@+id/bm_show_all"
+        android:icon="@drawable/ic_tag_unfiltered_dark_background"
+        android:title="ALL"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+    <item
+        android:id="@+id/bm_show_new"
+        android:icon="@drawable/ic_tag_filtered_dark_background"
+        android:title="NEW"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+    <item
+        android:id="@+id/bm_play"
+        android:icon="@drawable/ic_play_light"
+        android:title="PLAY"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        />
+
+</menu>
