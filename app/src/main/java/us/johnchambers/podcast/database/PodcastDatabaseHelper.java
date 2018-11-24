@@ -392,6 +392,14 @@ public class PodcastDatabaseHelper {
         _database.dao().removeItemFromPlaylistTable(playlistName, episodeId);
     }
 
+    public List<PlaylistTable> getCurrentTagPlaylistEpisodes(String tag) {
+        return _database.dao().getCurrentTagPlaylistEpisodes(tag);
+    }
+
+    public List<EpisodeTable> getRefreshedListOfTagPlaylistEpisodes(String tag) {
+        return _database.dao().getRefreshedListOfTagPlaylistEpisodes(tag);
+    }
+
     //************************************
     //* Tag table methods
     //************************************

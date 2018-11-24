@@ -27,6 +27,7 @@ import java.util.Calendar;
 
 import us.johnchambers.podcast.Events.fragment.CloseSubscribeFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.CloseSubscribedDetailFragmentEvent;
+import us.johnchambers.podcast.Events.fragment.OpenGenericPlaylistFragment;
 import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
 import us.johnchambers.podcast.Events.fragment.OpenPodcatTagListFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
@@ -275,6 +276,12 @@ public class MainNavigationActivity extends AppCompatActivity
     public void onEvent(OpenTagAddToPodcastFragment event) {
         _myFragmentManager.activateTagAddToPodcastFragment(event.getPid());
     }
+
+    @Subscribe
+    public void onEvent(OpenGenericPlaylistFragment event) {
+        _myFragmentManager.activateGenericPlaylistFragment(event.get_tag());
+    }
+
 
     @Subscribe
     public void onEvent(UpdatePodcastsEvent event) {
