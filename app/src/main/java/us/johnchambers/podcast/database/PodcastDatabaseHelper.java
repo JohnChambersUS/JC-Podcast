@@ -400,6 +400,11 @@ public class PodcastDatabaseHelper {
         return _database.dao().getRefreshedListOfTagPlaylistEpisodes(tag);
     }
 
+    public List<EpisodeTable> getRefreshedListOfTagPlaylistEpisodesTop(String tag) {
+        return _database.dao().getRefreshedListOfTagPlaylistEpisodesTop(tag);
+    }
+
+
     //************************************
     //* Tag table methods
     //************************************
