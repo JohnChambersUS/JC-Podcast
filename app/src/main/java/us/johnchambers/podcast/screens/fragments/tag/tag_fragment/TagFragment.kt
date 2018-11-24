@@ -226,17 +226,17 @@ class TagFragment : MyFragment() {
         var tag = event.workingTag
 
         // add popup menu
-        val colors = arrayOf<CharSequence>("Episodes", "What's New?", "Podcasts", "Add to podcast")
+        val colors = arrayOf<CharSequence>("Episodes", "What's New?", "Podcasts")
 
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Pick an option:")
         builder.setItems(colors) { _, which ->
             when (which) {
                 0 -> {
-                    //_playlist.setCurrentEpisodeIndex(row)
-                    //var docket = DocketEmbededPlaylist(_playlist)
-                    //var theEvent = ResumePlaylistEvent(docket)
-                    //EventBus.getDefault().post(theEvent)
+                    //call event to open generic playlist with tag
+                    EventBus.getDefault().post(OpenGenericPlaylistFragment(tag))
+
+
                 }
                 1 -> {
                     //var eid = _playlist.getEpisode(row).eid
@@ -247,16 +247,6 @@ class TagFragment : MyFragment() {
                 }
                 2 -> {
                     EventBus.getDefault().post(OpenPodcatTagListFragmentEvent(tag))
-                    //var updateRow = _playlist.getEpisode(row)
-                    //PodcastDatabaseHelper.getInstance().updateEpisodePlayPoint(updateRow.eid,
-                    //        updateRow.lengthAsLong)
-                    //_playlist.removeItem(-1) //will refresh episode list
-                    //_recyclerView.adapter.notifyItemChanged(row)
-                }
-                3 -> {
-                    //var pid = _playlist.getCurrentEpisodes().get(row).pid
-                    //var pt = PodcastDatabaseHelper.getInstance().getPodcastRow(pid)
-                    //EventBus.getDefault().post(OpenSubscribedDetailEvent(pt))
                 }
             }
         }

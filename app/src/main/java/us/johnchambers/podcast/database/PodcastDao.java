@@ -179,6 +179,13 @@ public interface PodcastDao {
     @Query("delete from playlistTable where playlistName = :playlistName and eid = :eid ")
     void removeItemFromPlaylistTable(String playlistName, String eid);
 
+    @Query("select * from playlisttable where playlistname like :tag || '_%'")
+    List<PlaylistTable> getCurrentTagPlaylistEpisodes(String tag);
+
+    @Query("select * from episodetable e where pid in (select pid from podcasttagtable where tag = :tag) order by e.publication_date DESC;")
+    List<EpisodeTable> getRefreshedListOfTagPlaylistEpisodes(String tag);
+
+
     //******************************************
     //* TagTable table routines
     //******************************************

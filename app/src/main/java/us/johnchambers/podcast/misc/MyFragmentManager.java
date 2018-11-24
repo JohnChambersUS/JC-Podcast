@@ -18,6 +18,7 @@ import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.options.GlobalOptionsFragment;
 import us.johnchambers.podcast.screens.fragments.options.PodcastOptionsFragment;
 import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
+import us.johnchambers.podcast.screens.fragments.playlist_generic.GenericPlaylistFragment;
 import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistFragment;
 import us.johnchambers.podcast.screens.fragments.playlist_manual.ManualPlaylistFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
@@ -48,6 +49,7 @@ public class MyFragmentManager {
     private final String TAG_FRAGMENT = "TAG_FRAGMENT";
     private final String PODCAST_TAG_LIST_FRAGMENT = "PODCAST_TAG_LIST_FRAGMENT";
     private final String TAG_ADD_TO_PODCAST_FRAGMENT = "TAG_ADD_TO_PODCAST_FRAGMENT";
+    private final String GENERIC_PLAYLIST_FRAGMENT = "GENERIC_PLAYLIST_FRAGMENT";
 
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
@@ -261,6 +263,16 @@ public class MyFragmentManager {
                     fragment,
                     TAG_ADD_TO_PODCAST_FRAGMENT,
                     "Tag The Podcast");
+        }
+    }
+
+    public void activateGenericPlaylistFragment(String tag) {
+        if (!alreadyOnTop(GENERIC_PLAYLIST_FRAGMENT)) {
+            GenericPlaylistFragment fragment = GenericPlaylistFragment.newInstance(tag);
+            activateFragment(R.id.generic_playlist_fragment_placeholder,
+                    fragment,
+                    GENERIC_PLAYLIST_FRAGMENT,
+                    tag); //todo change tag info
         }
     }
 

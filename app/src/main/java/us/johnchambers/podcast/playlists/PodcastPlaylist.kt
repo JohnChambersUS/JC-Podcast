@@ -15,8 +15,8 @@ open class PodcastPlaylist(playlist : String) : Playlist(playlist) {
     var _podcastInfo : PodcastTable
 
     init {
-        _podcastInfo = PodcastDatabaseHelper.getInstance().getPodcastRow(_plalyistId)
-        _episodes = PodcastDatabaseHelper.getInstance().getEpisodesSortedNewest(_plalyistId)
+        _podcastInfo = PodcastDatabaseHelper.getInstance().getPodcastRow(getPlaylistId())
+        _episodes = PodcastDatabaseHelper.getInstance().getEpisodesSortedNewest(getPlaylistId())
     }
 
     //private, protected
