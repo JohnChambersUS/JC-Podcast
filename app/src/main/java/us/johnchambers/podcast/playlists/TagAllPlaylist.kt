@@ -117,7 +117,7 @@ class TagAllPlaylist(useExisting : Boolean, tag: String) : Playlist(C.playlist.G
 
     override fun removeItem(index: Int) {
         if ((index > -1) && (index < _episodes.size)) {
-            PodcastDatabaseHelper.getInstance().removeEpisodeFromLatestTable(_episodes.get(index).eid)
+            PodcastDatabaseHelper.getInstance().removeItemFromPlaylistTable(_playistId, _episodes.get(index).eid)
         }
         loadCurrentEpisodeList()
         if (index == _episodeIndex) {
@@ -133,12 +133,11 @@ class TagAllPlaylist(useExisting : Boolean, tag: String) : Playlist(C.playlist.G
     }
 
     private fun updateDatabase() {
-        //remove all items for latest playlist
-        PodcastDatabaseHelper.getInstance()
-                .deleteAllFromLatestTable()
+        //remove all items for playlist
+        PodcastDatabaseHelper.getInstance().removePlaylistFromPlaylistTable(_playistId)
         //run loop to add items in _episode list to db
         for (episode in _episodes) {
-            PodcastDatabaseHelper.getInstance().addToLatestTable(episode)
+            PodcastDatabaseHelper.getInstance().upsertPlaylistRow(_playistId, episode.eid)
         }
     }
 

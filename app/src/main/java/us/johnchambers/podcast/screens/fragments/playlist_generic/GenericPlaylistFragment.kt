@@ -274,6 +274,7 @@ class GenericPlaylistFragment : MyFragment() {
 
                 if (dragFrom !== -1 && dragTo !== -1 && dragFrom !== dragTo) {
                     _playlist.moveItem(dragFrom, dragTo)
+                    //fillRecyclerView()
                     _viewAdapter.notifyDataSetChanged() //todo should clear with adapter fix
                 }
                 dragTo = -1
@@ -283,6 +284,7 @@ class GenericPlaylistFragment : MyFragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 var position = viewHolder.getAdapterPosition();
                 _playlist.removeItem(position)
+                //fillRecyclerView()
                 _viewAdapter.notifyDataSetChanged() //todo should clear with adapter fix
                 flipNoDataMessage()
             }

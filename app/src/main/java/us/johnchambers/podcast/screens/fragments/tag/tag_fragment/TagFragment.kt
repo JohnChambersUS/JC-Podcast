@@ -229,7 +229,7 @@ class TagFragment : MyFragment() {
         val colors = arrayOf<CharSequence>("Tag podcasts", "Show episodes")
 
         val builder = AlertDialog.Builder(requireContext())
-        builder.setTitle("Your preference?")
+        builder.setTitle("Your preference?  ")
         builder.setItems(colors) { _, which ->
             when (which) {
                 0 -> {
