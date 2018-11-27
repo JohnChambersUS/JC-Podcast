@@ -35,7 +35,7 @@ class GenericPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.layout.context
-        holder.layout.row_latest_episode_name.text =  (episodeList[position].title).trim() + " " + (episodeList[position].pubDate)
+        holder.layout.row_latest_episode_name.text =  (episodeList[position].title).trim() // + " " + (episodeList[position].pubDate)
         var bitmap = MyFileManager.getInstance().getPodcastImage(episodeList[position].pid)
         holder.layout.row_latest_image.setImageBitmap(bitmap)
 
