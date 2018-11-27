@@ -171,6 +171,10 @@ class GenericPlaylistFragment : MyFragment() {
             fillRecyclerView()
         }
 
+        if (item.itemId == R.id.bm_goto_bottom) {
+            _viewManager.scrollToPosition(_playlist.getCurrentEpisodes().size - 1)
+        }
+
         if (item.itemId == R.id.bm_play) {
             var docket = DocketEmbededPlaylist(_playlist)
             var event = ResumePlaylistEvent(docket)
