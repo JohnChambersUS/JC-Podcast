@@ -7,7 +7,7 @@
         android:icon="@drawable/ic_refresh_light"
         android:title="REFRESH"
         android:visible="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
     <item
@@ -15,7 +15,7 @@
         android:icon="@drawable/ic_tag_unfiltered_dark_background"
         android:title="ALL"
         android:visible="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
     <item
@@ -23,7 +23,15 @@
         android:icon="@drawable/ic_tag_filtered_dark_background"
         android:title="NEW"
         android:visible="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        />
+
+    <item
+        android:id="@+id/bm_goto_bottom"
+        android:icon="@drawable/ic_down_dark_background"
+        android:title="BOTTOM"
+        android:visible="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         />
 
     <item

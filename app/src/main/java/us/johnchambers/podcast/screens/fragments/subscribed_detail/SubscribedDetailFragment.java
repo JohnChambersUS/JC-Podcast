@@ -236,6 +236,10 @@ public class SubscribedDetailFragment extends MyFragment {
         if (item.getItemId() == R.id.bm_settings) {
             EventBus.getDefault().post(new OpenPodcastOptionsFragment(_podcastTable.getPid()));
         }
+        if (item.getItemId() == R.id.bm_goto_bottom) {
+            ListView lv = (ListView) _view.findViewById(R.id.subscribed_detail_episode_list_view);
+            lv.setSelection(_adapter.getCount() - 1);
+        }
         if (item.getItemId() == R.id.bm_play) {
             EventBus.getDefault()
                     .post(new ResumePlaylistEvent(new DocketPodcast(_podcastTable.getPid())));
