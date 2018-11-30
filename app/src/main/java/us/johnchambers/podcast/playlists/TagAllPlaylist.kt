@@ -13,7 +13,7 @@ class TagAllPlaylist(useExisting : Boolean, tag: String) : Playlist(C.playlist.G
     var _tag = tag
 
     init {
-        _playistId = _tag + C.playlist.TAG_PLAYLIST_SUFFIX
+        _playistId = _tag // + C.playlist.TAG_PLAYLIST_SUFFIX
         _episodes = mutableListOf()
         loadCurrentEpisodeList() //non destructive load
         if (_episodes.isEmpty()) {
@@ -26,6 +26,13 @@ class TagAllPlaylist(useExisting : Boolean, tag: String) : Playlist(C.playlist.G
     }
 
     override fun getNextEpisode(): EpisodeTable {
+
+        var episodeFinder = NextEpisodePodcast()
+        _episodeIndex = episodeFinder.getNextEpisode(_episodes, _episodeIndex)
+        if (_episodeIndex < 0) return EpisodeTable()
+        return PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
+
+        /*
         if (_episodes.size == 0) {
             return EpisodeTable()
         }
@@ -52,6 +59,8 @@ class TagAllPlaylist(useExisting : Boolean, tag: String) : Playlist(C.playlist.G
             return _episodes.get(_episodeIndex)
         else
             return EpisodeTable()
+
+    */
     }
 
     override fun setCurrentEpisode(eid : String) {
@@ -70,7 +79,7 @@ class TagAllPlaylist(useExisting : Boolean, tag: String) : Playlist(C.playlist.G
         } while (_episodeIndex > -1)
     }
 
-    override fun alignWithNowPlayingInfo() {
+    override fun alignWithNowPlayingInfo() { //todo
 
     }
 
@@ -99,7 +108,7 @@ class TagAllPlaylist(useExisting : Boolean, tag: String) : Playlist(C.playlist.G
         PodcastDatabaseHelper.getInstance().removePlaylistFromPlaylistTable(getPlaylistId())
         //insert all episodes into playlist-tag
         for (episode in _episodes) {
-            PodcastDatabaseHelper.getInstance().upsertPlaylistRow(_playistId, episode.eid)
+            PodcastDatabaseHelper.getInstance().upsertPlaylistRow(getPlaylistId(), episode.eid)
         }
     }
     //*** does not wipe tables ***

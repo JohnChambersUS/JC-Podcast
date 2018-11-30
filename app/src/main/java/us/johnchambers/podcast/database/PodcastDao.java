@@ -179,7 +179,7 @@ public interface PodcastDao {
     @Query("delete from playlistTable where playlistName = :playlistName and eid = :eid ")
     void removeItemFromPlaylistTable(String playlistName, String eid);
 
-    @Query("select * from playlisttable where playlistname like :tag || '_%'")
+    @Query("select * from playlisttable where playlistname = :tag order by identity")
     List<PlaylistTable> getCurrentTagPlaylistEpisodes(String tag);
 
     @Query("select * from episodetable e where pid in (select pid from podcasttagtable where tag = :tag) order by e.publication_date DESC;")
@@ -187,6 +187,9 @@ public interface PodcastDao {
 
     @Query("select * from episodetable e where pid in (select pid from podcasttagtable where tag = :tag) group by e.pid order by e.publication_date DESC  limit (select count(*) from podcasttagtable where tag = :tag);")
     List<EpisodeTable> getRefreshedListOfTagPlaylistEpisodesTop(String tag);
+
+    @Query("select count(*) from playlisttable where playlistName = :playlistId")
+    int getPlaylistCount(String playlistId);
 
 
     //******************************************

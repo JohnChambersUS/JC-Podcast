@@ -404,6 +404,10 @@ public class PodcastDatabaseHelper {
         return _database.dao().getRefreshedListOfTagPlaylistEpisodesTop(tag);
     }
 
+    public int getPlaylistCount(String playlistId) {
+        return _database.dao().getPlaylistCount(playlistId);
+    }
+
 
     //************************************
     //* Tag table methods
