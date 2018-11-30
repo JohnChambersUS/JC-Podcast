@@ -160,8 +160,7 @@ class TagFragment : MyFragment() {
                 var itemToRemove = _tagList.get(position)
                 PodcastDatabaseHelper.getInstance().deleteTag(itemToRemove);
                 _tagList.removeAt(position)
-                //_viewAdapter.notifyDataSetChanged()
-                //flipNoDataMessage()
+                PodcastDatabaseHelper.getInstance().removePlaylistFromPlaylistTable(itemToRemove.tag)
                 fillTagListRecyclerView()
             }
         }
