@@ -66,8 +66,6 @@ object PlaylistFactory {
         if ((npPlaylistId.equals("")) || (npPlaylistId.equals(NowPlaying.NO_PLAYLIST_FLAG)))
             return EmptyPlaylist()
 
-
-
         //if latest-playlist-flag
         //  make new latest-playlist
         //  set current episode to one in playlist
@@ -99,6 +97,17 @@ object PlaylistFactory {
                 pl.setCurrentEpisode(npEpisode)
                 return pl
             }
+        }
+
+        //if playlist exists - count number of episodes in playlist
+        //if count > 0
+        //  build generic playlist
+        //  return generic playlist
+        var playlistCount = PodcastDatabaseHelper.getInstance().getPlaylistCount(npPlaylistId)
+        if (playlistCount > 0) {
+            var pl = TagAllPlaylist(true, npPlaylistId)
+            pl.setCurrentEpisode(npEpisode)
+            return pl
         }
 
         //final

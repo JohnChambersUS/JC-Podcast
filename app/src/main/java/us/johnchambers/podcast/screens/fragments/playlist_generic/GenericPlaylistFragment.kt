@@ -121,6 +121,7 @@ class GenericPlaylistFragment : MyFragment() {
             return
         }
         _viewManager = LinearLayoutManager(context)
+        var ep = _playlist.getCurrentEpisodes()
         _viewAdapter = GenericPlaylistRecyclerAdapter(_playlist.getCurrentEpisodes()) //todo add to recycler
 
         _recyclerView = _view.findViewById(R.id.latest_recycler_view) as RecyclerView //todo can I use this view?
