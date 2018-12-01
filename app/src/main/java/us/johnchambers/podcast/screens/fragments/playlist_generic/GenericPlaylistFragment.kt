@@ -22,6 +22,7 @@ import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.fragments.MyFragment
 import us.johnchambers.podcast.misc.BottomNavigationViewHelper
+import us.johnchambers.podcast.misc.Constants
 import us.johnchambers.podcast.objects.DocketEmbededPlaylist
 import us.johnchambers.podcast.objects.DocketLatest
 import us.johnchambers.podcast.objects.DocketTagAllPlaylist
@@ -31,6 +32,10 @@ import us.johnchambers.podcast.playlists.PlaylistFactory
 import us.johnchambers.podcast.playlists.TagAllPlaylist
 import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistFragment
 import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistRecyclerAdapter
+import us.johnchambers.podcast.misc.Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS
+import us.johnchambers.podcast.misc.TapGuard
+
+
 
 class GenericPlaylistFragment : MyFragment() {
 
@@ -45,6 +50,7 @@ class GenericPlaylistFragment : MyFragment() {
     private lateinit var _navigation: BottomNavigationView
 
     private var _bottomNavigationListener: BottomNavigationView.OnNavigationItemSelectedListener? = null
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS)
 
     companion object {
         @JvmStatic
@@ -155,6 +161,7 @@ class GenericPlaylistFragment : MyFragment() {
     //*********************************
 
     private fun processNavigation(item: MenuItem) {
+        if (_tapGuard.tooSoon()) return
         if (item.itemId == R.id.bm_refresh) {
             _playlist.getEpisodes() //will cause an episode refresh in playlist
             fillRecyclerView()

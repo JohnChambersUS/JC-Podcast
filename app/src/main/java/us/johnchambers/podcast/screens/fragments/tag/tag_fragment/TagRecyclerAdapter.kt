@@ -10,9 +10,13 @@ import org.greenrobot.eventbus.EventBus
 import us.johnchambers.podcast.Events.fragment.TagRowTappedEvent
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.TagTable
+import us.johnchambers.podcast.misc.Constants
+import us.johnchambers.podcast.misc.TapGuard
 
 class TagRecyclerAdapter (private val tagList: List<TagTable>) :
         RecyclerView.Adapter<TagRecyclerAdapter.ViewHolder>() {
+
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS)
 
     class ViewHolder(val layout : PercentRelativeLayout) : RecyclerView.ViewHolder(layout)
 
@@ -35,6 +39,7 @@ class TagRecyclerAdapter (private val tagList: List<TagTable>) :
 
         var buttonListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
+                if (_tapGuard.tooSoon()) return
                 var pos = holder.getLayoutPosition(); //getting position
                 EventBus.getDefault().post(TagRowTappedEvent(pos, tagList[position].tag.trim()))
             }

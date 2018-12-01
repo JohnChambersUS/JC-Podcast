@@ -14,7 +14,7 @@ public final class Constants {
     public static String PLAYER_FORWARD = "Forward";
     public static String PLAYER_PLAY_PAUSE = "Play Pause";
 
-    public static Boolean DEBUG = false;
+    public static Boolean DEBUG = true;
 
     public static int UPDATE_HOUR = 5;
     public static int UPDATE_MINUTE = 11;
@@ -33,6 +33,9 @@ public final class Constants {
 
     public static String NO_PID_FLAG = "no_pid";
     public static String NO_EID_FLAG = "no_eid";
+
+    public static int MINIMUM_MILLISECONDS_BETWEEN_TAPS = 1000;
+    public static int MINIMUM_MILLISECONDS_BETWEEN_TAPS_SHORT = 250;
 
     private Constants() {}
 

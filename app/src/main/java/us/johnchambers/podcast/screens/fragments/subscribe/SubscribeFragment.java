@@ -48,6 +48,7 @@ import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.C;
 import us.johnchambers.podcast.misc.Constants;
+import us.johnchambers.podcast.misc.TapGuard;
 import us.johnchambers.podcast.objects.DocketPodcast;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.misc.MyFileManager;
@@ -67,6 +68,8 @@ public class SubscribeFragment extends MyFragment {
     private Context _context;
 
     private BottomNavigationView.OnNavigationItemSelectedListener _bottomNavigationListener;
+
+    private TapGuard _tapGuard = new TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS);
 
     public SubscribeFragment() {
         // Required empty public constructor
@@ -121,6 +124,7 @@ public class SubscribeFragment extends MyFragment {
     //*********************************
 
     private void processNavigation(MenuItem item) {
+        if (_tapGuard.tooSoon()) return;
         if (item.getItemId() == R.id.bm_subscribe) {
             openSubscribeDialog();
         }

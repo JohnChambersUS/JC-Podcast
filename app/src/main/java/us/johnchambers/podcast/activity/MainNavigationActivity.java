@@ -45,6 +45,7 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.Constants;
+import us.johnchambers.podcast.misc.TapGuard;
 import us.johnchambers.podcast.objects.DocketEmpty;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
@@ -61,6 +62,7 @@ public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     MyFragmentManager _myFragmentManager = null;
+    private TapGuard _tapGuard = new TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +151,7 @@ public class MainNavigationActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        if (_tapGuard.tooSoon()) return true;
         int id = item.getItemId();
 
         if (id == R.id.nav_search) {

@@ -28,6 +28,8 @@ import android.widget.TextView
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent
 import us.johnchambers.podcast.Events.fragment.SubscribedDetailClosedEvent
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent
+import us.johnchambers.podcast.misc.Constants
+import us.johnchambers.podcast.misc.TapGuard
 
 
 /**
@@ -46,7 +48,7 @@ class LatestPlaylistFragment : MyFragment() {
     private lateinit var _viewManager: RecyclerView.LayoutManager
 
     private var _bottomNavigationListener: BottomNavigationView.OnNavigationItemSelectedListener? = null
-
+   // private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS)
     companion object {
         @JvmStatic
         fun newInstance(): LatestPlaylistFragment {
