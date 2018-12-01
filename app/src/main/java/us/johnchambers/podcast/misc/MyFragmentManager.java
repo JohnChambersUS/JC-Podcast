@@ -94,8 +94,21 @@ public class MyFragmentManager {
         }
     }
 
+    private void closeAllFragments() {
+        while (_backstack.size() > 0) {
+            MyBackstackEntry currEntry = (MyBackstackEntry) _backstack.pop();
+            _fragmentManager.beginTransaction().
+                    remove(_fragmentManager.findFragmentByTag(currEntry.getFragmentTag()))
+                    .commit();
+        }
+    }
+
     private void activateFragment(int containerViewId, MyFragment frag, String fragmentName, String fragmentTitle) {
         closeInfoFragments();
+        if (frag.getBackstackType() == FragmentBackstackType.ROOT) {
+            closeAllFragments();
+            containerViewId = R.id.root_placeholder;
+        }
         _fragmentManager
                 .beginTransaction()
                 .add(containerViewId, frag, fragmentName)
@@ -272,7 +285,7 @@ public class MyFragmentManager {
             activateFragment(R.id.generic_playlist_fragment_placeholder,
                     fragment,
                     GENERIC_PLAYLIST_FRAGMENT,
-                    tag); //todo change tag info
+                    tag);
         }
     }
 
