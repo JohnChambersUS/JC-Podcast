@@ -17,12 +17,16 @@ import us.johnchambers.podcast.Events.manual.ManualRowActionButtonPressedEvent
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PlaylistTable
+import us.johnchambers.podcast.misc.Constants
 import us.johnchambers.podcast.misc.MyFileManager
+import us.johnchambers.podcast.misc.TapGuard
 import us.johnchambers.podcast.screens.fragments.playlist_manual.ManualPlaylistRecyclerAdapter
 import kotlin.math.roundToInt
 
 class ManualPlaylistRecyclerAdapter (private val episodeList: List<EpisodeTable>) :
         RecyclerView.Adapter<ManualPlaylistRecyclerAdapter.ViewHolder>() {
+
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS)
 
     class ViewHolder(val layout : PercentRelativeLayout) : RecyclerView.ViewHolder(layout)
 
@@ -49,6 +53,7 @@ class ManualPlaylistRecyclerAdapter (private val episodeList: List<EpisodeTable>
 
         var buttonListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
+                if (_tapGuard.tooSoon()) return
                 var pos = holder.getLayoutPosition(); //getting position
                 EventBus.getDefault().post(ManualRowActionButtonPressedEvent(pos))
             }

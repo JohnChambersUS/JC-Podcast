@@ -19,6 +19,8 @@ import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.database.PodcastTagJoinedObject
 import us.johnchambers.podcast.database.TagTable
 import us.johnchambers.podcast.fragments.MyFragment
+import us.johnchambers.podcast.misc.Constants
+import us.johnchambers.podcast.misc.TapGuard
 import us.johnchambers.podcast.objects.FragmentBackstackType
 import us.johnchambers.podcast.screens.fragments.tag.tag_podcast_list.TagPodcastListFragment
 import us.johnchambers.podcast.screens.fragments.tag.tag_podcast_list.TagPodcastListRecyclerAdapter
@@ -34,7 +36,7 @@ class TagAddToPodcastFragment : MyFragment()  {
     lateinit var _workingTag : String
     lateinit var _workingPid : String
     private var _bottomNavigationListener: BottomNavigationView.OnNavigationItemSelectedListener? = null
-
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS)
     companion object {
         @JvmStatic
         fun newInstance() =
@@ -121,7 +123,7 @@ class TagAddToPodcastFragment : MyFragment()  {
     //*********************************
 
     private fun processNavigation(item: MenuItem) {
-
+        if (_tapGuard.tooSoon()) return
         if (item.itemId == R.id.mp_add_tag) {
             displayAddDialog()
         }

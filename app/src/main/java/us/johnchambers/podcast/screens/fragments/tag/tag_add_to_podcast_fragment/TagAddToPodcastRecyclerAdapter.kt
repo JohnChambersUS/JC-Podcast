@@ -14,13 +14,16 @@ import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.database.PodcastTagJoinedObject
 import us.johnchambers.podcast.database.PodcastTagTable
+import us.johnchambers.podcast.misc.Constants
 import us.johnchambers.podcast.misc.MyFileManager
+import us.johnchambers.podcast.misc.TapGuard
 
 
 class TagAddToPodcastRecyclerAdapter(private val podcastList: List<PodcastTagJoinedObject>) :
         RecyclerView.Adapter<TagAddToPodcastRecyclerAdapter.ViewHolder>() {
 
     lateinit var _workingPid : String
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS_SHORT)
 
     class ViewHolder(val layout : PercentRelativeLayout) : RecyclerView.ViewHolder(layout)
 
@@ -52,6 +55,7 @@ class TagAddToPodcastRecyclerAdapter(private val podcastList: List<PodcastTagJoi
         //create hollow listener
         var outlinedStarListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
+                if (_tapGuard.tooSoon()) return
                 var pos = holder.getLayoutPosition(); //getting position
                 //flip view
                 holder.layout.row_tag_star_filled2.visibility = View.VISIBLE
@@ -71,6 +75,7 @@ class TagAddToPodcastRecyclerAdapter(private val podcastList: List<PodcastTagJoi
         //create filled listener
         var filledStarListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
+                if (_tapGuard.tooSoon()) return
                 var pos = holder.getLayoutPosition(); //getting position
                 holder.layout.row_tag_star_filled2.visibility = View.GONE
                 holder.layout.row_tag_star_outline2.visibility = View.VISIBLE

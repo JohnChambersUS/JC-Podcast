@@ -24,6 +24,8 @@ import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.misc.Constants;
+import us.johnchambers.podcast.misc.TapGuard;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 public class SubscribedFragment extends MyFragment {
@@ -31,6 +33,8 @@ public class SubscribedFragment extends MyFragment {
     SubscribedAdapter _adapter;
     private View _view;
     private FragmentBackstackType _fragmentBackstackType = FragmentBackstackType.BRANCH;
+
+    private TapGuard _tapGuard = new TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS);
 
     public SubscribedFragment() {
         // Required empty public constructor
@@ -114,6 +118,7 @@ public class SubscribedFragment extends MyFragment {
             public void onItemClick(AdapterView<?> adapter, View v, int position,
                                     long arg3)
             {
+                if (_tapGuard.tooSoon()) return;
                 PodcastTable pt = _adapter.getItem(position);
                 EventBus.getDefault().post(new SubscribedFragmentRowItemClickedEvent(pt));
             }

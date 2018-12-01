@@ -18,6 +18,8 @@ import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.database.TagTable
 import us.johnchambers.podcast.fragments.MyFragment
+import us.johnchambers.podcast.misc.Constants
+import us.johnchambers.podcast.misc.TapGuard
 import us.johnchambers.podcast.objects.FragmentBackstackType
 
 
@@ -31,7 +33,7 @@ class TagFragment : MyFragment() {
     private lateinit var _viewManager: RecyclerView.LayoutManager
 
     private var _bottomNavigationListener: BottomNavigationView.OnNavigationItemSelectedListener? = null
-
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS)
     companion object {
         @JvmStatic
         fun newInstance() =
@@ -122,6 +124,7 @@ class TagFragment : MyFragment() {
     private fun processNavigation(item: MenuItem) {
 
         if (item.itemId == R.id.mp_add) {
+            if (_tapGuard.tooSoon()) return
             displayAddDialog()
         }
 

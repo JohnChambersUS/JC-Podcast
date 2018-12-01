@@ -22,9 +22,13 @@ import org.greenrobot.eventbus.EventBus
 import us.johnchambers.podcast.Events.latest.LatestRowActionButtonPressedEvent
 import us.johnchambers.podcast.misc.MyFileManager
 import kotlin.math.roundToInt
+import us.johnchambers.podcast.misc.Constants
+import us.johnchambers.podcast.misc.TapGuard
 
 class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>) :
         RecyclerView.Adapter<LatestPlaylistRecyclerAdapter.ViewHolder>() {
+
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS)
 
     class ViewHolder(val layout : PercentRelativeLayout) : RecyclerView.ViewHolder(layout)
 
@@ -44,6 +48,7 @@ class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>)
 
         var buttonListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
+                if (_tapGuard.tooSoon()) return
                 var pos = holder.getLayoutPosition(); //getting position
                 EventBus.getDefault().post(LatestRowActionButtonPressedEvent(pos))
             }

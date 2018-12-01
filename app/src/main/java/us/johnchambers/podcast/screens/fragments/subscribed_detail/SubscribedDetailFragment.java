@@ -35,7 +35,9 @@ import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.BottomNavigationViewHelper;
 import us.johnchambers.podcast.misc.C;
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.MyFileManager;
+import us.johnchambers.podcast.misc.TapGuard;
 import us.johnchambers.podcast.objects.DocketEpisode;
 import us.johnchambers.podcast.objects.DocketPodcast;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
@@ -49,6 +51,7 @@ public class SubscribedDetailFragment extends MyFragment {
     private static Context _context;
 
     private BottomNavigationView.OnNavigationItemSelectedListener _bottomNavigationListener;
+    private TapGuard _tapGuard = new TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS);
 
     public SubscribedDetailFragment() {
         // Required empty public constructor
@@ -168,6 +171,7 @@ public class SubscribedDetailFragment extends MyFragment {
     }
 
     private void processRowTap(AdapterView listView, int position) {
+        if (_tapGuard.tooSoon()) return;
         EpisodeTable panelRow = _adapter.headerListGetItem(position);
         displayRowMenu(panelRow, position);
         //EventBus.getDefault().post(new ResumePlaylistEvent(new DocketEpisode(panelRow.getEid())));
@@ -227,6 +231,7 @@ public class SubscribedDetailFragment extends MyFragment {
     //*********************************
 
     private void processNavigation(MenuItem item) {
+        if (_tapGuard.tooSoon()) return;
         if (item.getItemId() == R.id.bm_unsubscribe) {
             unsubscribeDialog();
         }
