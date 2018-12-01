@@ -339,8 +339,13 @@ public class PodcastDatabaseHelper {
         //********** remove options if needed
         _database.dao().removePodcastFromOptionsTable(pid);
 
+        //********** remove from tag-podcast table
+        _database.dao().deletePodcastTagTableByPodcastId(pid);
+
+
         deleteEpisodeRows(pid);
         deletePodcastRow(pid);
+
 
     }
 
@@ -385,6 +390,69 @@ public class PodcastDatabaseHelper {
 
     public void removeItemFromPlaylistTable(String playlistName, String episodeId) {
         _database.dao().removeItemFromPlaylistTable(playlistName, episodeId);
+    }
+
+    public List<PlaylistTable> getCurrentTagPlaylistEpisodes(String tag) {
+        return _database.dao().getCurrentTagPlaylistEpisodes(tag);
+    }
+
+    public List<EpisodeTable> getRefreshedListOfTagPlaylistEpisodes(String tag) {
+        return _database.dao().getRefreshedListOfTagPlaylistEpisodes(tag);
+    }
+
+    public List<EpisodeTable> getRefreshedListOfTagPlaylistEpisodesTop(String tag) {
+        return _database.dao().getRefreshedListOfTagPlaylistEpisodesTop(tag);
+    }
+
+    public int getPlaylistCount(String playlistId) {
+        return _database.dao().getPlaylistCount(playlistId);
+    }
+
+
+    //************************************
+    //* Tag table methods
+    //************************************
+
+    public List<TagTable> getTagTableEntries() {
+        return _database.dao().getTagTableRows();
+    }
+
+    public void upsertTag(TagTable row) {
+        _database.dao().upsertTagRow(row);
+    }
+
+    public void deleteTag(TagTable row) {
+        _database.dao().deletePodcastTagTableByTag(row.getTag());
+        _database.dao().deleteTagTableRow(row);
+    }
+
+    //***************************************
+    //* Podcast Tag Table methods
+    //***************************************
+
+    public void upsertPodcastTag(PodcastTagTable row) {
+        _database.dao().upsertPodcastTagRow(row);
+    }
+
+    public void deletePodcastTagRow(PodcastTagTable row) {
+        _database.dao().deletePodcastTagTable2(row.getPid(), row.getTag());
+    }
+
+    //***************************************
+    //* misc calls
+    //***************************************
+
+    //* get joined podcast and tag podcast table
+    public List<PodcastTagJoinedObject> getPodcastAndTagInfo() {
+        return _database.dao().getPodcastsAndTags();
+    }
+
+    public List<PodcastTagJoinedObject> getPodcastAndTagInfo(String tag) {
+        return _database.dao().getPodcastsAndTags(tag);
+    }
+
+    public List<PodcastTagJoinedObject> getPodcastAndTagInfoByPid(String pid) {
+        return _database.dao().getPodcastsAndTagsByPid(pid);
     }
 
 }

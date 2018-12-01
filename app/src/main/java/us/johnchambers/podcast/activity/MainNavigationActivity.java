@@ -27,10 +27,13 @@ import java.util.Calendar;
 
 import us.johnchambers.podcast.Events.fragment.CloseSubscribeFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.CloseSubscribedDetailFragmentEvent;
+import us.johnchambers.podcast.Events.fragment.OpenGenericPlaylistFragment;
 import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
+import us.johnchambers.podcast.Events.fragment.OpenPodcatTagListFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedFragmentEvent;
+import us.johnchambers.podcast.Events.fragment.OpenTagAddToPodcastFragment;
 import us.johnchambers.podcast.Events.fragment.RefreshManualPlaylistFragment;
 import us.johnchambers.podcast.Events.fragment.RefreshSubscribedFragment;
 import us.johnchambers.podcast.Events.fragment.SubscribedFragmentRowItemClickedEvent;
@@ -167,8 +170,9 @@ public class MainNavigationActivity extends AppCompatActivity
             _myFragmentManager.activateManualPlaylistFragment();
         }  else if (id == R.id.nav_global_options) {
             _myFragmentManager.activateGlobalOptionsFragment();
+         } else if (id == R.id.nav_tags) {
+            _myFragmentManager.activateTagFragment();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setScrimColor(Color.TRANSPARENT);
         drawer.closeDrawer(GravityCompat.START);
@@ -261,6 +265,23 @@ public class MainNavigationActivity extends AppCompatActivity
     public void onEvent(OpenSubscribedFragmentEvent event) {
         _myFragmentManager.activateSubscribedFragment();
     }
+
+    @Subscribe
+    public void onEvent(OpenPodcatTagListFragmentEvent event) {
+        _myFragmentManager.activatePodcatsTagListFragment(event.get_tag());
+    }
+
+
+    @Subscribe
+    public void onEvent(OpenTagAddToPodcastFragment event) {
+        _myFragmentManager.activateTagAddToPodcastFragment(event.getPid());
+    }
+
+    @Subscribe
+    public void onEvent(OpenGenericPlaylistFragment event) {
+        _myFragmentManager.activateGenericPlaylistFragment(event.get_tag());
+    }
+
 
     @Subscribe
     public void onEvent(UpdatePodcastsEvent event) {

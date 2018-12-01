@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:id="@+id/groupdiv1">
+
         <item
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_search_combo"
@@ -11,33 +12,39 @@
             android:id="@+id/nav_show_subscribed"
             android:icon="@drawable/ic_my_podcasts_combo"
             android:title="My Podcasts" />
+    </group>
+    <group android:id="@+id/groupdiv2" >
         <item
             android:id="@+id/nav_player"
             android:icon="@drawable/ic_player_combo"
             android:title="Resume" />
+
+        <item
+            android:id="@+id/nav_tags"
+            android:icon="@drawable/ic_tag_dark"
+            android:title="Tags" />
         <item
             android:id="@+id/nav_latest_playlist"
             android:icon="@drawable/ic_new_regular"
             android:title="What's New in Podcasts?" />
         <item
             android:id="@+id/nav_manual_playlist"
-            android:icon="@drawable/ic_manual_playlist_dark"
+            android:icon="@drawable/ic_manual_light_background"
             android:title="Manual Queue" />
+    </group>
+    <group android:id="@+id/groupdiv3" >
         <item
             android:id="@+id/nav_update_podcasts"
             android:icon="@drawable/ic_update_combo"
-            android:title="Update Subscriptions" />
+            android:title="Update Podcasts" />
         <item
             android:id="@+id/nav_global_options"
             android:icon="@drawable/ic_settings_regular"
             android:title="Options" />
-
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/ic_about"
+            android:title="About" />
     </group>
-
-    <item
-        android:id="@+id/nav_about"
-        android:icon="@drawable/ic_about"
-        android:title="About" />
-
 
 </menu>
