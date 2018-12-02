@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastTable;
+import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.MyFileManager;
 
 /**
@@ -51,6 +52,11 @@ public class SubscribedAdapter extends ArrayAdapter<PodcastTable> {
         podcastName.setText(currPodcast.getName());
 
         image.setImageBitmap(pcImage);
+
+        if (currPodcast.getMode().equals(Constants.PLAYBACK_MODE_BOOK)) {
+            image.setPadding(20,20,20,20);
+            image.setBackgroundColor(_context.getResources().getColor(R.color.colorAccent));
+        }
 
         return convertView;
     }
