@@ -53,9 +53,17 @@ public class SubscribedAdapter extends ArrayAdapter<PodcastTable> {
 
         image.setImageBitmap(pcImage);
 
+        String mode = currPodcast.getMode();
+        String name = currPodcast.getName();
+        String pmode = Constants.PLAYBACK_MODE_BOOK;
+        int imId = image.getId();
         if (currPodcast.getMode().equals(Constants.PLAYBACK_MODE_BOOK)) {
-            image.setPadding(20,20,20,20);
+            image.setPadding(10,10,10,10);
             image.setBackgroundColor(_context.getResources().getColor(R.color.colorAccent));
+        }
+        else {
+            image.setPadding(0,0,0,0);
+            //image.setBackgroundColor(_context.getResources().getColor(R.color.colorAccent));
         }
 
         return convertView;
