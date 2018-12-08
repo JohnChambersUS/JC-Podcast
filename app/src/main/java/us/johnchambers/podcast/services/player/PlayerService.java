@@ -11,35 +11,24 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.media.session.MediaSession;
-import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.ImageButton;
 import android.widget.RemoteViews;
-import android.widget.Toast;
-
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -52,12 +41,9 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
-import com.google.android.exoplayer2.upstream.Allocator;
-import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.util.PriorityTaskManager;
 import com.google.android.exoplayer2.util.Util;
 
 import org.greenrobot.eventbus.EventBus;
@@ -79,11 +65,9 @@ import us.johnchambers.podcast.objects.PodcastOptions;
 
 import static android.media.AudioManager.STREAM_MUSIC;
 import static android.media.session.PlaybackState.STATE_SKIPPING_TO_NEXT;
-import static com.google.android.exoplayer2.C.DEFAULT_BUFFER_SEGMENT_SIZE;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 import static com.google.android.exoplayer2.Player.STATE_READY;
 import static us.johnchambers.podcast.misc.Constants.*;
-
 
 public class PlayerService extends Service {
 
@@ -191,7 +175,7 @@ public class PlayerService extends Service {
         // create channel
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(_notificationChannelId,
-                    "Different",
+                    "Diffcast",
                     NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription("A Different Podcast App");
             channel.enableLights(false);
@@ -209,38 +193,6 @@ public class PlayerService extends Service {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notif.setChannelId(_notificationChannelId);
         }
-
-        /*
-        if (!button1.equals("")) {
-            Intent yesReceive = new Intent(this,
-                    PlayerNotificationBroadcastReceiver.class);
-            yesReceive.setAction(button1);
-            PendingIntent pendingIntentYes = PendingIntent.getBroadcast(this,
-                    12345,
-                    yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
-            notif.addAction(0, button1, pendingIntentYes);
-        }
-        */
-        /*
-        if (!button2.equals("")) {
-            Intent yesReceive2 = new Intent(this,
-                    PlayerNotificationBroadcastReceiver.class);
-            yesReceive2.setAction(button2);
-            PendingIntent pendingIntentYes2 = PendingIntent.getBroadcast(this, 12345, yesReceive2, PendingIntent.FLAG_UPDATE_CURRENT);
-            action2 = new Notification.Action(0, button2, pendingIntentYes2);
-            notif.addAction(action2);
-        }
-        */
-        /*
-        if (!button3.equals("")) {
-            Intent yesReceive3 = new Intent(this,
-                    PlayerNotificationBroadcastReceiver.class);
-            yesReceive3.setAction(button3);
-            PendingIntent pendingIntentYes3 = PendingIntent.getBroadcast(this, 12345, yesReceive3, PendingIntent.FLAG_UPDATE_CURRENT);
-            notif.addAction(0, button3, pendingIntentYes3);
-        }
-        */
-
 
         RemoteViews customView = new RemoteViews(getPackageName(), R.layout.controls_notification);
 
@@ -656,8 +608,5 @@ public class PlayerService extends Service {
         _telephoneManager =  (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
         _telephoneManager.listen(_phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
-
-
-
 
 } //end of service

@@ -13,20 +13,9 @@ import android.widget.NumberPicker
 
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.fragments.MyFragment
-import us.johnchambers.podcast.misc.C
 import us.johnchambers.podcast.objects.FragmentBackstackType
 import us.johnchambers.podcast.objects.GlobalOptions
-import android.widget.Toast
 
-
-
-
-/**
- * A simple [Fragment] subclass.
- * Use the [GlobalOptionsFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class GlobalOptionsFragment : MyFragment() {
 
     lateinit var _view : View
@@ -115,8 +104,6 @@ class GlobalOptionsFragment : MyFragment() {
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         });
-
-
 
     }
 }

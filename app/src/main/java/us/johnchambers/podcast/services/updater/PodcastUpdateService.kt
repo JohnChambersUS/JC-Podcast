@@ -4,7 +4,6 @@ import android.app.*
 import android.content.Intent
 import android.content.Context
 import android.os.Build
-//import android.support.v7.app.NotificationCompat
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -18,14 +17,7 @@ import us.johnchambers.podcast.objects.FeedResponseWrapper
 import java.util.*
 import kotlin.collections.HashMap
 
-/**
- * An [IntentService] subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- *
- *
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
+
 class PodcastUpdateService : IntentService("PodcastUpdateService") {
 
     var podcastStack = Stack<PodcastTable>()
@@ -124,7 +116,7 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
         // create channel
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(_notificationChannelId,
-                    "Different",
+                    "Diffcast",
                     NotificationManager.IMPORTANCE_DEFAULT)
             channel.description = "A Different Podcast App"
             channel.enableLights(false)
@@ -158,7 +150,6 @@ class PodcastUpdateService : IntentService("PodcastUpdateService") {
         var notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(_notificationId)
         notificationManager.cancelAll()
-
 
     }
 

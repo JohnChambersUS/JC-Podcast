@@ -24,21 +24,13 @@ import us.johnchambers.podcast.fragments.MyFragment
 import us.johnchambers.podcast.misc.BottomNavigationViewHelper
 import us.johnchambers.podcast.misc.Constants
 import us.johnchambers.podcast.objects.DocketEmbededPlaylist
-import us.johnchambers.podcast.objects.DocketLatest
 import us.johnchambers.podcast.objects.DocketTagAllPlaylist
 import us.johnchambers.podcast.objects.FragmentBackstackType
 import us.johnchambers.podcast.playlists.Playlist
 import us.johnchambers.podcast.playlists.PlaylistFactory
-import us.johnchambers.podcast.playlists.TagAllPlaylist
-import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistFragment
-import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistRecyclerAdapter
-import us.johnchambers.podcast.misc.Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS
 import us.johnchambers.podcast.misc.TapGuard
 
-
-
 class GenericPlaylistFragment : MyFragment() {
-
 
     lateinit var _playlist : Playlist
     lateinit var _view : View
@@ -62,7 +54,6 @@ class GenericPlaylistFragment : MyFragment() {
             return fragment
         }
     }
-
 
     fun setTag(tag: String) {
         _tag = tag
@@ -120,7 +111,6 @@ class GenericPlaylistFragment : MyFragment() {
         }
     }
 
-
     private fun fillRecyclerView() {
         flipNoDataMessage()
         if (_playlist.isEmpty()) {
@@ -139,8 +129,6 @@ class GenericPlaylistFragment : MyFragment() {
 
             setItemTouchHelper()
         }
-
-
     }
 
 
@@ -300,8 +288,6 @@ class GenericPlaylistFragment : MyFragment() {
                 _viewAdapter.notifyDataSetChanged() //todo should clear with adapter fix
                 flipNoDataMessage()
             }
-
-
 
         }
 

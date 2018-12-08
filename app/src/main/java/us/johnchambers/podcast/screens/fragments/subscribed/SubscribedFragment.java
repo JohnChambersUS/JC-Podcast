@@ -1,10 +1,7 @@
 package us.johnchambers.podcast.screens.fragments.subscribed;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.EventLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +10,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
 import us.johnchambers.podcast.Events.fragment.RefreshManualPlaylistFragment;
 import us.johnchambers.podcast.Events.fragment.SubscribedFragmentRowItemClickedEvent;
-import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;

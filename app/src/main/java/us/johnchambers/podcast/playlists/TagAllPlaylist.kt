@@ -1,10 +1,7 @@
 package us.johnchambers.podcast.playlists
 
-import com.crashlytics.android.Crashlytics
 import us.johnchambers.podcast.database.EpisodeTable
-import us.johnchambers.podcast.database.PlaylistTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
-import us.johnchambers.podcast.database.PodcastTagTable
 import us.johnchambers.podcast.misc.C
 
 @Suppress("UNUSED_PARAMETER")
@@ -32,35 +29,6 @@ class TagAllPlaylist(useExisting : Boolean, tag: String) : Playlist(C.playlist.G
         if (_episodeIndex < 0) return EpisodeTable()
         return PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
 
-        /*
-        if (_episodes.size == 0) {
-            return EpisodeTable()
-        }
-        if (_episodeIndex == -1) {
-            setCurrentEpisodeIndex(_episodes.size - 1)
-        }
-        var attempts = _episodes.size
-        var foundIt = false
-        do {
-            var currEpisode = PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(_episodes.get(_episodeIndex).eid)
-            if (currEpisode == null) continue
-            _episodes.set(_episodeIndex, currEpisode)
-            if (currEpisode.playPointAsLong < currEpisode.lengthAsLong) {
-                foundIt = true
-            }
-            else {
-                _episodeIndex--
-                if (_episodeIndex < 0) {
-                    _episodeIndex = _episodes.size - 1
-                }
-            }
-        } while(!foundIt && (--attempts > 0))
-        if (foundIt)
-            return _episodes.get(_episodeIndex)
-        else
-            return EpisodeTable()
-
-    */
     }
 
     override fun setCurrentEpisode(eid : String) {

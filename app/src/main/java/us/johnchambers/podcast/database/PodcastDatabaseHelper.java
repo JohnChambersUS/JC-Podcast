@@ -7,8 +7,6 @@ import android.widget.Toast;
 import java.util.List;
 
 import us.johnchambers.podcast.misc.C;
-import us.johnchambers.podcast.misc.Constants;
-import us.johnchambers.podcast.playlists.LatestPlaylist;
 import us.johnchambers.podcast.playlists.NowPlaying;
 
 

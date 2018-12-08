@@ -2,7 +2,6 @@ package us.johnchambers.podcast.playlists
 
 import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.misc.C
-import us.johnchambers.podcast.objects.Docket
 
 /**
  * Created by johnchambers on 3/11/18.

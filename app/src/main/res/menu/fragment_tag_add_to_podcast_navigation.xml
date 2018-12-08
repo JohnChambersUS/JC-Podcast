@@ -7,7 +7,7 @@
         android:icon="@drawable/ic_add_light"
         android:title="NEW TAG"
         android:visible="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         />
 
     <item
@@ -15,7 +15,7 @@
         android:icon="@drawable/ic_tag_unfiltered_dark_background"
         android:title="ALL"
         android:visible="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         />
 
     <item
@@ -23,7 +23,7 @@
         android:icon="@drawable/ic_tag_filtered_dark_background"
         android:title="TAGGED"
         android:visible="true"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
         />
 
 </menu>

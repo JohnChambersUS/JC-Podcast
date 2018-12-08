@@ -92,8 +92,6 @@ class TagPodcastListRecyclerAdapter(private val podcastList: List<PodcastTagJoin
                 ptTableRow.pid = podcastList[position].pid.toString().trim()
                 ptTableRow.tag = _workingTag
                 PodcastDatabaseHelper.getInstance().deletePodcastTagRow(ptTableRow)
-
-
             }
         }
         holder.layout.row_tag_star_filled.setOnClickListener(filledStarListener)
