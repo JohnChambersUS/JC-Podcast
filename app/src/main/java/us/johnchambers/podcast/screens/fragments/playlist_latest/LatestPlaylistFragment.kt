@@ -28,6 +28,7 @@ import android.widget.TextView
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent
 import us.johnchambers.podcast.Events.fragment.SubscribedDetailClosedEvent
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent
+import us.johnchambers.podcast.misc.L
 
 class LatestPlaylistFragment : MyFragment() {
 
@@ -122,7 +123,11 @@ class LatestPlaylistFragment : MyFragment() {
         if (item.itemId == R.id.bm_refresh) {
             _playlist.getEpisodes() //will cause an episode refresh in playlist
             flipNoDataMessage()
-            _viewAdapter.notifyDataSetChanged()
+            try {
+                _viewAdapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                L.i("LatestPlaylistFragment", e.localizedMessage.toString())
+            }
         }
     }
 

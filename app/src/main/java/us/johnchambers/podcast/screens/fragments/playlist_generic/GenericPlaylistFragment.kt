@@ -23,6 +23,7 @@ import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.fragments.MyFragment
 import us.johnchambers.podcast.misc.BottomNavigationViewHelper
 import us.johnchambers.podcast.misc.Constants
+import us.johnchambers.podcast.misc.L
 import us.johnchambers.podcast.objects.DocketEmbededPlaylist
 import us.johnchambers.podcast.objects.DocketTagAllPlaylist
 import us.johnchambers.podcast.objects.FragmentBackstackType
@@ -168,7 +169,11 @@ class GenericPlaylistFragment : MyFragment() {
         }
 
         if (item.itemId == R.id.bm_goto_bottom) {
-            _viewManager.scrollToPosition(_playlist.getCurrentEpisodes().size - 1)
+            try {
+                _viewManager.scrollToPosition(_playlist.getCurrentEpisodes().size - 1)
+            } catch (e: Exception) {
+                L.i("GenericPlaylistFragment", e.message.toString())
+            }
         }
 
         if (item.itemId == R.id.bm_play) {
