@@ -1,8 +1,10 @@
-A Different Podcast App (or Different for short)
+Diffcast
+
+A Different Podcast App
 
 Android podcast player 
 
-Codename: Polo
+Codename: Rodeo
 
 Copyright © 2018 John Chambers All Rights Reserved
 

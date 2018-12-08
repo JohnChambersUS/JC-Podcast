@@ -53,9 +53,6 @@ class TagFragment : MyFragment() {
         arguments?.let {
         }
         EventBus.getDefault().register(this)
-        //fill tag list
-        //_tagList = PodcastDatabaseHelper.getInstance().tagTableEntries
-
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -63,8 +60,6 @@ class TagFragment : MyFragment() {
         _view = inflater.inflate(R.layout.fragment_tag, container, false)
 
         fillTagListRecyclerView()
-
-        //addSubscribedDetailPlayListener() //listenter for row tap
 
         addNavigationListener()
         val navigation = _view.findViewById(R.id.manual_navigation) as BottomNavigationView
@@ -110,12 +105,7 @@ class TagFragment : MyFragment() {
             setItemTouchHelper()
         }
 
-
-
-
     }
-
-
 
     //*********************************
     //* bottom menu listener

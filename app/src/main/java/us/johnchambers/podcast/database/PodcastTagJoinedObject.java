@@ -1,7 +1,5 @@
 package us.johnchambers.podcast.database;
 
-import us.johnchambers.podcast.database.PodcastTable;
-
 public class PodcastTagJoinedObject {
 
     private String tag;

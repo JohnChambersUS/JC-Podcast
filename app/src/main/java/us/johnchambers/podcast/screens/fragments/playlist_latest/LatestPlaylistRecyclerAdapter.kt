@@ -2,10 +2,8 @@ package us.johnchambers.podcast.screens.fragments.playlist_latest
 
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
-import android.service.voice.AlwaysOnHotwordDetector
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,8 +13,6 @@ import 	android.support.percent.PercentRelativeLayout
 import android.support.v4.content.ContextCompat
 import android.util.DisplayMetrics
 import android.view.View
-import android.widget.Button
-import android.view.View.OnClickListener;
 import kotlinx.android.synthetic.main.row_latest_playlist.view.*
 import org.greenrobot.eventbus.EventBus
 import us.johnchambers.podcast.Events.latest.LatestRowActionButtonPressedEvent
@@ -66,14 +62,11 @@ class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>)
         var context = holder.layout.context
         val left = GradientDrawable()
         left.shape = GradientDrawable.RECTANGLE
-        //left.setColor(context.getResources().getColor(R.color.semiLightBackground))
         left.setColor(ContextCompat.getColor(context, R.color.semiLightBackground))
 
         val right = GradientDrawable()
         right.shape = GradientDrawable.RECTANGLE
-        //right.setColor(context.getResources().getColor(R.color.lightBackground))
         right.setColor(ContextCompat.getColor(context, R.color.lightBackground))
-
 
         val ar = arrayOf(left, right)
         val layer = LayerDrawable(ar)

@@ -1,9 +1,6 @@
 package us.johnchambers.podcast.screens.fragments.tag.tag_add_to_podcast_fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.design.internal.BottomNavigationItemView
-import android.support.design.internal.BottomNavigationMenuView
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.LinearLayoutManager
@@ -22,8 +19,6 @@ import us.johnchambers.podcast.fragments.MyFragment
 import us.johnchambers.podcast.misc.Constants
 import us.johnchambers.podcast.misc.TapGuard
 import us.johnchambers.podcast.objects.FragmentBackstackType
-import us.johnchambers.podcast.screens.fragments.tag.tag_podcast_list.TagPodcastListFragment
-import us.johnchambers.podcast.screens.fragments.tag.tag_podcast_list.TagPodcastListRecyclerAdapter
 
 class TagAddToPodcastFragment : MyFragment()  {
 
@@ -64,7 +59,6 @@ class TagAddToPodcastFragment : MyFragment()  {
         }
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         _view = inflater.inflate(R.layout.fragment_tag_add_to_podcast, container, false)
@@ -73,7 +67,6 @@ class TagAddToPodcastFragment : MyFragment()  {
         addNavigationListener()
         val navigation = _view.findViewById(R.id.manual_navigation) as BottomNavigationView
         navigation.setOnNavigationItemSelectedListener(_bottomNavigationListener)
-
 
         return _view
     }
@@ -94,7 +87,6 @@ class TagAddToPodcastFragment : MyFragment()  {
             recyclerView.visibility = View.VISIBLE
         }
     }
-
 
     fun fillRecyclerView() {
 
@@ -147,7 +139,6 @@ class TagAddToPodcastFragment : MyFragment()  {
             }
             fillRecyclerView()
         }
-
 
     }
 

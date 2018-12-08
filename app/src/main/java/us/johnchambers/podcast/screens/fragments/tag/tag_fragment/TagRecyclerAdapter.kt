@@ -46,18 +46,6 @@ class TagRecyclerAdapter (private val tagList: List<TagTable>) :
         }
         holder.layout.row_tag_button.setOnClickListener(buttonListener)
 
-
-        //setProgress(episodeList[position], holder)
-
-        //var buttonListener = object : View.OnClickListener {
-        //    override public fun onClick(v : View?)  {
-        //        var pos = holder.getLayoutPosition(); //getting position
-        //        EventBus.getDefault().post(ManualRowActionButtonPressedEvent(pos))
-        //    }
-       // }
-
-       // holder.layout.row_manual_button.setOnClickListener(buttonListener)
-
     }
 
     public fun tagListItem(pos: Int): TagTable? {

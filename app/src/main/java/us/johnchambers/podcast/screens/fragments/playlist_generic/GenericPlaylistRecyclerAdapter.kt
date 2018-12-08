@@ -18,7 +18,6 @@ import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.misc.Constants
 import us.johnchambers.podcast.misc.MyFileManager
 import us.johnchambers.podcast.misc.TapGuard
-import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistRecyclerAdapter
 import kotlin.math.roundToInt
 
 class GenericPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>) :

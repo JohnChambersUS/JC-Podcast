@@ -1,21 +1,16 @@
 package us.johnchambers.podcast.screens.fragments.tag.tag_add_to_podcast_fragment
 
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.support.percent.PercentRelativeLayout
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.row_tag_add_to_podcast.view.*
-import kotlinx.android.synthetic.main.row_tag_podcast_list.view.*
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.database.PodcastTagJoinedObject
 import us.johnchambers.podcast.database.PodcastTagTable
 import us.johnchambers.podcast.misc.Constants
-import us.johnchambers.podcast.misc.MyFileManager
 import us.johnchambers.podcast.misc.TapGuard
 
 
@@ -41,8 +36,6 @@ class TagAddToPodcastRecyclerAdapter(private val podcastList: List<PodcastTagJoi
     override fun onBindViewHolder(holder: TagAddToPodcastRecyclerAdapter.ViewHolder, position: Int) {
 
         holder.layout.context
-        //var dbRow = PodcastDatabaseHelper.getInstance().getPodcastRow(podcastList[position].tag)
-        //var pn = dbRow.
         holder.layout.row_tag_name2.text = podcastList[position].tag
 
         holder.layout.row_tag_star_filled2.visibility = View.VISIBLE

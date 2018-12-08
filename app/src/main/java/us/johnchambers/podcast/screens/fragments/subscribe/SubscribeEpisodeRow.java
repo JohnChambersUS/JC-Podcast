@@ -1,7 +1,5 @@
 package us.johnchambers.podcast.screens.fragments.subscribe;
 
-import java.util.Date;
-
 /**
  * Created by johnchambers on 7/18/17.
  */

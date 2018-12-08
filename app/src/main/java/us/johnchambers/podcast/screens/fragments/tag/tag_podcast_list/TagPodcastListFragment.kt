@@ -79,9 +79,7 @@ class TagPodcastListFragment :MyFragment() {
         }
     }
 
-
     fun fillRecyclerView() {
-
 
         flipNoDataMessage()
 
@@ -136,7 +134,5 @@ class TagPodcastListFragment :MyFragment() {
             true
         }
     }
-
-
 
 }
