@@ -75,6 +75,12 @@
     </FrameLayout>
 
     <FrameLayout
+        android:id="@+id/subscribed_detail_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/player_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

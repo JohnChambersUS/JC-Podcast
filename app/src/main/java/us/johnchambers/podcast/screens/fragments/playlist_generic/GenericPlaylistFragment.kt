@@ -213,7 +213,7 @@ class GenericPlaylistFragment : MyFragment() {
         var row = event.row
 
         // add popup menu
-        val colors = arrayOf<CharSequence>("Play this episode", "Reset to beginning", "Mark as played", "Go to podcast")
+        val colors = arrayOf<CharSequence>("Play this episode", "Reset to beginning", "Mark as played")
 
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Pick an option:")
@@ -239,11 +239,11 @@ class GenericPlaylistFragment : MyFragment() {
                     _playlist.removeItem(-1) //will refresh episode list
                     _recyclerView.adapter.notifyItemChanged(row)
                 }
-                3 -> {
-                    var pid = _playlist.getCurrentEpisodes().get(row).pid
-                    var pt = PodcastDatabaseHelper.getInstance().getPodcastRow(pid)
-                    EventBus.getDefault().post(OpenSubscribedDetailEvent(pt))
-                }
+               // 3 -> {
+               //     var pid = _playlist.getCurrentEpisodes().get(row).pid
+               //     var pt = PodcastDatabaseHelper.getInstance().getPodcastRow(pid)
+               //     EventBus.getDefault().post(OpenSubscribedDetailEvent(pt))
+               // }
             }
         }
 
