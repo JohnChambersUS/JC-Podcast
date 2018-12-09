@@ -15,13 +15,15 @@ import org.greenrobot.eventbus.EventBus
 import us.johnchambers.podcast.Events.latest.LatestRowActionButtonPressedEvent
 import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.EpisodeTable
+import us.johnchambers.podcast.misc.Constants
 import us.johnchambers.podcast.misc.MyFileManager
-import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistRecyclerAdapter
+import us.johnchambers.podcast.misc.TapGuard
 import kotlin.math.roundToInt
 
 class GenericPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>) :
         RecyclerView.Adapter<GenericPlaylistRecyclerAdapter.ViewHolder>() {
 
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS)
 
     class ViewHolder(val layout : PercentRelativeLayout) : RecyclerView.ViewHolder(layout)
 
@@ -41,6 +43,7 @@ class GenericPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>
 
         var buttonListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
+                if (_tapGuard.tooSoon()) return
                 var pos = holder.getLayoutPosition(); //getting position
                 EventBus.getDefault().post(LatestRowActionButtonPressedEvent(pos)) //todo should I put menu here instead of event call?
             }

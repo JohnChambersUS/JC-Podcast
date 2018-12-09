@@ -22,18 +22,16 @@ import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.fragments.MyFragment
 import us.johnchambers.podcast.misc.BottomNavigationViewHelper
+import us.johnchambers.podcast.misc.Constants
+import us.johnchambers.podcast.misc.L
 import us.johnchambers.podcast.objects.DocketEmbededPlaylist
-import us.johnchambers.podcast.objects.DocketLatest
 import us.johnchambers.podcast.objects.DocketTagAllPlaylist
 import us.johnchambers.podcast.objects.FragmentBackstackType
 import us.johnchambers.podcast.playlists.Playlist
 import us.johnchambers.podcast.playlists.PlaylistFactory
-import us.johnchambers.podcast.playlists.TagAllPlaylist
-import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistFragment
-import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistRecyclerAdapter
+import us.johnchambers.podcast.misc.TapGuard
 
 class GenericPlaylistFragment : MyFragment() {
-
 
     lateinit var _playlist : Playlist
     lateinit var _view : View
@@ -45,6 +43,7 @@ class GenericPlaylistFragment : MyFragment() {
     private lateinit var _navigation: BottomNavigationView
 
     private var _bottomNavigationListener: BottomNavigationView.OnNavigationItemSelectedListener? = null
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS)
 
     companion object {
         @JvmStatic
@@ -56,7 +55,6 @@ class GenericPlaylistFragment : MyFragment() {
             return fragment
         }
     }
-
 
     fun setTag(tag: String) {
         _tag = tag
@@ -114,7 +112,6 @@ class GenericPlaylistFragment : MyFragment() {
         }
     }
 
-
     private fun fillRecyclerView() {
         flipNoDataMessage()
         if (_playlist.isEmpty()) {
@@ -133,8 +130,6 @@ class GenericPlaylistFragment : MyFragment() {
 
             setItemTouchHelper()
         }
-
-
     }
 
 
@@ -155,6 +150,7 @@ class GenericPlaylistFragment : MyFragment() {
     //*********************************
 
     private fun processNavigation(item: MenuItem) {
+        if (_tapGuard.tooSoon()) return
         if (item.itemId == R.id.bm_refresh) {
             _playlist.getEpisodes() //will cause an episode refresh in playlist
             fillRecyclerView()
@@ -173,7 +169,11 @@ class GenericPlaylistFragment : MyFragment() {
         }
 
         if (item.itemId == R.id.bm_goto_bottom) {
-            _viewManager.scrollToPosition(_playlist.getCurrentEpisodes().size - 1)
+            try {
+                _viewManager.scrollToPosition(_playlist.getCurrentEpisodes().size - 1)
+            } catch (e: Exception) {
+                L.i("GenericPlaylistFragment", e.message.toString())
+            }
         }
 
         if (item.itemId == R.id.bm_play) {
@@ -213,7 +213,7 @@ class GenericPlaylistFragment : MyFragment() {
         var row = event.row
 
         // add popup menu
-        val colors = arrayOf<CharSequence>("Play this episode", "Reset to beginning", "Mark as played", "Go to podcast")
+        val colors = arrayOf<CharSequence>("Play this episode", "Reset to beginning", "Mark as played")
 
         val builder = AlertDialog.Builder(requireContext())
         builder.setTitle("Pick an option:")
@@ -239,11 +239,11 @@ class GenericPlaylistFragment : MyFragment() {
                     _playlist.removeItem(-1) //will refresh episode list
                     _recyclerView.adapter.notifyItemChanged(row)
                 }
-                3 -> {
-                    var pid = _playlist.getCurrentEpisodes().get(row).pid
-                    var pt = PodcastDatabaseHelper.getInstance().getPodcastRow(pid)
-                    EventBus.getDefault().post(OpenSubscribedDetailEvent(pt))
-                }
+               // 3 -> {
+               //     var pid = _playlist.getCurrentEpisodes().get(row).pid
+               //     var pt = PodcastDatabaseHelper.getInstance().getPodcastRow(pid)
+               //     EventBus.getDefault().post(OpenSubscribedDetailEvent(pt))
+               // }
             }
         }
 
@@ -293,8 +293,6 @@ class GenericPlaylistFragment : MyFragment() {
                 _viewAdapter.notifyDataSetChanged() //todo should clear with adapter fix
                 flipNoDataMessage()
             }
-
-
 
         }
 

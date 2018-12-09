@@ -28,14 +28,8 @@ import android.widget.TextView
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent
 import us.johnchambers.podcast.Events.fragment.SubscribedDetailClosedEvent
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent
+import us.johnchambers.podcast.misc.L
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [LatestPlaylistFragment.newInstance] factory method to
- * create an instance of this fragment.
- *
- */
 class LatestPlaylistFragment : MyFragment() {
 
     lateinit var _playlist : Playlist
@@ -46,7 +40,6 @@ class LatestPlaylistFragment : MyFragment() {
     private lateinit var _viewManager: RecyclerView.LayoutManager
 
     private var _bottomNavigationListener: BottomNavigationView.OnNavigationItemSelectedListener? = null
-
     companion object {
         @JvmStatic
         fun newInstance(): LatestPlaylistFragment {
@@ -130,7 +123,11 @@ class LatestPlaylistFragment : MyFragment() {
         if (item.itemId == R.id.bm_refresh) {
             _playlist.getEpisodes() //will cause an episode refresh in playlist
             flipNoDataMessage()
-            _viewAdapter.notifyDataSetChanged()
+            try {
+                _viewAdapter.notifyDataSetChanged()
+            } catch (e: Exception) {
+                L.i("LatestPlaylistFragment", e.localizedMessage.toString())
+            }
         }
     }
 
@@ -241,8 +238,6 @@ class LatestPlaylistFragment : MyFragment() {
                 _viewAdapter.notifyDataSetChanged()
                 flipNoDataMessage()
             }
-
-
 
         }
 

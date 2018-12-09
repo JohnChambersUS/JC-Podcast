@@ -2,9 +2,7 @@ package us.johnchambers.podcast.screens.fragments.search;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.Image;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -34,6 +31,8 @@ import java.net.URLEncoder;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.misc.Constants;
+import us.johnchambers.podcast.misc.TapGuard;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.misc.VolleyQueue;
 
@@ -43,6 +42,8 @@ public class SearchFragment extends MyFragment {
     private static View _view;
 
     private SearchDisplayAdapter _adapter;
+
+    private TapGuard _tapGuard = new TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS);
 
     public SearchFragment() {
         // Required empty public constructor
@@ -171,6 +172,7 @@ public class SearchFragment extends MyFragment {
 
             @Override
             public void onClick(View view) {
+                if (_tapGuard.tooSoon()) return;
                 hideKeyboard();
                 performSearch();
             }
@@ -190,6 +192,7 @@ public class SearchFragment extends MyFragment {
             public void onItemClick(AdapterView<?> adapter, View v, int position,
                                     long arg3)
             {
+                if (_tapGuard.tooSoon()) return;
                 SearchRow sr = _adapter.getItem(position);
                 EventBus.getDefault().post(new OpenSubscribeFragment(sr));
             }

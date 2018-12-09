@@ -13,12 +13,15 @@ import us.johnchambers.podcast.R
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.database.PodcastTagJoinedObject
 import us.johnchambers.podcast.database.PodcastTagTable
+import us.johnchambers.podcast.misc.Constants
 import us.johnchambers.podcast.misc.MyFileManager
+import us.johnchambers.podcast.misc.TapGuard
 
 class TagPodcastListRecyclerAdapter(private val podcastList: List<PodcastTagJoinedObject>) :
         RecyclerView.Adapter<TagPodcastListRecyclerAdapter.ViewHolder>() {
 
     lateinit var _workingTag : String
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS_SHORT)
 
     class ViewHolder(val layout : PercentRelativeLayout) : RecyclerView.ViewHolder(layout)
 
@@ -57,6 +60,7 @@ class TagPodcastListRecyclerAdapter(private val podcastList: List<PodcastTagJoin
         //create hollow listener
         var outlinedStarListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
+                if (_tapGuard.tooSoon()) return
                 var pos = holder.getLayoutPosition(); //getting position
                 //flip view
                 holder.layout.row_tag_star_filled.visibility = View.VISIBLE
@@ -76,6 +80,7 @@ class TagPodcastListRecyclerAdapter(private val podcastList: List<PodcastTagJoin
         //create filled listener
         var filledStarListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
+                if (_tapGuard.tooSoon()) return
                 var pos = holder.getLayoutPosition(); //getting position
                 holder.layout.row_tag_star_filled.visibility = View.GONE
                 holder.layout.row_tag_star_outline.visibility = View.VISIBLE
@@ -87,8 +92,6 @@ class TagPodcastListRecyclerAdapter(private val podcastList: List<PodcastTagJoin
                 ptTableRow.pid = podcastList[position].pid.toString().trim()
                 ptTableRow.tag = _workingTag
                 PodcastDatabaseHelper.getInstance().deletePodcastTagRow(ptTableRow)
-
-
             }
         }
         holder.layout.row_tag_star_filled.setOnClickListener(filledStarListener)

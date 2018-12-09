@@ -1,8 +1,6 @@
 package us.johnchambers.podcast.playlists
 
 import us.johnchambers.podcast.database.EpisodeTable
-import us.johnchambers.podcast.database.PodcastDatabaseHelper
-import us.johnchambers.podcast.misc.C
 import us.johnchambers.podcast.objects.Docket
 
 /**
@@ -34,7 +32,6 @@ abstract class Playlist(playlistId : String) {
         else
             _episodeIndex = -1
     }
-
 
     abstract protected fun updatePlaylistInfo()
 

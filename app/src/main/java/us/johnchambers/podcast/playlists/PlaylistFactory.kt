@@ -114,20 +114,5 @@ object PlaylistFactory {
         //  return empty playlist
         return EmptyPlaylist()
 
-        /*
-        var npPlaylistId = NowPlaying.getPlaylistId()
-        if ((!npPlaylistId.equals("")) &&
-                (!npPlaylistId.equals(NowPlaying.NO_PLAYLIST_FLAG))) {
-            var npDocket = DocketPlaylist(npPlaylistId)
-            var playlist = PodcastPlaylist(npDocket)
-            var npEpisode = NowPlaying.getEpisodeId()
-            if (!npEpisode.equals(NowPlaying.NO_EPISODE_FLAG)) {
-                playlist.setCurrentEpisode(npEpisode)
-            }
-            return playlist
-        }
-        return EmptyPlaylist(docket)
-        */
-
     }
 }

@@ -2,10 +2,8 @@ package us.johnchambers.podcast.screens.fragments.playlist_latest
 
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
-import android.service.voice.AlwaysOnHotwordDetector
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,16 +13,18 @@ import 	android.support.percent.PercentRelativeLayout
 import android.support.v4.content.ContextCompat
 import android.util.DisplayMetrics
 import android.view.View
-import android.widget.Button
-import android.view.View.OnClickListener;
 import kotlinx.android.synthetic.main.row_latest_playlist.view.*
 import org.greenrobot.eventbus.EventBus
 import us.johnchambers.podcast.Events.latest.LatestRowActionButtonPressedEvent
 import us.johnchambers.podcast.misc.MyFileManager
 import kotlin.math.roundToInt
+import us.johnchambers.podcast.misc.Constants
+import us.johnchambers.podcast.misc.TapGuard
 
 class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>) :
         RecyclerView.Adapter<LatestPlaylistRecyclerAdapter.ViewHolder>() {
+
+    private val _tapGuard = TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS)
 
     class ViewHolder(val layout : PercentRelativeLayout) : RecyclerView.ViewHolder(layout)
 
@@ -44,6 +44,7 @@ class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>)
 
         var buttonListener = object : View.OnClickListener {
             override public fun onClick(v : View?)  {
+                if (_tapGuard.tooSoon()) return
                 var pos = holder.getLayoutPosition(); //getting position
                 EventBus.getDefault().post(LatestRowActionButtonPressedEvent(pos))
             }
@@ -61,14 +62,11 @@ class LatestPlaylistRecyclerAdapter(private val episodeList: List<EpisodeTable>)
         var context = holder.layout.context
         val left = GradientDrawable()
         left.shape = GradientDrawable.RECTANGLE
-        //left.setColor(context.getResources().getColor(R.color.semiLightBackground))
         left.setColor(ContextCompat.getColor(context, R.color.semiLightBackground))
 
         val right = GradientDrawable()
         right.shape = GradientDrawable.RECTANGLE
-        //right.setColor(context.getResources().getColor(R.color.lightBackground))
         right.setColor(ContextCompat.getColor(context, R.color.lightBackground))
-
 
         val ar = arrayOf(left, right)
         val layer = LayerDrawable(ar)

@@ -5,16 +5,7 @@ package us.johnchambers.podcast.objects;
  */
 
 import android.graphics.Bitmap;
-import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.rometools.rome.feed.module.Module;
-import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndEnclosure;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -22,17 +13,13 @@ import com.rometools.rome.feed.synd.SyndImage;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.impl.XmlFixerReader;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.io.StringReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,7 +29,6 @@ import us.johnchambers.podcast.database.PodcastMode;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.Constants;
 import us.johnchambers.podcast.misc.HashMaker;
-import us.johnchambers.podcast.misc.MyFileManager;
 
 public class FeedResponseWrapper {
 

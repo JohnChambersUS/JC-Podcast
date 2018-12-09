@@ -2,7 +2,6 @@ package us.johnchambers.podcast.playlists
 
 import com.crashlytics.android.Crashlytics
 import us.johnchambers.podcast.database.EpisodeTable
-import us.johnchambers.podcast.database.PlaylistTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.misc.C
 

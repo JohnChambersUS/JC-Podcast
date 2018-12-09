@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="us.johnchambers.podcast.screens.fragments.search.SearchFragment"
-    android:id="@+id/search_fragment">
+    android:id="@+id/search_fragment"
+    android:background="@raw/background"
+    >
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
