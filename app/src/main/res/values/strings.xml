@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">A Different Podcast App</string>
-    <string name="app_version">Codename: Polo</string>
+    <string name="app_name">Diffcast</string>
+    <string name="app_version">Codename: Rodeo</string>
     <string name="title_activity_main_navigation">MainNavigationActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -16,17 +16,19 @@
         A Different Podcast App (formerly named JC Podcast) does not collect or maintain any private information. It uses the Android permission READ_PHONE_STATE so it can pause the player when the phone rings and restart the player when the phone is hung up. That\'s it.
     </string>
 
-    <string name="default_fragment_title">Different</string>
+    <string name="default_fragment_title">Diffcast</string>
     <string name="search_fragment_title">Search</string>
     <string name="subscribe_fragment_title">Subscribe</string>
     <string name="subscribed_fragment_title">My Podcasts</string>
     <string name="manual_playlist_fragment_title">Manual Queue</string>
     <string name="subscribed_detail_fragment_title">Podcast Details</string>
     <string name="player_fragment_title">Player</string>
-    <string name="about_fragment_title">Different</string>
+    <string name="about_fragment_title">Diffcast</string>
     <string name="latest_playlist_fragment_title">What\'s New?</string>
-    <string name="global__options_fragment_title">Different</string>
-    <string name="podcast_options_fragment_title">Different</string>
+    <string name="global__options_fragment_title">Diffcast</string>
+    <string name="podcast_options_fragment_title">Diffcast</string>
+    <string name="tag_title">Tags</string>
+    <string name="tag_podcast_list_title">Tagged Podcasts</string>
 
 
 </resources>

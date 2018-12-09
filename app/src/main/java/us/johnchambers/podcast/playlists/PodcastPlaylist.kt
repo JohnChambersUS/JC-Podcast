@@ -3,9 +3,6 @@ package us.johnchambers.podcast.playlists
 import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
 import us.johnchambers.podcast.database.PodcastTable
-import us.johnchambers.podcast.misc.Constants
-import us.johnchambers.podcast.objects.Docket
-import kotlin.math.E
 
 /**
  * Created by johnchambers on 3/11/18.
@@ -15,8 +12,8 @@ open class PodcastPlaylist(playlist : String) : Playlist(playlist) {
     var _podcastInfo : PodcastTable
 
     init {
-        _podcastInfo = PodcastDatabaseHelper.getInstance().getPodcastRow(_plalyistId)
-        _episodes = PodcastDatabaseHelper.getInstance().getEpisodesSortedNewest(_plalyistId)
+        _podcastInfo = PodcastDatabaseHelper.getInstance().getPodcastRow(getPlaylistId())
+        _episodes = PodcastDatabaseHelper.getInstance().getEpisodesSortedNewest(getPlaylistId())
     }
 
     //private, protected

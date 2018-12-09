@@ -9,6 +9,12 @@
     tools:showIn="@layout/app_bar_main_navigation">
 
     <FrameLayout
+        android:id="@+id/root_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <FrameLayout
         android:id="@+id/manual_playlist_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -51,13 +57,31 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/player_placeholder"
+        android:id="@+id/podcast_tag_list_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/about_placeholder"
+        android:id="@+id/tag_add_to_podcastplaceholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/generic_playlist_fragment_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/subscribed_detail_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/player_placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>
@@ -68,5 +92,10 @@
         android:layout_height="match_parent">
     </FrameLayout>
 
-
+    <FrameLayout
+        android:id="@+id/about_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+    
 </android.support.constraint.ConstraintLayout>

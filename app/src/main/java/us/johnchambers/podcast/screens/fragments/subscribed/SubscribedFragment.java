@@ -1,10 +1,7 @@
 package us.johnchambers.podcast.screens.fragments.subscribed;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.EventLog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +10,17 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
 import us.johnchambers.podcast.Events.fragment.RefreshManualPlaylistFragment;
 import us.johnchambers.podcast.Events.fragment.SubscribedFragmentRowItemClickedEvent;
-import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
+import us.johnchambers.podcast.misc.Constants;
+import us.johnchambers.podcast.misc.TapGuard;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 
 public class SubscribedFragment extends MyFragment {
@@ -31,6 +28,8 @@ public class SubscribedFragment extends MyFragment {
     SubscribedAdapter _adapter;
     private View _view;
     private FragmentBackstackType _fragmentBackstackType = FragmentBackstackType.BRANCH;
+
+    private TapGuard _tapGuard = new TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS);
 
     public SubscribedFragment() {
         // Required empty public constructor
@@ -114,6 +113,7 @@ public class SubscribedFragment extends MyFragment {
             public void onItemClick(AdapterView<?> adapter, View v, int position,
                                     long arg3)
             {
+                if (_tapGuard.tooSoon()) return;
                 PodcastTable pt = _adapter.getItem(position);
                 EventBus.getDefault().post(new SubscribedFragmentRowItemClickedEvent(pt));
             }

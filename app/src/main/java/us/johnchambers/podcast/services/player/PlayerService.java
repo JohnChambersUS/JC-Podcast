@@ -11,33 +11,24 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
-import android.media.session.MediaSession;
-import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Toast;
-
-
+import android.widget.RemoteViews;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
-import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
@@ -73,6 +64,7 @@ import us.johnchambers.podcast.objects.GlobalOptions;
 import us.johnchambers.podcast.objects.PodcastOptions;
 
 import static android.media.AudioManager.STREAM_MUSIC;
+import static android.media.session.PlaybackState.STATE_SKIPPING_TO_NEXT;
 import static com.google.android.exoplayer2.Player.STATE_ENDED;
 import static com.google.android.exoplayer2.Player.STATE_READY;
 import static us.johnchambers.podcast.misc.Constants.*;
@@ -101,6 +93,9 @@ public class PlayerService extends Service {
     TelephonyManager _telephoneManager;
 
     boolean _playerPhoneState = false;
+
+    GlobalOptions _globalOptions = new GlobalOptions();
+    Bitmap _podcastPicture = null;
 
 
     public PlayerService() {
@@ -180,7 +175,7 @@ public class PlayerService extends Service {
         // create channel
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(_notificationChannelId,
-                    "Different",
+                    "Diffcast",
                     NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription("A Different Podcast App");
             channel.enableLights(false);
@@ -199,32 +194,46 @@ public class PlayerService extends Service {
             notif.setChannelId(_notificationChannelId);
         }
 
-        if (!button1.equals("")) {
-            Intent yesReceive = new Intent(this,
+        RemoteViews customView = new RemoteViews(getPackageName(), R.layout.controls_notification);
+
+        notif.setContent(customView);
+
+        //rewind button
+        customView.setImageViewResource(R.id.notification_rewind_button, R.drawable.ic_rewind_dark);
+        Intent yesReceiveRewind = new Intent(this,
+                PlayerNotificationBroadcastReceiver.class);
+        yesReceiveRewind.setAction(PLAYER_REWIND);
+        PendingIntent pendingIntentYesRewind = PendingIntent.getBroadcast(this, 12345,
+                yesReceiveRewind, PendingIntent.FLAG_UPDATE_CURRENT);
+        customView.setOnClickPendingIntent(R.id.notification_rewind_button, pendingIntentYesRewind);
+
+        //play pause button
+        if (button2.equals(PLAYER_PLAY)) { //play button showing
+            customView.setImageViewResource(R.id.notification_play_pause_button, R.drawable.ic_play_dark);
+            Intent yesReceivePlayPause = new Intent(this,
                     PlayerNotificationBroadcastReceiver.class);
-            yesReceive.setAction(button1);
-            PendingIntent pendingIntentYes = PendingIntent.getBroadcast(this,
-                    12345,
-                    yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
-            notif.addAction(0, button1, pendingIntentYes);
+            yesReceivePlayPause.setAction(PLAYER_PLAY);
+            PendingIntent pendingIntentYesPlayPause = PendingIntent.getBroadcast(this, 12345,
+                    yesReceivePlayPause, PendingIntent.FLAG_UPDATE_CURRENT);
+            customView.setOnClickPendingIntent(R.id.notification_play_pause_button, pendingIntentYesPlayPause);
+        } else { //pause button showing
+            customView.setImageViewResource(R.id.notification_play_pause_button, R.drawable.ic_pause_dark);
+            Intent yesReceivePlayPause = new Intent(this,
+                    PlayerNotificationBroadcastReceiver.class);
+            yesReceivePlayPause.setAction(PLAYER_PAUSE);
+            PendingIntent pendingIntentYesPlayPause = PendingIntent.getBroadcast(this, 12345,
+                    yesReceivePlayPause, PendingIntent.FLAG_UPDATE_CURRENT);
+            customView.setOnClickPendingIntent(R.id.notification_play_pause_button, pendingIntentYesPlayPause);
         }
 
-        if (!button2.equals("")) {
-            Intent yesReceive2 = new Intent(this,
-                    PlayerNotificationBroadcastReceiver.class);
-            yesReceive2.setAction(button2);
-            PendingIntent pendingIntentYes2 = PendingIntent.getBroadcast(this, 12345, yesReceive2, PendingIntent.FLAG_UPDATE_CURRENT);
-            action2 = new Notification.Action(0, button2, pendingIntentYes2);
-            notif.addAction(action2);
-        }
-
-        if (!button3.equals("")) {
-            Intent yesReceive3 = new Intent(this,
-                    PlayerNotificationBroadcastReceiver.class);
-            yesReceive3.setAction(button3);
-            PendingIntent pendingIntentYes3 = PendingIntent.getBroadcast(this, 12345, yesReceive3, PendingIntent.FLAG_UPDATE_CURRENT);
-            notif.addAction(0, button3, pendingIntentYes3);
-        }
+        //forward button
+        customView.setImageViewResource(R.id.notification_forward_button, R.drawable.ic_forward_dark);
+        Intent yesReceiveForward = new Intent(this,
+                PlayerNotificationBroadcastReceiver.class);
+        yesReceiveForward.setAction(PLAYER_FORWARD);
+        PendingIntent pendingIntentYesForward = PendingIntent.getBroadcast(this, 12345,
+                yesReceiveForward, PendingIntent.FLAG_UPDATE_CURRENT);
+        customView.setOnClickPendingIntent(R.id.notification_forward_button, pendingIntentYesForward);
 
         return notif.build();
 
@@ -232,8 +241,10 @@ public class PlayerService extends Service {
 
     // Only run once for setup
     private void createEmptyPlayer() {
+
         _player = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(_context),
                 new DefaultTrackSelector(), new DefaultLoadControl());
+
         _player.addListener(eventListener);
     }
 
@@ -275,10 +286,12 @@ public class PlayerService extends Service {
 
     public void pausePlayer() {
         _player.setPlayWhenReady(false);
+        setNoticationToPaused();
     }
 
     public void resumePlayer() {
         _player.setPlayWhenReady(true);
+        setNoticationToPlaying();
     }
 
     public void flipPlayerState() {
@@ -290,11 +303,11 @@ public class PlayerService extends Service {
     }
 
     public void forwardPlayer() {
-        _player.seekTo(_player.getContentPosition() + 30000);
+        _player.seekTo(_player.getContentPosition() + _globalOptions.getForwardMinutesAsMilliseconds());
     }
 
     public void rewindPlayer() {
-        _player.seekTo(_player.getContentPosition() - 30000);
+        _player.seekTo(_player.getContentPosition() - _globalOptions.getRewindMinutesAsMilliseconds());
     }
 
     public void playEpisode(EpisodeTable episode) {
@@ -375,8 +388,14 @@ public class PlayerService extends Service {
 
     Player.EventListener eventListener = new Player.EventListener() {
 
+       @Override
+       public void onShuffleModeEnabledChanged(boolean b) {}
+
         @Override
-        public void onTimelineChanged(Timeline timeline, Object manifest) {
+        public void onSeekProcessed() {}
+
+        @Override
+        public void onTimelineChanged(Timeline timeline, Object manifest, int num) {
 
         }
 
@@ -417,6 +436,11 @@ public class PlayerService extends Service {
                 _eventBus.post(new AnyKeyEvent());
             }
 
+            if (playbackState == STATE_SKIPPING_TO_NEXT) {
+                int x = 1;
+
+            }
+
         }
 
         @Override
@@ -430,8 +454,7 @@ public class PlayerService extends Service {
         }
 
         @Override
-        public void onPositionDiscontinuity() {
-
+        public void onPositionDiscontinuity(int pos) {
         }
 
         @Override
@@ -585,8 +608,5 @@ public class PlayerService extends Service {
         _telephoneManager =  (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
         _telephoneManager.listen(_phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
     }
-
-
-
 
 } //end of service

@@ -1,9 +1,6 @@
 package us.johnchambers.podcast.screens.fragments.player;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,14 +9,11 @@ import android.view.ViewGroup;
 import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import us.johnchambers.podcast.Events.player.PlayerClosedEvent;
 import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.database.EpisodeTable;
-import us.johnchambers.podcast.database.PodcastDatabaseHelper;
+
 import us.johnchambers.podcast.fragments.MyFragment;
-import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.objects.Docket;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
 import us.johnchambers.podcast.objects.FragmentBackstackType;

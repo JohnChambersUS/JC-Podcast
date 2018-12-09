@@ -5,7 +5,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,7 +16,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,12 +25,14 @@ import java.util.Calendar;
 
 import us.johnchambers.podcast.Events.fragment.CloseSubscribeFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.CloseSubscribedDetailFragmentEvent;
+import us.johnchambers.podcast.Events.fragment.OpenGenericPlaylistFragment;
 import us.johnchambers.podcast.Events.fragment.OpenPodcastOptionsFragment;
+import us.johnchambers.podcast.Events.fragment.OpenPodcatTagListFragmentEvent;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribeFragment;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedDetailEvent;
 import us.johnchambers.podcast.Events.fragment.OpenSubscribedFragmentEvent;
+import us.johnchambers.podcast.Events.fragment.OpenTagAddToPodcastFragment;
 import us.johnchambers.podcast.Events.fragment.RefreshManualPlaylistFragment;
-import us.johnchambers.podcast.Events.fragment.RefreshSubscribedFragment;
 import us.johnchambers.podcast.Events.fragment.SubscribedFragmentRowItemClickedEvent;
 import us.johnchambers.podcast.Events.keys.AnyKeyEvent;
 import us.johnchambers.podcast.Events.player.ClosePlayerEvent;
@@ -40,24 +40,20 @@ import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
 import us.johnchambers.podcast.Events.service.UpdatePodcastsEvent;
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
-import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.misc.Constants;
+import us.johnchambers.podcast.misc.TapGuard;
 import us.johnchambers.podcast.objects.DocketEmpty;
 import us.johnchambers.podcast.services.player.PlayerServiceController;
-import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
-import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
-import us.johnchambers.podcast.screens.fragments.subscribe.SubscribeFragment;
-import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
+
 import us.johnchambers.podcast.misc.MyFragmentManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
-import us.johnchambers.podcast.screens.fragments.subscribed_detail.SubscribedDetailFragment;
-import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
 
 public class MainNavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     MyFragmentManager _myFragmentManager = null;
+    private TapGuard _tapGuard = new TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,22 +126,18 @@ public class MainNavigationActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        if (_tapGuard.tooSoon()) return true;
         int id = item.getItemId();
 
         if (id == R.id.nav_search) {
@@ -167,8 +159,9 @@ public class MainNavigationActivity extends AppCompatActivity
             _myFragmentManager.activateManualPlaylistFragment();
         }  else if (id == R.id.nav_global_options) {
             _myFragmentManager.activateGlobalOptionsFragment();
+         } else if (id == R.id.nav_tags) {
+            _myFragmentManager.activateTagFragment();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.setScrimColor(Color.TRANSPARENT);
         drawer.closeDrawer(GravityCompat.START);
@@ -261,6 +254,23 @@ public class MainNavigationActivity extends AppCompatActivity
     public void onEvent(OpenSubscribedFragmentEvent event) {
         _myFragmentManager.activateSubscribedFragment();
     }
+
+    @Subscribe
+    public void onEvent(OpenPodcatTagListFragmentEvent event) {
+        _myFragmentManager.activatePodcatsTagListFragment(event.get_tag());
+    }
+
+
+    @Subscribe
+    public void onEvent(OpenTagAddToPodcastFragment event) {
+        _myFragmentManager.activateTagAddToPodcastFragment(event.getPid());
+    }
+
+    @Subscribe
+    public void onEvent(OpenGenericPlaylistFragment event) {
+        _myFragmentManager.activateGenericPlaylistFragment(event.get_tag());
+    }
+
 
     @Subscribe
     public void onEvent(UpdatePodcastsEvent event) {

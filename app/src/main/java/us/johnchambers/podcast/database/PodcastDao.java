@@ -178,4 +178,71 @@ public interface PodcastDao {
 
     @Query("delete from playlistTable where playlistName = :playlistName and eid = :eid ")
     void removeItemFromPlaylistTable(String playlistName, String eid);
+
+    @Query("select * from playlisttable where playlistname = :tag order by identity")
+    List<PlaylistTable> getCurrentTagPlaylistEpisodes(String tag);
+
+    @Query("select * from episodetable e where pid in (select pid from podcasttagtable where tag = :tag) order by e.publication_date DESC;")
+    List<EpisodeTable> getRefreshedListOfTagPlaylistEpisodes(String tag);
+
+    @Query("select * from episodetable e where pid in (select pid from podcasttagtable where tag = :tag) group by e.pid order by e.publication_date DESC  limit (select count(*) from podcasttagtable where tag = :tag);")
+    List<EpisodeTable> getRefreshedListOfTagPlaylistEpisodesTop(String tag);
+
+    @Query("select count(*) from playlisttable where playlistName = :playlistId")
+    int getPlaylistCount(String playlistId);
+
+
+    //******************************************
+    //* TagTable table routines
+    //******************************************
+
+    @Delete
+    void deleteTagTableRow(TagTable tagTable);
+
+    @Insert
+    void insertTagTableRow(TagTable tagTable);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void upsertTagRow(TagTable row);
+
+    @Query("Select * from tagtable order by tag")
+    List<TagTable> getTagTableRows();
+
+    @Query("Select * from tagtable where tag = :tag order by tag")
+    List<TagTable> getTagTableRows(String tag);
+
+    //*********************************************
+    //* PodcastTagTable table routines
+    //*********************************************
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void upsertPodcastTagRow(PodcastTagTable row);
+
+    @Delete
+    void deletePodcastTagTableRow(PodcastTagTable row);
+
+    @Query("DELETE FROM podcasttagtable WHERE pid = :pid and tag = :tag")
+    void deletePodcastTagTable2(String pid, String tag);
+
+    @Query("DELETE FROM podcasttagtable WHERE pid = :pid")
+    void deletePodcastTagTableByPodcastId(String pid);
+
+    @Query("DELETE FROM podcasttagtable WHERE tag = :tag")
+    void deletePodcastTagTableByTag(String tag);
+
+
+    //*******************************************
+    //* mixed and joined returns
+    //*******************************************
+
+    //* join podcast & podcastTagTable
+
+    @Query("SELECT p.pid, t.tag FROM podcasttable p LEFT JOIN podcasttagtable t ON p.pid = t.pid")
+    List<PodcastTagJoinedObject> getPodcastsAndTags();
+
+    @Query("SELECT p.pid, t.tag FROM podcasttable p LEFT JOIN (select * from podcasttagtable where tag = :tag) t ON p.pid = t.pid;")
+    List<PodcastTagJoinedObject> getPodcastsAndTags(String tag);
+
+    @Query("SELECT p.pid, t.tag FROM tagtable t LEFT JOIN (select * from podcasttagtable where pid = :pid) p ON p.tag = t.tag order by t.tag;")
+    List<PodcastTagJoinedObject> getPodcastsAndTagsByPid(String pid);
+
 }

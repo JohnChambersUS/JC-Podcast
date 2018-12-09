@@ -9,7 +9,8 @@ import android.arch.persistence.room.RoomDatabase;
 
 @Database(entities = {PodcastTable.class, EpisodeTable.class,
         NowPlayingTable.class, LatestPlaylistTable.class,
-        OptionsTable.class, PlaylistTable.class}, version = 17, exportSchema = false)
+        OptionsTable.class, PlaylistTable.class, TagTable.class,
+        PodcastTagTable.class}, version = 20, exportSchema = false)
 public abstract class PodcastDatabase extends RoomDatabase {
     public abstract PodcastDao dao();
 }

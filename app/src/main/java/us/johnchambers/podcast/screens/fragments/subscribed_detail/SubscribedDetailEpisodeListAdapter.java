@@ -2,8 +2,6 @@ package us.johnchambers.podcast.screens.fragments.subscribed_detail;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 
@@ -13,19 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import us.johnchambers.podcast.R;
 import us.johnchambers.podcast.database.EpisodeTable;
-
-
 
 /**
  * Created by johnchambers on 8/19/17.

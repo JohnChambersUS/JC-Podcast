@@ -19,15 +19,21 @@ object C {
         var TYPE_IS_LATEST = "latest"
         var TYPE_IS_MANUAL = "manual_playlist"
         var TYPE_IS_EMBEDED_PLAYLIST = "embeded_playlist"
+        var TYPE_IS_GENERIC_PLAYLIST = "generic_playlist"
+        var TYPE_IS_TAG_ALL_PLAYLIST = "tag_all_playlist"
     }
 
     object playlist {
+        var TAG_PLAYLIST_SUFFIX = "_tag_playlist"
+        var GENERIC_PLAYLIST = "generic_playlist"
         var LATEST_PLAYLIST = "latest_playlist"
         var MANUAL_PLAYLIST = "manual_playlist"
         var DUMMY = "dummy"
     }
 
     object options {
+        var REWIND_MINUTES = "rewind_minutes"
+        var FORWARD_MINUTES = "forward_minutes"
         var GLOBAL = "GLOBAL"
         var KEY_SPEED = "speed"
         var NORMAL_SPEED = "normal"

@@ -1,8 +1,6 @@
 package us.johnchambers.podcast.playlists
 
 import us.johnchambers.podcast.database.EpisodeTable
-import us.johnchambers.podcast.database.PodcastDatabaseHelper
-import us.johnchambers.podcast.misc.C
 import us.johnchambers.podcast.objects.Docket
 
 /**
@@ -13,10 +11,15 @@ abstract class Playlist(playlistId : String) {
     lateinit var _docket : Docket
     lateinit var _episodes : MutableList<EpisodeTable>
     var _episodeIndex = -1
-    var _plalyistId = playlistId
+    var _playistId = playlistId
+    var _newOnly = false;
 
     init {
 
+    }
+
+    open fun setNewOnly(newValue: Boolean) {
+        _newOnly = newValue
     }
 
     open fun isEmpty() : Boolean {
@@ -29,7 +32,6 @@ abstract class Playlist(playlistId : String) {
         else
             _episodeIndex = -1
     }
-
 
     abstract protected fun updatePlaylistInfo()
 
@@ -52,7 +54,7 @@ abstract class Playlist(playlistId : String) {
     }
 
     open fun getPlaylistId() : String {
-        return _plalyistId
+        return _playistId
     }
 
     abstract protected fun alignWithNowPlayingInfo()

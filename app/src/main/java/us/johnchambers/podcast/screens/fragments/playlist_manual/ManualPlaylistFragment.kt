@@ -57,10 +57,6 @@ class ManualPlaylistFragment : MyFragment() {
         _view =  inflater.inflate(R.layout.fragment_manual_playlist, container, false)
 
         if (_playlist.getEpisodes().size == 0) {
-            //var noEpisodesMessage = _view.findViewById(R.id.manual_no_episodes_message) as TextView
-            //var recyclerView = _view.findViewById(R.id.manual_recycler_view) as RecyclerView
-            //noEpisodesMessage.visibility = View.VISIBLE
-            //recyclerView.visibility = View.GONE
             flipNoDataMessage()
         }
         else {
@@ -74,8 +70,6 @@ class ManualPlaylistFragment : MyFragment() {
                 layoutManager = _viewManager
                 adapter = _viewAdapter
             }
-
-            //_recyclerView.setItemAnimator(null)
             setItemTouchHelper()
         }
         addNavigationListener()
@@ -115,7 +109,6 @@ class ManualPlaylistFragment : MyFragment() {
 
 
     }
-
 
     //*********************************
     //* bottom menu listener
@@ -204,8 +197,6 @@ class ManualPlaylistFragment : MyFragment() {
 
         builder.show()
     }
-
-
 
     //**********************************************
     //* setup item touch helper for recyclerview

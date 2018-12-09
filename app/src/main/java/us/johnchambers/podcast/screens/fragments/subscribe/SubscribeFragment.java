@@ -2,18 +2,12 @@ package us.johnchambers.podcast.screens.fragments.subscribe;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.PopupMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,23 +26,17 @@ import com.android.volley.toolbox.StringRequest;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.lang.reflect.Array;
 import java.net.URL;
-import java.util.Date;
-import java.util.List;
 
 import us.johnchambers.podcast.Events.fragment.CloseSubscribeFragmentEvent;
-import us.johnchambers.podcast.Events.player.ResumePlaylistEvent;
 import us.johnchambers.podcast.Events.service.UpdatePodcastsEvent;
 import us.johnchambers.podcast.R;
-import us.johnchambers.podcast.database.EpisodeTable;
 import us.johnchambers.podcast.database.PodcastDatabaseHelper;
-import us.johnchambers.podcast.database.PodcastMode;
 import us.johnchambers.podcast.database.PodcastTable;
 import us.johnchambers.podcast.fragments.MyFragment;
 import us.johnchambers.podcast.misc.C;
 import us.johnchambers.podcast.misc.Constants;
-import us.johnchambers.podcast.objects.DocketPodcast;
+import us.johnchambers.podcast.misc.TapGuard;
 import us.johnchambers.podcast.objects.FragmentBackstackType;
 import us.johnchambers.podcast.misc.MyFileManager;
 import us.johnchambers.podcast.misc.VolleyQueue;
@@ -67,6 +55,8 @@ public class SubscribeFragment extends MyFragment {
     private Context _context;
 
     private BottomNavigationView.OnNavigationItemSelectedListener _bottomNavigationListener;
+
+    private TapGuard _tapGuard = new TapGuard(Constants.MINIMUM_MILLISECONDS_BETWEEN_TAPS);
 
     public SubscribeFragment() {
         // Required empty public constructor
@@ -121,6 +111,7 @@ public class SubscribeFragment extends MyFragment {
     //*********************************
 
     private void processNavigation(MenuItem item) {
+        if (_tapGuard.tooSoon()) return;
         if (item.getItemId() == R.id.bm_subscribe) {
             openSubscribeDialog();
         }
@@ -222,15 +213,7 @@ public class SubscribeFragment extends MyFragment {
         PodcastDatabaseHelper.getInstance().insertPodcastTableRow(newRow);
         C.podcasts.INSTANCE.getUPDATE_STACK().push(newRow);
     }
-    /*
-    private void addAllEpisodesToDatabase() {
-        _feedResponseWrapper.processEpisodesFromBottom();
-        while (_feedResponseWrapper.prevEpisode()) {
-            EpisodeTable currEpisode = _feedResponseWrapper.getFilledEpisodeTable();
-            PodcastDatabaseHelper.getInstance().insertEpisodeTableRow(currEpisode);
-        }
-    }
-    */
+
     private void init(SearchRow sr) {
         _searchRow = sr;
     }

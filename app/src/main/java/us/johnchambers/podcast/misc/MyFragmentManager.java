@@ -4,11 +4,8 @@ package us.johnchambers.podcast.misc;
  * Created by johnchambers on 7/20/17.
  */
 
-import android.content.Context;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import java.util.Stack;
 
@@ -21,6 +18,7 @@ import us.johnchambers.podcast.screens.fragments.about.AboutFragment;
 import us.johnchambers.podcast.screens.fragments.options.GlobalOptionsFragment;
 import us.johnchambers.podcast.screens.fragments.options.PodcastOptionsFragment;
 import us.johnchambers.podcast.screens.fragments.player.PlayerFragment;
+import us.johnchambers.podcast.screens.fragments.playlist_generic.GenericPlaylistFragment;
 import us.johnchambers.podcast.screens.fragments.playlist_latest.LatestPlaylistFragment;
 import us.johnchambers.podcast.screens.fragments.playlist_manual.ManualPlaylistFragment;
 import us.johnchambers.podcast.screens.fragments.search.SearchFragment;
@@ -29,6 +27,9 @@ import us.johnchambers.podcast.screens.fragments.subscribed.SubscribedFragment;
 import us.johnchambers.podcast.objects.MyBackstackEntry;
 import us.johnchambers.podcast.screens.fragments.search.SearchRow;
 import us.johnchambers.podcast.screens.fragments.subscribed_detail.SubscribedDetailFragment;
+import us.johnchambers.podcast.screens.fragments.tag.tag_add_to_podcast_fragment.TagAddToPodcastFragment;
+import us.johnchambers.podcast.screens.fragments.tag.tag_fragment.TagFragment;
+import us.johnchambers.podcast.screens.fragments.tag.tag_podcast_list.TagPodcastListFragment;
 
 public class MyFragmentManager {
 
@@ -45,6 +46,10 @@ public class MyFragmentManager {
     private final String MANUAL_PLAYLIST_FRAGMENT = "MANUAL_PLAYLIST_FRAGMENT";
     private final String GLOBAL_OPTIONS_FRAGMENT = "GLOBAL_OPTIONS_FRAGMENT";
     private final String PODCAST_OPTIONS_FRAGMENT = "PODCAST_OPTIONS_FRAGMENT";
+    private final String TAG_FRAGMENT = "TAG_FRAGMENT";
+    private final String PODCAST_TAG_LIST_FRAGMENT = "PODCAST_TAG_LIST_FRAGMENT";
+    private final String TAG_ADD_TO_PODCAST_FRAGMENT = "TAG_ADD_TO_PODCAST_FRAGMENT";
+    private final String GENERIC_PLAYLIST_FRAGMENT = "GENERIC_PLAYLIST_FRAGMENT";
 
 
     private Stack _backstack = new Stack<MyBackstackEntry>();
@@ -89,8 +94,21 @@ public class MyFragmentManager {
         }
     }
 
+    private void closeAllFragments() {
+        while (_backstack.size() > 0) {
+            MyBackstackEntry currEntry = (MyBackstackEntry) _backstack.pop();
+            _fragmentManager.beginTransaction().
+                    remove(_fragmentManager.findFragmentByTag(currEntry.getFragmentTag()))
+                    .commit();
+        }
+    }
+
     private void activateFragment(int containerViewId, MyFragment frag, String fragmentName, String fragmentTitle) {
         closeInfoFragments();
+        if (frag.getBackstackType() == FragmentBackstackType.ROOT) {
+            closeAllFragments();
+            containerViewId = R.id.root_placeholder;
+        }
         _fragmentManager
                 .beginTransaction()
                 .add(containerViewId, frag, fragmentName)
@@ -226,6 +244,51 @@ public class MyFragmentManager {
                     _toolbar.getContext().getResources().getString(R.string.podcast_options_fragment_title));
         }
     }
+
+
+    public void activateTagFragment() {
+        if (!alreadyOnTop(TAG_FRAGMENT)) {
+            TagFragment fragment = TagFragment.newInstance();
+            activateFragment(R.id.root_placeholder,
+                    fragment,
+                    TAG_FRAGMENT,
+                    _toolbar.getContext().getResources().getString(R.string.tag_title));
+        }
+    }
+
+
+    public void activatePodcatsTagListFragment(String tag) {
+        if (!alreadyOnTop(PODCAST_TAG_LIST_FRAGMENT)) {
+            TagPodcastListFragment fragment = TagPodcastListFragment.newInstance();
+            fragment.setTag(tag);
+            activateFragment(R.id.podcast_tag_list_placeholder,
+                    fragment,
+                    PODCAST_TAG_LIST_FRAGMENT,
+                    tag);
+        }
+    }
+
+    public void activateTagAddToPodcastFragment(String pid) {
+        if (!alreadyOnTop(TAG_ADD_TO_PODCAST_FRAGMENT)) {
+            TagAddToPodcastFragment fragment = TagAddToPodcastFragment.newInstance();
+            fragment.setPid(pid);
+            activateFragment(R.id.tag_add_to_podcastplaceholder,
+                    fragment,
+                    TAG_ADD_TO_PODCAST_FRAGMENT,
+                    "Tag The Podcast");
+        }
+    }
+
+    public void activateGenericPlaylistFragment(String tag) {
+        if (!alreadyOnTop(GENERIC_PLAYLIST_FRAGMENT)) {
+            GenericPlaylistFragment fragment = GenericPlaylistFragment.newInstance(tag);
+            activateFragment(R.id.generic_playlist_fragment_placeholder,
+                    fragment,
+                    GENERIC_PLAYLIST_FRAGMENT,
+                    tag);
+        }
+    }
+
 
     private boolean alreadyOnTop(String fragmentName) {
         if (_backstack.size() == 0) {

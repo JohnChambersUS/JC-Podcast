@@ -24,8 +24,8 @@ android {
         applicationId "us.johnchambers.podcast"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 23
-        versionName "1.23.0"
+        versionCode 24
+        versionName "1.24.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -60,7 +60,8 @@ dependencies {
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.0'
 
     //*** exoplayer - tooklit for playing audio & video
-    implementation 'com.google.android.exoplayer:exoplayer:r2.5.4'
+    //implementation 'com.google.android.exoplayer:exoplayer:r2.5.4'
+    implementation 'com.google.android.exoplayer:exoplayer:2.8.4'
 
     //*** kotlin - sdk to include kotlin language
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
