@@ -1,11 +1,20 @@
 buildscript {
     repositories {
-        maven { url 'https://maven.fabric.io/public' }
         google()
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
     }
 
     dependencies {
         classpath 'io.fabric.tools:gradle:1.+'
+        classpath 'com.android.tools.build:gradle:3.2.1'
+    }
+    allprojects {
+        repositories {
+            google() // and here
+            jcenter()
+            maven { url 'https://google.bintray.com/exoplayer/' }
+        }
     }
 }
 apply plugin: 'com.android.application'
@@ -16,16 +25,15 @@ repositories {
     google()
 }
 
-
 android {
     compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    //buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "us.johnchambers.podcast"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 24
-        versionName "1.24.0"
+        versionCode 30
+        versionName "1.30.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -33,6 +41,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
@@ -76,7 +87,7 @@ dependencies {
 
     //*** testing ***
     testImplementation 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }
