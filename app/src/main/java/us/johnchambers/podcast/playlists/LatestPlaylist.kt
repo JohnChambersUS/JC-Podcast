@@ -1,6 +1,5 @@
 package us.johnchambers.podcast.playlists
 
-import android.widget.Toast
 import com.crashlytics.android.Crashlytics
 import us.johnchambers.podcast.database.EpisodeTable
 import us.johnchambers.podcast.database.PodcastDatabaseHelper
@@ -107,8 +106,9 @@ class LatestPlaylist(useExisting : Boolean) : Playlist(C.playlist.LATEST_PLAYLIS
                 _episodes.add(PodcastDatabaseHelper.getInstance().getEpisodeTableRowByEpisodeId(episode.eid))
             }
             catch (e: Exception) {
-                Crashlytics.log(1,"LatestPlaylist",
-                        "loadCurrentEpisodeList, unable to find episode, " + e.message)
+                Crashlytics.log(1,
+                        "LatestPlaylist",
+                        "loadCurrenEpisodeList, " + e.message)
             }
         }
     }
